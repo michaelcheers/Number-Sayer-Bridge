@@ -36,6 +36,7 @@ public class BigInteger
 
     public override extern string ToString();
 #pragma warning restore CS0626 // Method, operator, or accessor is marked external and has no attributes on it
+#pragma warning restore CS0824 // Method, operator, or accessor is marked external
 
     [Template("{0}.and({1})")]
     public static extern BigInteger operator &(BigInteger a, GenNum b);

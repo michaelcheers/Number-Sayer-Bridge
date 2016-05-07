@@ -22,6 +22,8 @@ public class BigInteger
     [Template("bigInt({0}).pow({1})")]
     public static extern BigInteger Pow(GenNum a, GenNum b);
 
+#pragma warning disable CS0626 // Method, operator, or accessor is marked external and has no attributes on it
+#pragma warning disable CS0824 // Method, operator, or accessor is marked external and has no attributes on it
     public extern BigInteger(string value, int radix = 10);
     
     public extern BigInteger(int value = 0);
@@ -32,7 +34,6 @@ public class BigInteger
         get;
     }
 
-#pragma warning disable CS0626 // Method, operator, or accessor is marked external and has no attributes on it
     public override extern string ToString();
 #pragma warning restore CS0626 // Method, operator, or accessor is marked external and has no attributes on it
 

@@ -7,21 +7,21 @@ namespace Number_Sayer_Bridge
 {
     internal class Sound
     {
-        private AudioElement[] sound;
+        private Audio[] sound;
 
-        public Sound(AudioElement value)
+        public Sound(Audio value)
         {
-            sound = new AudioElement[] { value };
+            sound = new Audio[] { value };
         }
 
-        public Sound (AudioElement[] value)
+        public Sound (Audio[] value)
         {
             sound = value;
         }
 
         public Sound()
         {
-            sound = new AudioElement[] { };
+            sound = new Audio[] { };
         }
 
         public void Play()
@@ -33,13 +33,14 @@ namespace Number_Sayer_Bridge
         void Play (int index)
         {
             var audio = sound[index];
+            var audioActual = audio.audio;
             if (sound.Length != ++index)
-                audio.OnEnded = v => 
+                audioActual.OnEnded = v => 
                 {
                     v.Target.OnEnded = v2 => { };
                     Play(index);
                 };
-            audio.Play();
+            audioActual.Play();
         }
 
         public void AppendThis (Sound sound)
@@ -49,10 +50,29 @@ namespace Number_Sayer_Bridge
 
         public Sound Append(Sound sound)
         {
-            var result = new AudioElement[this.sound.Length + sound.sound.Length];
+            var result = new Audio[this.sound.Length + sound.sound.Length];
             this.sound.CopyTo(result, 0);
             sound.sound.CopyTo(result, this.sound.Length);
             return new Sound(result);
+        }
+    }
+
+    public class Audio
+    {
+        public Random rnd;
+        public AudioElement[] value;
+        public Audio(AudioElement[] value, Random rnd = null)
+        {
+            this.value = value;
+            this.rnd = rnd == null ? new Random() : rnd;
+        }
+
+        public AudioElement audio
+        {
+            get
+            {
+                return value[rnd.Next(value.Length)];
+            }
         }
     }
 }

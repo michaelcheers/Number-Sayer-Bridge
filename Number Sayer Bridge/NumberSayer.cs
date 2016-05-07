@@ -42,6 +42,11 @@ namespace Number_Sayer_Bridge
         public readonly Sound hundred;
         public readonly Sound and;
         public readonly Sound ty;
+        public readonly Random rnd = new Random();
+        public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
+        {
+            {Language.English, new[] {"Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael"} }
+        };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
 
@@ -49,7 +54,14 @@ namespace Number_Sayer_Bridge
         {
             if (alreadyDone.ContainsKey(value))
                 return alreadyDone[value];
-            return (alreadyDone[value] = new Sound(new AudioElement("Sounds/" + Voice + "/" + value + ".wav")));
+            AudioElement[] mixedResult = new AudioElement[] { };
+            string format = "Sounds/{0}/{1}.wav";
+            if (Voice == "mixed")
+                foreach (var item in knownVoices[language])
+                    mixedResult.Push(new AudioElement(string.Format(format, item, value)));
+            else
+                mixedResult.Push(new AudioElement(string.Format(format, Voice, value)));
+            return (alreadyDone[value] = new Sound(new Audio(mixedResult, rnd)));
         }
 
         public Sound GetThirFifSound(Number value)

@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Bridge Number_Sayer_Bridge</title>
+    <script src="../output/bridge.min.js"></script>
+    <script src="../output/Number_Sayer_Bridge.min.js"></script>
+    <script src="BigInteger.min.js"></script>
+</head>
+<body>
+    Number to say: <input type="number" id="number" style="width:100%" /><br />
+    Voice: <select id="voice">
+    <option value="Michael">
+        Michael
+    </option>
+    <option value="Melissa">
+        Melissa
+    </option>
+    <option value="Seamus">
+        Seamus
+    </option>
+    <option value="Laurie">
+        Laurie
+    </option>
+     <option value="Ally">
+         Ally
+     </option>   
+    <option value="Ben">
+        Ben
+    </option>
+    <option value="Jeff">
+        Jeff
+    </option>
+    </select>
+    <button onclick="new Number_Sayer_Bridge.NumberSayer(voice.value).say(bigInt(number.value)).play()">Submit</button>
+    <!-- 
+        Right-Click on this file and select "View in Browser"
+    --> 
+</body>
+</html>

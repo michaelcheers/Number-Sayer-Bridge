@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <NoStdLib>true</NoStdLib>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+    <AdditionalExplicitAssemblyReferences />
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{47F38B72-740C-47C6-978F-6B81B9E1B923}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Number_Sayer_Bridge</RootNamespace>
+    <AssemblyName>Number Sayer Bridge</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="BigInteger.cs" />
+    <Compile Include="NumberSayer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sound.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Bridge\bridge.json" />
+    <None Include="Bridge\www\Sounds\Michael\0.wav" />
+    <None Include="Bridge\www\Sounds\Michael\1.wav" />
+    <None Include="Bridge\www\Sounds\Michael\10.wav" />
+    <None Include="Bridge\www\Sounds\Michael\11.wav" />
+    <None Include="Bridge\www\Sounds\Michael\12.wav" />
+    <None Include="Bridge\www\Sounds\Michael\2.wav" />
+    <None Include="Bridge\www\Sounds\Michael\20.wav" />
+    <None Include="Bridge\www\Sounds\Michael\3.wav" />
+    <None Include="Bridge\www\Sounds\Michael\4.wav" />
+    <None Include="Bridge\www\Sounds\Michael\5.wav" />
+    <None Include="Bridge\www\Sounds\Michael\6.wav" />
+    <None Include="Bridge\www\Sounds\Michael\7.wav" />
+    <None Include="Bridge\www\Sounds\Michael\8.wav" />
+    <None Include="Bridge\www\Sounds\Michael\9.wav" />
+    <None Include="Bridge\www\Sounds\Michael\and.wav" />
+    <None Include="Bridge\www\Sounds\Michael\BETA.wav" />
+    <None Include="Bridge\www\Sounds\Michael\billion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\days.wav" />
+    <None Include="Bridge\www\Sounds\Michael\decillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\divide.wav" />
+    <None Include="Bridge\www\Sounds\Michael\duodecillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\equals.wav" />
+    <None Include="Bridge\www\Sounds\Michael\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Michael\fif.wav" />
+    <None Include="Bridge\www\Sounds\Michael\hours.wav" />
+    <None Include="Bridge\www\Sounds\Michael\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Michael\million.wav" />
+    <None Include="Bridge\www\Sounds\Michael\milliseconds.wav" />
+    <None Include="Bridge\www\Sounds\Michael\minus.wav" />
+    <None Include="Bridge\www\Sounds\Michael\minutes.wav" />
+    <None Include="Bridge\www\Sounds\Michael\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\octillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\plus.wav" />
+    <None Include="Bridge\www\Sounds\Michael\point.wav" />
+    <None Include="Bridge\www\Sounds\Michael\quadrillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\quattuordecillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\quindecillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\quintillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\seconds.wav" />
+    <None Include="Bridge\www\Sounds\Michael\sedecillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\septillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\sextillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\teen.wav" />
+    <None Include="Bridge\www\Sounds\Michael\thir.wav" />
+    <None Include="Bridge\www\Sounds\Michael\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Michael\times.wav" />
+    <None Include="Bridge\www\Sounds\Michael\tredecillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\ty.wav" />
+    <None Include="Bridge\www\Sounds\Michael\undecillion.wav" />
+    <None Include="Bridge\www\Sounds\Michael\VERSION.wav" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="Bridge, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.Core.1.13.0\lib\net40\Bridge.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bridge.Html5, Version=1.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bridge.Html5.1.13.0\lib\net40\Bridge.Html5.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bridge\output\readme.txt" />
+    <Content Include="Bridge\www\BigInteger.min.js" />
+    <Content Include="Bridge\www\demo.html" />
+    <None Include="Bridge\www\Sounds\Ally\0.wav" />
+    <None Include="Bridge\www\Sounds\Ally\1.wav" />
+    <None Include="Bridge\www\Sounds\Ally\10.wav" />
+    <None Include="Bridge\www\Sounds\Ally\11.wav" />
+    <None Include="Bridge\www\Sounds\Ally\12.wav" />
+    <None Include="Bridge\www\Sounds\Ally\2.wav" />
+    <None Include="Bridge\www\Sounds\Ally\20.wav" />
+    <None Include="Bridge\www\Sounds\Ally\3.wav" />
+    <None Include="Bridge\www\Sounds\Ally\4.wav" />
+    <None Include="Bridge\www\Sounds\Ally\5.wav" />
+    <None Include="Bridge\www\Sounds\Ally\6.wav" />
+    <None Include="Bridge\www\Sounds\Ally\7.wav" />
+    <None Include="Bridge\www\Sounds\Ally\8.wav" />
+    <None Include="Bridge\www\Sounds\Ally\9.wav" />
+    <None Include="Bridge\www\Sounds\Ally\and.wav" />
+    <None Include="Bridge\www\Sounds\Ally\billion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\decillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\divide.wav" />
+    <None Include="Bridge\www\Sounds\Ally\duodecillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\equals.wav" />
+    <None Include="Bridge\www\Sounds\Ally\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Ally\fif.wav" />
+    <None Include="Bridge\www\Sounds\Ally\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Ally\million.wav" />
+    <None Include="Bridge\www\Sounds\Ally\minus.wav" />
+    <None Include="Bridge\www\Sounds\Ally\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\octillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\plus.wav" />
+    <None Include="Bridge\www\Sounds\Ally\point.wav" />
+    <None Include="Bridge\www\Sounds\Ally\quadrillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\quattuordecillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\quindecillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\quintillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\sedecillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\septillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\sextillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\teen.wav" />
+    <None Include="Bridge\www\Sounds\Ally\thir.wav" />
+    <None Include="Bridge\www\Sounds\Ally\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Ally\times.wav" />
+    <None Include="Bridge\www\Sounds\Ally\tredecillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Ally\ty.wav" />
+    <None Include="Bridge\www\Sounds\Ally\undecillion.wav" />
+    <None Include="Bridge\www\Sounds\Ben\0.wav" />
+    <None Include="Bridge\www\Sounds\Ben\1.wav" />
+    <None Include="Bridge\www\Sounds\Ben\10.wav" />
+    <None Include="Bridge\www\Sounds\Ben\11.wav" />
+    <None Include="Bridge\www\Sounds\Ben\12.wav" />
+    <None Include="Bridge\www\Sounds\Ben\2.wav" />
+    <None Include="Bridge\www\Sounds\Ben\20.wav" />
+    <None Include="Bridge\www\Sounds\Ben\3.wav" />
+    <None Include="Bridge\www\Sounds\Ben\4.wav" />
+    <None Include="Bridge\www\Sounds\Ben\5.wav" />
+    <None Include="Bridge\www\Sounds\Ben\6.wav" />
+    <None Include="Bridge\www\Sounds\Ben\7.wav" />
+    <None Include="Bridge\www\Sounds\Ben\8.wav" />
+    <None Include="Bridge\www\Sounds\Ben\9.wav" />
+    <None Include="Bridge\www\Sounds\Ben\and.wav" />
+    <None Include="Bridge\www\Sounds\Ben\divide.wav" />
+    <None Include="Bridge\www\Sounds\Ben\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Ben\fif.wav" />
+    <None Include="Bridge\www\Sounds\Ben\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Ben\million.wav" />
+    <None Include="Bridge\www\Sounds\Ben\minus.wav" />
+    <None Include="Bridge\www\Sounds\Ben\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Ben\plus.wav" />
+    <None Include="Bridge\www\Sounds\Ben\point.wav" />
+    <None Include="Bridge\www\Sounds\Ben\teen.wav" />
+    <None Include="Bridge\www\Sounds\Ben\thir.wav" />
+    <None Include="Bridge\www\Sounds\Ben\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Ben\times.wav" />
+    <None Include="Bridge\www\Sounds\Ben\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Ben\ty.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\0.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\1.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\10.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\11.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\12.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\2.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\20.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\3.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\4.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\5.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\6.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\7.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\8.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\9.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\and.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\billion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\decillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\duodecillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\fif.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\million.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\octillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\point.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\quadrillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\quattuordecillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\quindecillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\quintillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\sedecillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\septillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\sextillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\teen.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\thir.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\tredecillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\ty.wav" />
+    <None Include="Bridge\www\Sounds\Jeff\undecillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\0.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\1.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\10.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\11.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\12.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\2.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\20.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\3.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\4.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\5.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\6.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\7.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\8.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\9.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\and.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\billion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\decillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\fif.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\million.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\octillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\point.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\quadrillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\quintillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\septillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\sextillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\teen.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\thir.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Laurie\ty.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\0.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\1.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\10.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\11.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\12.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\2.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\20.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\3.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\4.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\5.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\6.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\7.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\8.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\9.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\and.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\billion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\decillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\divide.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\equals.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\fif.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\million.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\minus.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\octillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\plus.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\point.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\quadrillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\quintillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\septillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\sextillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\teen.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\thir.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\times.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Melissa\ty.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\0.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\1.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\10.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\11.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\12.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\2.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\20.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\3.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\4.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\5.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\6.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\7.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\8.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\9.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\and.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\billion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\decillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\exponent.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\fif.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\hundred.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\million.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\nonillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\octillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\point.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\quadrillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\quintillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\septillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\sextillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\teen.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\thir.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\thousand.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\trillion.wav" />
+    <None Include="Bridge\www\Sounds\Seamus\ty.wav" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Bridge.Min.1.13.0\build\Bridge.Min.targets" Condition="Exists('..\packages\Bridge.Min.1.13.0\build\Bridge.Min.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Bridge.Min.1.13.0\build\Bridge.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Bridge.Min.1.13.0\build\Bridge.Min.targets'))" />
+  </Target>
+</Project>

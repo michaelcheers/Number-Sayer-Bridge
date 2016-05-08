@@ -223,7 +223,6 @@ namespace Number_Sayer_Bridge
                                             result.AppendThis(LoadSound("900"));
                                             break;
                                         }
-                                        break;
                                     default:
                                         {
                                             result.AppendThis(Say(hundred));
@@ -275,7 +274,7 @@ namespace Number_Sayer_Bridge
                 {
                     if (currentVal < 100 && condition && language == Language.English)
                         result.AppendThis(and);
-                    result.AppendThis(Say(currentVal));
+                    result.AppendThis(currentVal == 1 ? LoadSound("one"): Say(currentVal));
                     if (!condition)
                     {
                         result.AppendThis(LoadSound(languageNumberScale == 1000 ? placeValues[n] : placeValues[n + 1]));

@@ -115,6 +115,7 @@
     <Content Include="Bridge\output\readme.txt" />
     <Content Include="Bridge\www\BigInteger.min.js" />
     <Content Include="Bridge\www\demo.html" />
+    <Content Include="Bridge\www\demo.min.html" />
     <None Include="Bridge\www\Sounds\English\Ally\0.wav" />
     <None Include="Bridge\www\Sounds\English\Ally\1.wav" />
     <None Include="Bridge\www\Sounds\English\Ally\10.wav" />

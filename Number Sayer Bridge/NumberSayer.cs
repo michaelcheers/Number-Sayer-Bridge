@@ -61,6 +61,30 @@ namespace Number_Sayer_Bridge
                         };
                         break;
                     }
+                case Language.French:
+                    {
+                        smalls = new Sound[]
+                        {
+                            LoadSound("0"),
+                            LoadSound("1"),
+                            LoadSound("2"),
+                            LoadSound("3"),
+                            LoadSound("4"),
+                            LoadSound("5"),
+                            LoadSound("6"),
+                            LoadSound("7"),
+                            LoadSound("8"),
+                            LoadSound("9"),
+                            LoadSound("10"),
+                            LoadSound("11"),
+                            LoadSound("12"),
+                            LoadSound("13"),
+                            LoadSound("14"),
+                            LoadSound("15"),
+                            LoadSound("16")
+                        };
+                        break;
+                    }
                 default:
                     break;
             }
@@ -80,7 +104,8 @@ namespace Number_Sayer_Bridge
         public static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
         {
             {Language.English, 13 },
-            {Language.Spanish, 16 }
+            {Language.Spanish, 16 },
+            {Language.French, 17 }
         };
 
         public static readonly Dictionary<Language, int> numberScale = new Dictionary<Language, int>
@@ -102,7 +127,7 @@ namespace Number_Sayer_Bridge
                     mixedResult.Push(new AudioElement(string.Format(format, item, value)));
             else
                 mixedResult.Push(new AudioElement(string.Format(format, Voice, value)));
-            return (alreadyDone[value] = new Sound(new Audio(mixedResult, rnd)));
+            return (alreadyDone[value] = new Sound(new Audio(mixedResult, value, rnd)));
         }
 
         public Sound GetThirFifSound(Number value)
@@ -293,7 +318,8 @@ namespace Number_Sayer_Bridge
         public enum Language
         {
             English,
-            Spanish
+            Spanish,
+            French
         }
     }
 }

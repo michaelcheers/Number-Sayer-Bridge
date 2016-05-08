@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Bridge.Linq;
 
 namespace Number_Sayer_Bridge
 {
@@ -15,6 +16,7 @@ namespace Number_Sayer_Bridge
         static SelectElement language { get { return Document.GetElementById<SelectElement>("language"); } }
         static NumberSayer.Language currentLanguage { get{ return (NumberSayer.Language)language.SelectedIndex; } }
         static string currentVoice { get { return voice.Value; } }
+        static ParagraphElement said { get { return Document.GetElementById<ParagraphElement>("said"); } }
 
         [Ready]
         static void Start ()
@@ -40,7 +42,11 @@ namespace Number_Sayer_Bridge
                 sayer = sayers[key];
             else
                 sayer = (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
-            sayer.Say(new BigInteger(Document.GetElementById<InputElement>("number").Value)).Play();
+            var sound = sayer.Say(new BigInteger(Document.GetElementById<InputElement>("number").Value));
+            sound.Play();
+            List<string> saidString = new List<string>();
+            sound.sound.ForEach(v => saidString.Add(v.name));
+            said.InnerHTML = saidString.Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
         }
 
         static void Update ()

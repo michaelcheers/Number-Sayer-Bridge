@@ -7,7 +7,7 @@ namespace Number_Sayer_Bridge
 {
     internal class Sound
     {
-        private Audio[] sound;
+        internal Audio[] sound;
 
         public Sound(Audio value)
         {
@@ -61,10 +61,13 @@ namespace Number_Sayer_Bridge
     {
         public Random rnd;
         public AudioElement[] value;
-        public Audio(AudioElement[] value, Random rnd = null)
+        public string name;
+
+        public Audio(AudioElement[] value, string name = "", Random rnd = null)
         {
             this.value = value;
             this.rnd = rnd == null ? new Random() : rnd;
+            this.name = name;
         }
 
         public AudioElement audio

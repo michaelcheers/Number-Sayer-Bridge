@@ -22,6 +22,9 @@
             getcurrentVoice: function () {
                 return Number_Sayer_Bridge.HTML.getvoice().value;
             },
+            getsaid: function () {
+                return document.getElementById("said");
+            },
             start: function () {
                 var $t;
                 document.getElementById("submit").onclick = Number_Sayer_Bridge.HTML.submit;
@@ -45,7 +48,13 @@
                 else  {
                     sayer = ((Number_Sayer_Bridge.HTML.sayers.set(key, new Number_Sayer_Bridge.NumberSayer(Number_Sayer_Bridge.HTML.getcurrentLanguage(), Number_Sayer_Bridge.HTML.getcurrentVoice())), Number_Sayer_Bridge.HTML.sayers.get(key)));
                 }
-                sayer.say(new bigInt(document.getElementById("number").value)).play();
+                var sound = sayer.say(new bigInt(document.getElementById("number").value));
+                sound.play();
+                var saidString = new Bridge.List$1(String)();
+                Bridge.Linq.Enumerable.from(sound.sound).forEach(function (v) {
+                    saidString.add(v.name);
+                });
+                Number_Sayer_Bridge.HTML.getsaid().innerHTML = Bridge.String.replaceAll(Bridge.String.replaceAll(Bridge.String.replaceAll(saidString.join(" "), " es", "es"), " ty", "ty"), " teen", "teen");
             },
             update: function () {
                 var $t;

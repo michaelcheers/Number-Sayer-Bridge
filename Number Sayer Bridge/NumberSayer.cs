@@ -213,6 +213,17 @@ namespace Number_Sayer_Bridge
                                             result.AppendThis(LoadSound("500"));
                                             break;
                                         }
+                                    case 7:
+                                        {
+                                            result.AppendThis(LoadSound("700"));
+                                            break;
+                                        }
+                                    case 9:
+                                        {
+                                            result.AppendThis(LoadSound("900"));
+                                            break;
+                                        }
+                                        break;
                                     default:
                                         {
                                             result.AppendThis(Say(hundred));

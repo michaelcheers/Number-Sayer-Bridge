@@ -108,10 +108,16 @@ namespace Number_Sayer_Bridge
             {Language.French, 17 }
         };
 
+        [InlineConst]
+        public const int shortNumberScale = 1000   ;
+        [InlineConst]
+        public const int  longNumberScale = 1000000;
+
         public static readonly Dictionary<Language, int> numberScale = new Dictionary<Language, int>
         {
-            {Language.English, 1000 },
-            {Language.Spanish, 1000000 }
+            {Language.English, shortNumberScale },
+            {Language.Spanish,  longNumberScale },
+            {Language.French,   longNumberScale }
         };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
@@ -200,9 +206,10 @@ namespace Number_Sayer_Bridge
                                     break;
                                 }
                             case Language.Spanish:
+                            case Language.French:
                                 {
                                     result.AppendThis(LoadSound(dig1 + "0"));
-                                    if (dig2 != 0)
+                                    if (dig2 != 0 && language == Language.Spanish)
                                         result.AppendThis(and);
                                     break;
                                 }
@@ -230,7 +237,10 @@ namespace Number_Sayer_Bridge
                                 {
                                     case 1:
                                         {
-                                            result.AppendThis(LoadSound("100"));
+                                            if (remainder == 0)
+                                                result.AppendThis(LoadSound("100"));
+                                            else
+                                                result.AppendThis(LoadSound("ciento"));
                                             break;
                                         }
                                     case 5:
@@ -299,7 +309,7 @@ namespace Number_Sayer_Bridge
                 {
                     if (currentVal < 100 && condition && language == Language.English)
                         result.AppendThis(and);
-                    result.AppendThis(currentVal == 1 ? LoadSound("one"): Say(currentVal));
+                    result.AppendThis((currentVal == 1 && language == Language.Spanish) ? LoadSound("one"): Say(currentVal));
                     if (!condition)
                     {
                         result.AppendThis(LoadSound(languageNumberScale == 1000 ? placeValues[n] : placeValues[n + 1]));

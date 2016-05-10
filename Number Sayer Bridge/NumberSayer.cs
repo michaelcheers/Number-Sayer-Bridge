@@ -116,8 +116,8 @@ namespace Number_Sayer_Bridge
         public static readonly Dictionary<Language, int> numberScale = new Dictionary<Language, int>
         {
             {Language.English, shortNumberScale },
-            {Language.Spanish,  longNumberScale },
-            {Language.French,   longNumberScale }
+            {Language.French,  shortNumberScale },
+            {Language.Spanish,  longNumberScale }
         };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
@@ -206,11 +206,35 @@ namespace Number_Sayer_Bridge
                                     break;
                                 }
                             case Language.Spanish:
-                            case Language.French:
                                 {
                                     result.AppendThis(LoadSound(dig1 + "0"));
-                                    if (dig2 != 0 && language == Language.Spanish)
+                                    if (dig2 != 0)
                                         result.AppendThis(and);
+                                    break;
+                                }
+                            case Language.French:
+                                {
+                                    int dig120 = (int)value / 20;
+                                    var dig220 = value % 20;
+                                    switch (dig120)
+                                    {
+                                        case 3:
+                                        case 4:
+                                            {
+                                                result.AppendThis(LoadSound(dig120 * 2 + "0"));
+                                                if (dig120 == 3 && dig220 == 1)
+                                                    result.AppendThis(and);
+                                                result.AppendThis(Say(dig220));
+                                                return result;
+                                            }
+                                        default:
+                                            {
+                                                result.AppendThis(LoadSound(dig1 + "0"));
+                                                if (dig2 == 1)
+                                                    result.AppendThis(and);
+                                                break;
+                                            }
+                                    }
                                     break;
                                 }
                             default:
@@ -267,6 +291,27 @@ namespace Number_Sayer_Bridge
                                 }
                                 break;
                             }
+                        case Language.French:
+                            {
+                                switch (hundred)
+                                {
+                                    case 1:
+                                        {
+                                            if (remainder == 0)
+                                                result.AppendThis(LoadSound("100"));
+                                            else
+                                                result.AppendThis(LoadSound("ciento"));
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            result.AppendThis(Say(hundred));
+                                            result.AppendThis(LoadSound("hundred"));
+                                            break;
+                                        }
+                                }
+                                break;
+                            }
                         default:
                             break;
                     }
@@ -281,6 +326,7 @@ namespace Number_Sayer_Bridge
                 switch (language)
                 {
                     case Language.Spanish:
+                    case Language.French:
                         {
                             var part1 = value / 1000;
                             var part2 = value % 1000;
@@ -311,11 +357,22 @@ namespace Number_Sayer_Bridge
                         result.AppendThis(and);
                     result.AppendThis((currentVal == 1 && language == Language.Spanish) ? LoadSound("one"): Say(currentVal));
                     if (!condition)
-                    {
-                        result.AppendThis(LoadSound(languageNumberScale == 1000 ? placeValues[n] : placeValues[n + 1]));
-                        if (language == Language.Spanish && currentVal != 1)
-                            result.AppendThis(LoadSound("es"));
-                    }
+                        switch (language)
+                        {
+                            case Language.English:
+                                    result.AppendThis(LoadSound(placeValues[n]));
+                                    break;
+                            case Language.Spanish:
+                                    result.AppendThis(LoadSound(placeValues[n + 1]));
+                                    if (currentVal != 1)
+                                        result.AppendThis(LoadSound("es"));
+                                    break;
+                            case Language.French:
+                                    result.AppendThis(LoadSound(placeValues[(n + 1) / 2]).Append(((n + 1) % 2) == 1 ? LoadSound("ard") : LoadSound("on")));
+                                    break;
+                            default:
+                                break;
+                        }
                 }
                 current /= languageNumberScale;
                 n--;

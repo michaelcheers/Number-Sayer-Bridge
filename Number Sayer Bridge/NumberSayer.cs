@@ -98,7 +98,8 @@ namespace Number_Sayer_Bridge
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
             {Language.English, new[] {"Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
-            {Language.Spanish, new[] {"Ana"} }
+            {Language.Spanish, new[] {"Ana"} },
+            {Language.French,  new[] {"Ben"} }
         };
 
         public static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
@@ -297,10 +298,9 @@ namespace Number_Sayer_Bridge
                                 {
                                     case 1:
                                         {
-                                            if (remainder == 0)
-                                                result.AppendThis(LoadSound("100"));
-                                            else
-                                                result.AppendThis(LoadSound("ciento"));
+                                            result.AppendThis(LoadSound("hundred"));
+                                            if (remainder != 0)
+                                                result.AppendThis(LoadSound("and"));
                                             break;
                                         }
                                     default:

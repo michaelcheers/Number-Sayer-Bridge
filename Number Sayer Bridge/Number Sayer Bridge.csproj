@@ -112,6 +112,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bridge\output\bridge.js" />
+    <Content Include="Bridge\output\bridge.min.js" />
+    <Content Include="Bridge\output\html.js" />
+    <Content Include="Bridge\output\html.min.js" />
+    <Content Include="Bridge\output\number_Sayer_Bridge.js" />
+    <Content Include="Bridge\output\number_Sayer_Bridge.min.js" />
     <Content Include="Bridge\output\readme.txt" />
     <Content Include="Bridge\www\BigInteger.min.js" />
     <Content Include="Bridge\www\demo.html" />

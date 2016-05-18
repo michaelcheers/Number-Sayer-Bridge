@@ -1,27 +1,53 @@
 ﻿using Bridge;
 using Bridge.Html5;
+using Bridge.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Bridge.Linq;
 
 namespace Number_Sayer_Bridge
 {
     [FileName("html.js")]
-    static class HTML
+    internal static class HTML
     {
-        static SelectElement voice { get { return Document.GetElementById<SelectElement>("voice"); } }
-        static SelectElement language { get { return Document.GetElementById<SelectElement>("language"); } }
-        static NumberSayer.Language currentLanguage { get{ return (NumberSayer.Language)language.SelectedIndex; } }
-        static string currentVoice { get { return voice.Value; } }
-        static ParagraphElement said { get { return Document.GetElementById<ParagraphElement>("said"); } }
+        private static InputElement number
+        { get { return Document.GetElementById<InputElement>("number"); } }
+
+        private static SelectElement voice
+        { get { return Document.GetElementById<SelectElement>("voice"); } }
+
+        private static SelectElement language
+        { get { return Document.GetElementById<SelectElement>("language"); } }
+
+        private static NumberSayer.Language currentLanguage
+        { get { return (NumberSayer.Language)language.SelectedIndex; } }
+
+        private static string currentVoice
+        { get { return voice.Value; } }
+
+        private static ParagraphElement said
+        { get { return Document.GetElementById<ParagraphElement>("said"); } }
 
         [Ready]
-        static void Start ()
+        private static void Start()
         {
+            number.OnKeyDown = (ev) =>
+            {
+                if (ev.IsKeyboardEvent() && ev.As<KeyboardEvent>().KeyCode == 13)
+                {
+                    Submit(null);
+                }
+            };
+
+            language.OnChange = (ev) =>
+            {
+                Update();
+            };
+
             Document.GetElementById<ButtonElement>("submit").OnClick = Submit;
+
             foreach (NumberSayer.Language item in Enum.GetValues(typeof(NumberSayer.Language)))
                 language.AppendChild(new OptionElement
                 {
@@ -29,19 +55,22 @@ namespace Number_Sayer_Bridge
                     InnerHTML = item.ToString()
                 });
             language.SelectedIndex = 0;
+
             Update();
         }
 
-        static Dictionary<string, NumberSayer> sayers = new Dictionary<string, NumberSayer>();
+        private static Dictionary<string, NumberSayer> sayers = new Dictionary<string, NumberSayer>();
 
-        static void Submit(MouseEvent<ButtonElement> arg)
+        private static void Submit(MouseEvent<ButtonElement> arg)
         {
             var key = currentVoice + currentLanguage.ToString();
             NumberSayer sayer;
+
             if (sayers.ContainsKey(key))
                 sayer = sayers[key];
             else
                 sayer = (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
+
             var sound = sayer.Say(new BigInteger(Document.GetElementById<InputElement>("number").Value));
             sound.Play();
             List<string> saidString = new List<string>();
@@ -49,16 +78,18 @@ namespace Number_Sayer_Bridge
             said.InnerHTML = saidString.Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
         }
 
-        static void Update ()
+        private static void Update()
         {
             voice.InnerHTML = "";
             var currentKnownVoices = NumberSayer.knownVoices[(NumberSayer.Language)language.SelectedIndex];
+
             foreach (var item in currentKnownVoices)
                 voice.AppendChild(new OptionElement
                 {
                     Value = item.ToString(),
                     InnerHTML = item.ToString()
                 });
+
             voice.AppendChild(new OptionElement
             {
                 Value = "mixed",

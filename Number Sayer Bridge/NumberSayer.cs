@@ -18,6 +18,23 @@ namespace Number_Sayer_Bridge
             Voice = voice;
             switch (language)
             {
+                case Language.Esperanto:
+                    {
+                        smalls = new Sound[]
+                        {
+                            LoadSound("0"),
+                            LoadSound("1"),
+                            LoadSound("2"),
+                            LoadSound("3"),
+                            LoadSound("4"),
+                            LoadSound("5"),
+                            LoadSound("6"),
+                            LoadSound("7"),
+                            LoadSound("8"),
+                            LoadSound("9")
+                        };
+                        break;
+                    }
                 case Language.English:
                     {
                         smalls = new Sound[]
@@ -106,7 +123,8 @@ namespace Number_Sayer_Bridge
         {
             {Language.English, 13 },
             {Language.Spanish, 16 },
-            {Language.French, 17 }
+            {Language.French, 17 },
+            {Language.Esperanto, 10 }
         };
 
         [InlineConst]
@@ -118,7 +136,8 @@ namespace Number_Sayer_Bridge
         {
             {Language.English, shortNumberScale },
             {Language.French,  shortNumberScale },
-            {Language.Spanish,  longNumberScale }
+            {Language.Spanish,  longNumberScale },
+            {Language.Esperanto, shortNumberScale }
         };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
@@ -129,11 +148,18 @@ namespace Number_Sayer_Bridge
                 return alreadyDone[value];
             AudioElement[] mixedResult = new AudioElement[] { };
             string format = "Sounds/" + language.ToString() + "/{0}/{1}.wav";
-            if (Voice == "mixed")
-                foreach (var item in knownVoices[language])
-                    mixedResult.Push(new AudioElement(string.Format(format, item, value)));
-            else
-                mixedResult.Push(new AudioElement(string.Format(format, Voice, value)));
+            try
+            {
+                if (Voice == "mixed")
+                    foreach (var item in knownVoices[language])
+                        mixedResult.Push(new AudioElement(string.Format(format, item, value)));
+                else
+                    mixedResult.Push(new AudioElement(string.Format(format, Voice, value)));
+            }
+            catch (KeyNotFoundException e)
+            {
+                mixedResult.Push(new AudioElement(string.Format(format, "", "")));
+            }
             return (alreadyDone[value] = new Sound(new Audio(mixedResult, value, rnd)));
         }
 
@@ -204,6 +230,13 @@ namespace Number_Sayer_Bridge
                                         result.AppendThis(GetThirFifSound(dig1));
                                         result.AppendThis(ty);
                                     }
+                                    break;
+                                }
+                            case Language.Esperanto:
+                                {
+                                    if (dig1 != 1)
+                                        result.AppendThis(Say(dig1));
+                                    result.AppendThis(LoadSound("10"));
                                     break;
                                 }
                             case Language.Spanish:
@@ -293,13 +326,14 @@ namespace Number_Sayer_Bridge
                                 break;
                             }
                         case Language.French:
+                        case Language.Esperanto:
                             {
                                 switch (hundred)
                                 {
                                     case 1:
                                         {
                                             result.AppendThis(LoadSound("hundred"));
-                                            if (remainder != 0)
+                                            if (remainder == 1 && language == Language.French)
                                                 result.AppendThis(LoadSound("and"));
                                             break;
                                         }
@@ -327,6 +361,7 @@ namespace Number_Sayer_Bridge
                 {
                     case Language.Spanish:
                     case Language.French:
+                    case Language.Esperanto:
                         {
                             var part1 = value / 1000;
                             var part2 = value % 1000;
@@ -368,6 +403,7 @@ namespace Number_Sayer_Bridge
                                         result.AppendThis(LoadSound("es"));
                                     break;
                             case Language.French:
+                            case Language.Esperanto:
                                     result.AppendThis(LoadSound(placeValues[(n + 1) / 2]).Append(((n + 1) % 2) == 1 ? LoadSound("ard") : LoadSound("on")));
                                     break;
                             default:
@@ -386,7 +422,8 @@ namespace Number_Sayer_Bridge
         {
             English,
             Spanish,
-            French
+            French,
+            Esperanto
         }
     }
 }

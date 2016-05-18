@@ -8,7 +8,11 @@ using GenNum = Bridge.Any<int, BigInteger>;
 
 [External]
 [Name("bigInt")]
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 public class BigInteger
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
 {
     [Template("bigInt({0})")]
     public static extern implicit operator BigInteger (int value);

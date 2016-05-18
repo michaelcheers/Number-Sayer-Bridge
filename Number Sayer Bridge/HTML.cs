@@ -48,6 +48,7 @@ namespace Number_Sayer_Bridge
 
             Document.GetElementById<ButtonElement>("submit").OnClick = Submit;
 
+            language.InnerHTML = "";
             foreach (NumberSayer.Language item in Enum.GetValues(typeof(NumberSayer.Language)))
                 language.AppendChild(new OptionElement
                 {

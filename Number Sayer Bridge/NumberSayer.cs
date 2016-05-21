@@ -116,7 +116,8 @@ namespace Number_Sayer_Bridge
         {
             {Language.English, new[] {"Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
             {Language.Spanish, new[] {"Ana"} },
-            {Language.French,  new[] {"Ben"} }
+            {Language.French,  new[] {"Ben"} },
+            {Language.Esperanto, new[] {"Michael"} }
         };
 
         public static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
@@ -390,7 +391,8 @@ namespace Number_Sayer_Bridge
                 {
                     if (currentVal < 100 && condition && language == Language.English)
                         result.AppendThis(and);
-                    result.AppendThis((currentVal == 1 && language == Language.Spanish) ? LoadSound("one"): Say(currentVal));
+                    if (currentVal != 1 || language == Language.English)
+                        result.AppendThis((currentVal == 1 && language == Language.Spanish) ? LoadSound("one"): Say(currentVal));
                     if (!condition)
                         switch (language)
                         {

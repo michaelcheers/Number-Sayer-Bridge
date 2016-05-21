@@ -413,6 +413,8 @@ namespace Number_Sayer_Bridge
                         }
                 }
                 current /= languageNumberScale;
+                if (current == 1000 && language != Language.English)
+                    return result.Append(Say(value % 1000000));
                 n--;
                 if (current == 0)
                     return result;

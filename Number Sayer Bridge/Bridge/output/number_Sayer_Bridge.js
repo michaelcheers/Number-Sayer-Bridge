@@ -30,10 +30,12 @@
         [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
-        [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]]
+        [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],
+        [Number_Sayer_Bridge.NumberSayer.Language.German, ["Laurie"]]
     ] );
                     this.irregularStarters = Bridge.merge(new Bridge.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Bridge.Int32)(), [
         [Number_Sayer_Bridge.NumberSayer.Language.English, 13],
+        [Number_Sayer_Bridge.NumberSayer.Language.German, 13],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, 16],
         [Number_Sayer_Bridge.NumberSayer.Language.French, 17],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, 10]
@@ -41,6 +43,7 @@
                     this.numberScale = Bridge.merge(new Bridge.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Bridge.Int32)(), [
         [Number_Sayer_Bridge.NumberSayer.Language.English, 1000],
         [Number_Sayer_Bridge.NumberSayer.Language.French, 1000],
+        [Number_Sayer_Bridge.NumberSayer.Language.German, 1000],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, 1000000],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, 1000]
     ] );
@@ -84,6 +87,11 @@
                 case Number_Sayer_Bridge.NumberSayer.Language.French: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("1"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12"), this.loadSound("13"), this.loadSound("14"), this.loadSound("15"), this.loadSound("16")];
+                        break;
+                    }
+                case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                    {
+                        this.smalls = [this.loadSound("0"), this.loadSound("eins"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12")];
                         break;
                     }
                 default: 
@@ -141,11 +149,21 @@
                 case 2: 
                     return this.loadSound("2");
                 case 3: 
-                    return this.getthir();
+                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
+                        return this.getthir();
+                    }
+                    else  {
+                        return this.loadSound("3");
+                    }
                 case 4: 
                     return this.loadSound("4");
                 case 5: 
-                    return this.getfif();
+                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
+                        return this.getfif();
+                    }
+                    else  {
+                        return this.loadSound("5");
+                    }
                 case 6: 
                     return this.loadSound("6");
                 case 7: 
@@ -169,9 +187,10 @@
                             }
                             switch (this.language) {
                                 case Number_Sayer_Bridge.NumberSayer.Language.English: 
+                                case Number_Sayer_Bridge.NumberSayer.Language.German: 
                                     {
                                         result.appendThis(this.getThirFifSound(value.mod(10)));
-                                        result.appendThis(this.loadSound("teen"));
+                                        result.appendThis(this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.German ? "10" : "teen"));
                                         return result;
                                     }
                                 default: 
@@ -191,6 +210,21 @@
                                         result.appendThis(this.getty());
                                     }
                                     break;
+                                }
+                            case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                                {
+                                    if (dig2.neq(0)) {
+                                        result.appendThis(this.getThirFifSound(dig2));
+                                        result.appendThis(this.getand());
+                                    }
+                                    if (dig1.eq(2)) {
+                                        result.appendThis(this.loadSound("20"));
+                                    }
+                                    else  {
+                                        result.appendThis(this.getThirFifSound(dig1));
+                                        result.appendThis(this.getty());
+                                    }
+                                    return result;
                                 }
                             case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
                                 {
@@ -398,7 +432,8 @@
             English: 0,
             Spanish: 1,
             French: 2,
-            Esperanto: 3
+            Esperanto: 3,
+            German: 4
         },
         $enum: true
     });

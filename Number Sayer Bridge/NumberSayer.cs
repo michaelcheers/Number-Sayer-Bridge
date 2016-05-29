@@ -102,6 +102,26 @@ namespace Number_Sayer_Bridge
                         };
                         break;
                     }
+                case Language.German:
+                    {
+                        smalls = new Sound[]
+                        {
+                            LoadSound("0"),
+                            LoadSound("eins"),
+                            LoadSound("2"),
+                            LoadSound("3"),
+                            LoadSound("4"),
+                            LoadSound("5"),
+                            LoadSound("6"),
+                            LoadSound("7"),
+                            LoadSound("8"),
+                            LoadSound("9"),
+                            LoadSound("10"),
+                            LoadSound("11"),
+                            LoadSound("12")
+                        };
+                        break;
+                    }
                 default:
                     break;
             }
@@ -117,12 +137,14 @@ namespace Number_Sayer_Bridge
             {Language.English, new[] {"Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
-            {Language.Esperanto, new[] {"Michael"} }
+            {Language.Esperanto, new[] {"Michael"} },
+            {Language.German, new[] {"Laurie"} }
         };
 
         public static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
         {
             {Language.English, 13 },
+            {Language.German, 13 },
             {Language.Spanish, 16 },
             {Language.French, 17 },
             {Language.Esperanto, 10 }
@@ -137,6 +159,7 @@ namespace Number_Sayer_Bridge
         {
             {Language.English, shortNumberScale },
             {Language.French,  shortNumberScale },
+            {Language.German, shortNumberScale },
             {Language.Spanish,  longNumberScale },
             {Language.Esperanto, shortNumberScale }
         };
@@ -173,11 +196,13 @@ namespace Number_Sayer_Bridge
                 case 2:
                     return LoadSound("2");
                 case 3:
-                    return thir;
+                    if (language == Language.English) return thir;
+                    else return LoadSound("3");
                 case 4:
                     return LoadSound("4");
                 case 5:
-                    return fif;
+                    if (language == Language.English) return fif;
+                    else return LoadSound("5");
                 case 6:
                     return LoadSound("6");
                 case 7:
@@ -209,9 +234,10 @@ namespace Number_Sayer_Bridge
                             switch (language)
                             {
                                 case Language.English:
+                                case Language.German:
                                     {
                                         result.AppendThis(GetThirFifSound(value % 10));
-                                        result.AppendThis(LoadSound("teen"));
+                                        result.AppendThis(LoadSound(language == Language.German ? "10" : "teen"));
                                         return result;
                                     }
                                 default:
@@ -232,6 +258,22 @@ namespace Number_Sayer_Bridge
                                         result.AppendThis(ty);
                                     }
                                     break;
+                                }
+                            case Language.German:
+                                {
+                                    if (dig2 != 0)
+                                    {
+                                        result.AppendThis(GetThirFifSound(dig2));
+                                        result.AppendThis(and);
+                                    }
+                                    if (dig1 == 2)
+                                        result.AppendThis(LoadSound("20"));
+                                    else
+                                    {
+                                        result.AppendThis(GetThirFifSound(dig1));
+                                        result.AppendThis(ty);
+                                    }
+                                    return result;
                                 }
                             case Language.Esperanto:
                                 {
@@ -427,7 +469,8 @@ namespace Number_Sayer_Bridge
             English,
             Spanish,
             French,
-            Esperanto
+            Esperanto,
+            German
         }
     }
 }

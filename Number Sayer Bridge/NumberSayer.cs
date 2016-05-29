@@ -455,8 +455,9 @@ namespace Number_Sayer_Bridge
                         }
                 }
                 current /= languageNumberScale;
-                if (current == 1000 && language != Language.English)
-                    return result.Append(Say(value % 1000000));
+                int valMod1000000;
+                if (current == 1000 && (valMod1000000 = (int)(value % 1000000)) != 0 && language != Language.English)
+                    return result.Append(Say(valMod1000000));
                 n--;
                 if (current == 0)
                     return result;

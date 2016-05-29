@@ -381,8 +381,9 @@
                     }
                 }
                 current = current.over(languageNumberScale);
-                if (current.eq(1000) && this.language !== Number_Sayer_Bridge.NumberSayer.Language.English) {
-                    return result.append(this.say(value.mod(1000000)));
+                var valMod1000000;
+                if (current.eq(1000) && ((valMod1000000 = (value.mod(1000000)).toJSNumber())) !== 0 && this.language !== Number_Sayer_Bridge.NumberSayer.Language.English) {
+                    return result.append(this.say(bigInt(valMod1000000)));
                 }
                 n = (n - 1) | 0;
                 if (current.eq(0)) {

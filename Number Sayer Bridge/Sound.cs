@@ -26,8 +26,7 @@ namespace Number_Sayer_Bridge
 
         public void Play()
         {
-            if (sound.Length > 0)
-            Play(0);
+            if (sound.Length > 0) Play(0);
         }
         
         void Play (int index)
@@ -50,27 +49,24 @@ namespace Number_Sayer_Bridge
 
         public Sound Append(Sound sound)
         {
-            var result = new Audio[this.sound.Length + sound.sound.Length];
-            this.sound.CopyTo(result, 0);
-            sound.sound.CopyTo(result, this.sound.Length);
-            return new Sound(result);
+            return new Sound(this.sound.Concat(sound.sound).As<Audio[]>());
         }
     }
 
     public class Audio
     {
         public Random rnd;
-        public AudioElement[] value;
+        public HTMLAudioElement[] value;
         public string name;
 
-        public Audio(AudioElement[] value, string name = "", Random rnd = null)
+        public Audio(HTMLAudioElement[] value, string name = "", Random rnd = null)
         {
             this.value = value;
             this.rnd = rnd == null ? new Random() : rnd;
             this.name = name;
         }
 
-        public AudioElement audio
+        public HTMLAudioElement audio
         {
             get
             {

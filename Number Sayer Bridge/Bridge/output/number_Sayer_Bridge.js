@@ -10,7 +10,7 @@
             if (rnd === void 0) { rnd = null; }
     
             this.value = value;
-            this.rnd = rnd == null ? new Bridge.Random("constructor") : rnd;
+            this.rnd = rnd == null ? new System.Random("constructor") : rnd;
             this.name = name;
         },
         getaudio: function () {
@@ -26,21 +26,21 @@
             placeValues: null,
             config: {
                 init: function () {
-                    this.knownVoices = Bridge.merge(new Bridge.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
+                    this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
         [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],
         [Number_Sayer_Bridge.NumberSayer.Language.German, ["Laurie"]]
     ] );
-                    this.irregularStarters = Bridge.merge(new Bridge.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Bridge.Int32)(), [
+                    this.irregularStarters = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,System.Int32)(), [
         [Number_Sayer_Bridge.NumberSayer.Language.English, 13],
         [Number_Sayer_Bridge.NumberSayer.Language.German, 13],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, 16],
         [Number_Sayer_Bridge.NumberSayer.Language.French, 17],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, 10]
     ] );
-                    this.numberScale = Bridge.merge(new Bridge.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Bridge.Int32)(), [
+                    this.numberScale = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,System.Int32)(), [
         [Number_Sayer_Bridge.NumberSayer.Language.English, 1000],
         [Number_Sayer_Bridge.NumberSayer.Language.French, 1000],
         [Number_Sayer_Bridge.NumberSayer.Language.German, 1000],
@@ -58,8 +58,8 @@
         alreadyDone: null,
         config: {
             init: function () {
-                this.rnd = new Bridge.Random("constructor");
-                this.alreadyDone = new Bridge.Dictionary$2(String,Number_Sayer_Bridge.Sound)();
+                this.rnd = new System.Random("constructor");
+                this.alreadyDone = new System.Collections.Generic.Dictionary$2(String,Number_Sayer_Bridge.Sound)();
             }
         },
         constructor: function (language, voice) {
@@ -111,36 +111,36 @@
             return this.loadSound("ty");
         },
         loadSound: function (value) {
-            var $t;
+            var $t, $t1;
             if (this.alreadyDone.containsKey(value)) {
                 return this.alreadyDone.get(value);
             }
             var mixedResult = [];
-            var format = "Sounds/" + Bridge.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language) + "/{0}/{1}.wav";
+            var format = "Sounds/" + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language) + "/{0}/{1}.wav";
             try {
                 if (Bridge.referenceEquals(this.voice, "mixed")) {
                     $t = Bridge.getEnumerator(Number_Sayer_Bridge.NumberSayer.knownVoices.get(this.language));
                     while ($t.moveNext()) {
                         var item = $t.getCurrent();
-                        mixedResult.push(new Audio(Bridge.String.format(format, item, value)));
+                        mixedResult.push(new Audio(System.String.format(format, item, value)));
                     }
                 }
                 else  {
-                    mixedResult.push(new Audio(Bridge.String.format(format, this.voice, value)));
+                    mixedResult.push(new Audio(System.String.format(format, this.voice, value)));
                 }
             }
             catch ($e1) {
-                $e1 = Bridge.Exception.create($e1);
+                $e1 = System.Exception.create($e1);
                 var e;
-                if (Bridge.is($e1, Bridge.KeyNotFoundException)) {
+                if (Bridge.is($e1, System.Collections.Generic.KeyNotFoundException)) {
                     e = $e1;
-                    mixedResult.push(new Audio(Bridge.String.format(format, "", "")));
+                    mixedResult.push(new Audio(System.String.format(format, "", "")));
                 }
                 else {
                     throw $e1;
                 }
             }
-            return ((this.alreadyDone.set(value, new Number_Sayer_Bridge.Sound("constructor$1", new Number_Sayer_Bridge.Audio(mixedResult, value, this.rnd))), this.alreadyDone.get(value)));
+            return (($t1 = new Number_Sayer_Bridge.Sound("constructor$1", new Number_Sayer_Bridge.Audio(mixedResult, value, this.rnd)), this.alreadyDone.set(value, $t1), $t1));
         },
         getThirFifSound: function (value) {
             switch (value.toJSNumber()) {
@@ -173,7 +173,7 @@
                 case 9: 
                     return this.loadSound("9");
             }
-            throw new Bridge.ArgumentException(value + " should only be 1 digit.");
+            throw new System.ArgumentException(value + " should only be 1 digit.");
         },
         say: function (value) {
             var result = new Number_Sayer_Bridge.Sound("constructor");
@@ -469,16 +469,13 @@
             this.sound = this.append(sound).sound;
         },
         append: function (sound) {
-            var result = Bridge.Array.init(((this.sound.length + sound.sound.length) | 0), null);
-            Bridge.Array.copy(this.sound, 0, result, 0, this.sound.length);
-            Bridge.Array.copy(sound.sound, 0, result, this.sound.length, sound.sound.length);
-            return new Number_Sayer_Bridge.Sound("constructor$2", result);
+            return new Number_Sayer_Bridge.Sound("constructor$2", this.sound.concat.apply(this.sound, sound.sound));
         }
     });
     
     var $_ = {};
     
-    Bridge.ns("Number_Sayer_Bridge.Sound", $_)
+    Bridge.ns("Number_Sayer_Bridge.Sound", $_);
     
     Bridge.apply($_.Number_Sayer_Bridge.Sound, {
         f1: function (v2) {

@@ -147,19 +147,19 @@ namespace Number_Sayer_Bridge
         {
             if (alreadyDone.ContainsKey(value))
                 return alreadyDone[value];
-            AudioElement[] mixedResult = new AudioElement[] { };
+            HTMLAudioElement[] mixedResult = new HTMLAudioElement[] { };
             string format = "Sounds/" + language.ToString() + "/{0}/{1}.wav";
             try
             {
                 if (Voice == "mixed")
                     foreach (var item in knownVoices[language])
-                        mixedResult.Push(new AudioElement(string.Format(format, item, value)));
+                        mixedResult.Push(new HTMLAudioElement(string.Format(format, item, value)));
                 else
-                    mixedResult.Push(new AudioElement(string.Format(format, Voice, value)));
+                    mixedResult.Push(new HTMLAudioElement(string.Format(format, Voice, value)));
             }
             catch (KeyNotFoundException e)
             {
-                mixedResult.Push(new AudioElement(string.Format(format, "", "")));
+                mixedResult.Push(new HTMLAudioElement(string.Format(format, "", "")));
             }
             return (alreadyDone[value] = new Sound(new Audio(mixedResult, value, rnd)));
         }

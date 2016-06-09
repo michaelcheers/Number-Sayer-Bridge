@@ -12,23 +12,17 @@ namespace Number_Sayer_Bridge
     [FileName("html.js")]
     internal static class HTML
     {
-        private static InputElement number
-        { get { return Document.GetElementById<InputElement>("number"); } }
+        private static extern HTMLInputElement number { [Template("document.getElementById(\"number\")")] get; }
 
-        private static SelectElement voice
-        { get { return Document.GetElementById<SelectElement>("voice"); } }
+        private static extern HTMLSelectElement voice { [Template("document.getElementById(\"voice\")")] get; }
 
-        private static SelectElement language
-        { get { return Document.GetElementById<SelectElement>("language"); } }
+        private static extern HTMLSelectElement language { [Template("document.getElementById(\"language\")")] get; }
 
-        private static NumberSayer.Language currentLanguage
-        { get { return (NumberSayer.Language)language.SelectedIndex; } }
+        private static extern NumberSayer.Language currentLanguage { [Template("document.getElementById(\"language\").selectedIndex")] get; }
 
-        private static string currentVoice
-        { get { return voice.Value; } }
+        private static extern string currentVoice { [Template("document.getElementById(\"voice\").value")] get; }
 
-        private static ParagraphElement said
-        { get { return Document.GetElementById<ParagraphElement>("said"); } }
+        private static extern HTMLParagraphElement said { [Template("document.getElementById(\"said\")")] get; }
 
         [Ready]
         private static void Start()
@@ -41,16 +35,13 @@ namespace Number_Sayer_Bridge
                 }
             };
 
-            language.OnChange = (ev) =>
-            {
-                Update();
-            };
+            language.OnChange = (ev) => Update();
 
-            Document.GetElementById<ButtonElement>("submit").OnClick = Submit;
+            Document.GetElementById<HTMLButtonElement>("submit").OnClick = Submit;
 
             language.InnerHTML = "";
             foreach (NumberSayer.Language item in Enum.GetValues(typeof(NumberSayer.Language)))
-                language.AppendChild(new OptionElement
+                language.AppendChild(new HTMLOptionElement
                 {
                     Value = item.ToString(),
                     InnerHTML = item.ToString()
@@ -62,36 +53,31 @@ namespace Number_Sayer_Bridge
 
         private static Dictionary<string, NumberSayer> sayers = new Dictionary<string, NumberSayer>();
 
-        private static void Submit(MouseEvent<ButtonElement> arg)
+        private static void Submit(MouseEvent<HTMLButtonElement> arg)
         {
             var key = currentVoice + currentLanguage.ToString();
             NumberSayer sayer;
+            
+            sayer = sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
 
-            if (sayers.ContainsKey(key))
-                sayer = sayers[key];
-            else
-                sayer = (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
-
-            var sound = sayer.Say(new BigInteger(Document.GetElementById<InputElement>("number").Value));
+            var sound = sayer.Say(new BigInteger(Document.GetElementById<HTMLInputElement>("number").Value));
             sound.Play();
-            List<string> saidString = new List<string>();
-            sound.sound.ForEach(v => saidString.Add(v.name));
-            said.InnerHTML = saidString.Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
+            said.InnerHTML = Array.ConvertAll(sound.sound, v => v.name).Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
         }
 
         private static void Update()
         {
             voice.InnerHTML = "";
-            var currentKnownVoices = NumberSayer.knownVoices[(NumberSayer.Language)language.SelectedIndex];
+            var currentKnownVoices = NumberSayer.knownVoices[currentLanguage];
 
             foreach (var item in currentKnownVoices)
-                voice.AppendChild(new OptionElement
+                voice.AppendChild(new HTMLOptionElement
                 {
                     Value = item.ToString(),
                     InnerHTML = item.ToString()
                 });
 
-            voice.AppendChild(new OptionElement
+            voice.AppendChild(new HTMLOptionElement
             {
                 Value = "mixed",
                 InnerHTML = "Mixed"

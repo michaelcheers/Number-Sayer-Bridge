@@ -8,14 +8,15 @@
         constructor: function (value, name, rnd) {
             if (name === void 0) { name = ""; }
             if (rnd === void 0) { rnd = null; }
+            var $t;
     
             this.value = value;
-            this.rnd = rnd == null ? new System.Random("constructor") : rnd;
+            this.rnd = ($t = rnd, $t != null ? $t : new System.Random("constructor"));
             this.name = name;
-        },
-        getaudio: function () {
-            return this.value[this.rnd.next$1(this.value.length)];
-        }
+    },
+    getaudio: function () {
+        return this.value[this.rnd.next$1(this.value.length)];
+    }
     });
     
     Bridge.define('Number_Sayer_Bridge.NumberSayer', {

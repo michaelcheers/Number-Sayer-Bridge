@@ -62,7 +62,7 @@ namespace Number_Sayer_Bridge
         public Audio(HTMLAudioElement[] value, string name = "", Random rnd = null)
         {
             this.value = value;
-            this.rnd = rnd == null ? new Random() : rnd;
+            this.rnd = rnd ?? new Random();
             this.name = name;
         }
 

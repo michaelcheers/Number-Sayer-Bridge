@@ -10,12 +10,12 @@ namespace Number_Sayer_Bridge
     {
         public Language language;
         public Sound[] smalls;
-        public string Voice;
+        public string voice;
 
         public NumberSayer(Language language = Language.English, string voice = "Michael")
         {
             this.language = language;
-            Voice = voice;
+            this.voice = voice;
             switch (language)
             {
                 case Language.Esperanto:
@@ -151,11 +151,11 @@ namespace Number_Sayer_Bridge
             string format = "Sounds/" + language.ToString() + "/{0}/{1}.wav";
             try
             {
-                if (Voice == "mixed")
+                if (voice == "mixed")
                     foreach (var item in knownVoices[language])
                         mixedResult.Push(new HTMLAudioElement(string.Format(format, item, value)));
                 else
-                    mixedResult.Push(new HTMLAudioElement(string.Format(format, Voice, value)));
+                    mixedResult.Push(new HTMLAudioElement(string.Format(format, voice, value)));
             }
             catch (KeyNotFoundException e)
             {

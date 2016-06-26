@@ -55,12 +55,12 @@ namespace Number_Sayer_Bridge
 
         private static void Submit(MouseEvent<HTMLButtonElement> arg)
         {
-            var key = currentVoice + currentLanguage.ToString();
+            string key = currentVoice + currentLanguage.ToString();
             NumberSayer sayer;
             
             sayer = sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
 
-            var sound = sayer.Say(new BigInteger(Document.GetElementById<HTMLInputElement>("number").Value));
+            Sound sound = sayer.Say(new BigInteger(Document.GetElementById<HTMLInputElement>("number").Value));
             sound.Play();
             said.InnerHTML = Array.ConvertAll(sound.sound, v => v.name).Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
         }
@@ -68,9 +68,9 @@ namespace Number_Sayer_Bridge
         private static void Update()
         {
             voice.InnerHTML = "";
-            var currentKnownVoices = NumberSayer.knownVoices[currentLanguage];
+            string[] currentKnownVoices = NumberSayer.knownVoices[currentLanguage];
 
-            foreach (var item in currentKnownVoices)
+            foreach (string item in currentKnownVoices)
                 voice.AppendChild(new HTMLOptionElement
                 {
                     Value = item.ToString(),

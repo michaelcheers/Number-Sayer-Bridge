@@ -95,8 +95,6 @@
                         this.smalls = [this.loadSound("0"), this.loadSound("eins"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12")];
                         break;
                     }
-                default: 
-                    break;
             }
         },
         getthir: function () {
@@ -117,7 +115,7 @@
                 return this.alreadyDone.get(value);
             }
             var mixedResult = [];
-            var format = "Sounds/" + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language) + "/{0}/{1}.wav";
+            var format = "Sounds/" + this.language + "/{0}/{1}.wav";
             try {
                 if (Bridge.referenceEquals(this.voice, "mixed")) {
                     $t = Bridge.getEnumerator(Number_Sayer_Bridge.NumberSayer.knownVoices.get(this.language));
@@ -132,9 +130,7 @@
             }
             catch ($e1) {
                 $e1 = System.Exception.create($e1);
-                var e;
                 if (Bridge.is($e1, System.Collections.Generic.KeyNotFoundException)) {
-                    e = $e1;
                     mixedResult.push(new Audio(System.String.format(format, "", "")));
                 }
                 else {
@@ -153,18 +149,14 @@
                     if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
                         return this.getthir();
                     }
-                    else  {
-                        return this.loadSound("3");
-                    }
+                    return this.loadSound("3");
                 case 4: 
                     return this.loadSound("4");
                 case 5: 
                     if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
                         return this.getfif();
                     }
-                    else  {
-                        return this.loadSound("5");
-                    }
+                    return this.loadSound("5");
                 case 6: 
                     return this.loadSound("6");
                 case 7: 
@@ -194,8 +186,6 @@
                                         result.appendThis(this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.German ? "10" : "teen"));
                                         return result;
                                     }
-                                default: 
-                                    break;
                             }
                         }
                         var dig1 = value.over(10);
@@ -269,8 +259,6 @@
                                     }
                                     break;
                                 }
-                            default: 
-                                break;
                         }
                         if (dig2.neq(0)) {
                             result.appendThis(this.say(dig2));
@@ -282,6 +270,7 @@
                     var remainder = value.mod(100);
                     switch (this.language) {
                         case Number_Sayer_Bridge.NumberSayer.Language.English: 
+                        case Number_Sayer_Bridge.NumberSayer.Language.German: 
                             {
                                 result.appendThis(this.say(bigInt(hundred)));
                                 result.appendThis(this.loadSound("hundred"));
@@ -292,12 +281,7 @@
                                 switch (hundred) {
                                     case 1: 
                                         {
-                                            if (remainder.eq(0)) {
-                                                result.appendThis(this.loadSound("100"));
-                                            }
-                                            else  {
-                                                result.appendThis(this.loadSound("ciento"));
-                                            }
+                                            result.appendThis(remainder.eq(0) ? this.loadSound("100") : this.loadSound("ciento"));
                                             break;
                                         }
                                     case 5: 
@@ -345,8 +329,6 @@
                                 }
                                 break;
                             }
-                        default: 
-                            break;
                     }
                     if (remainder.neq(0)) {
                         if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
@@ -361,6 +343,7 @@
                     case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
                     case Number_Sayer_Bridge.NumberSayer.Language.French: 
                     case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                    case Number_Sayer_Bridge.NumberSayer.Language.German: 
                         {
                             var part1 = value.over(1000);
                             var part2 = value.mod(1000);
@@ -373,8 +356,6 @@
                             }
                             return result;
                         }
-                    default: 
-                        break;
                 }
             }
             var current = bigInt(1);
@@ -408,9 +389,8 @@
                                 break;
                             case Number_Sayer_Bridge.NumberSayer.Language.French: 
                             case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                            case Number_Sayer_Bridge.NumberSayer.Language.German: 
                                 result.appendThis(this.loadSound(Number_Sayer_Bridge.NumberSayer.placeValues[((Bridge.Int.div((((n + 1) | 0)), 2)) | 0)]).append(((((n + 1) | 0)) % 2) === 1 ? this.loadSound("ard") : this.loadSound("on")));
-                                break;
-                            default: 
                                 break;
                         }
                     }

@@ -137,7 +137,7 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
+            {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} },
@@ -178,7 +178,7 @@ namespace Number_Sayer_Bridge
             try
             {
                 if (voice == "mixed")
-                    foreach (string item in knownVoices[language])
+                    foreach (var item in knownVoices[language])
                         mixedResult.Push(new HTMLAudioElement(string.Format(format, item, value)));
                 else
                     mixedResult.Push(new HTMLAudioElement(string.Format(format, voice, value)));

@@ -4,6 +4,7 @@ using Bridge.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -60,7 +61,7 @@ namespace Number_Sayer_Bridge
             
             sayer = sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
 
-            Sound sound = sayer.Say(new BigInteger(Document.GetElementById<HTMLInputElement>("number").Value));
+            Sound sound = sayer.Say(BigInteger.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
             sound.Play();
             said.InnerHTML = Array.ConvertAll(sound.sound, v => v.name).Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
         }

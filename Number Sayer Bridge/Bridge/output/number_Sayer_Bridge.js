@@ -67,6 +67,9 @@
             if (language === void 0) { language = 0; }
             if (voice === void 0) { voice = "Michael"; }
     
+            if (!System.Enum.isDefined(Number_Sayer_Bridge.NumberSayer.Language, language)) {
+                throw new System.ArgumentOutOfRangeException("language", "Value should be defined in the Language enum.");
+            }
             this.language = language;
             this.voice = voice;
             switch (language) {

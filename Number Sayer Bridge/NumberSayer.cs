@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Bridge;
 using Bridge.Html5;
+using System.Numerics;
 
 namespace Number_Sayer_Bridge
 {
@@ -10,11 +11,13 @@ namespace Number_Sayer_Bridge
     public class NumberSayer
     {
         public Language language;
-        readonly Sound[] smalls;
+        private readonly Sound[] smalls;
         public string voice;
 
         public NumberSayer(Language language = Language.English, string voice = "Michael")
         {
+            if (!Enum.IsDefined(typeof(Language), language))
+                throw new ArgumentOutOfRangeException("language", "Value should be defined in the Language enum.");
             this.language = language;
             this.voice = voice;
             switch (language)
@@ -151,9 +154,9 @@ namespace Number_Sayer_Bridge
         };
 
         [InlineConst]
-        public const int shortNumberScale = 1000   ;
+        const int shortNumberScale = 1000   ;
         [InlineConst]
-        public const int  longNumberScale = 1000000;
+        const int  longNumberScale = 1000000;
 
         public static readonly Dictionary<Language, int> numberScale = new Dictionary<Language, int>
         {

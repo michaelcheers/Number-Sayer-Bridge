@@ -1,26 +1,30 @@
-﻿using Bridge;
-using Bridge.Html5;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Bridge;
+using Bridge.Html5;
+using System.Numerics;
 
 namespace Number_Sayer_Bridge
 {
     using Number = BigInteger;
-    class NumberSayer
+
+    public class NumberSayer
     {
         public Language language;
-        public Sound[] smalls;
+        private readonly Sound[] smalls;
         public string voice;
 
         public NumberSayer(Language language = Language.English, string voice = "Michael")
         {
+            if (!Enum.IsDefined(typeof(Language), language))
+                throw new ArgumentOutOfRangeException("language", "Value should be defined in the Language enum.");
             this.language = language;
             this.voice = voice;
             switch (language)
             {
                 case Language.Esperanto:
                     {
-                        smalls = new Sound[]
+                        smalls = new[]
                         {
                             LoadSound("0"),
                             LoadSound("1"),
@@ -37,7 +41,7 @@ namespace Number_Sayer_Bridge
                     }
                 case Language.English:
                     {
-                        smalls = new Sound[]
+                        smalls = new[]
                         {
                             LoadSound("0"),
                             LoadSound("1"),
@@ -57,7 +61,7 @@ namespace Number_Sayer_Bridge
                     }
                 case Language.Spanish:
                     {
-                        smalls = new Sound[]
+                        smalls = new[]
                         {
                             LoadSound("0"),
                             LoadSound("1"),
@@ -80,7 +84,7 @@ namespace Number_Sayer_Bridge
                     }
                 case Language.French:
                     {
-                        smalls = new Sound[]
+                        smalls = new[]
                         {
                             LoadSound("0"),
                             LoadSound("1"),
@@ -102,41 +106,63 @@ namespace Number_Sayer_Bridge
                         };
                         break;
                     }
-                default:
-                    break;
+                case Language.German:
+                    {
+                        smalls = new[]
+                        {
+                            LoadSound("0"),
+                            LoadSound("eins"),
+                            LoadSound("2"),
+                            LoadSound("3"),
+                            LoadSound("4"),
+                            LoadSound("5"),
+                            LoadSound("6"),
+                            LoadSound("7"),
+                            LoadSound("8"),
+                            LoadSound("9"),
+                            LoadSound("10"),
+                            LoadSound("11"),
+                            LoadSound("12")
+                        };
+                        break;
+                    }
             }
         }
 
-        public Sound thir { get { return LoadSound("thir"); } }
-        public Sound fif { get { return LoadSound("fif"); } }
-        public Sound and { get { return LoadSound("and"); } }
-        public Sound ty { get { return LoadSound("ty"); } }
-        public readonly Random rnd = new Random();
+        Sound thir { get { return LoadSound("thir"); } }
+        Sound fif { get { return LoadSound("fif"); } }
+        Sound and { get { return LoadSound("and"); } }
+        Sound ty { get { return LoadSound("ty"); } }
+        readonly Random rnd = new Random();
+
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
             {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
-            {Language.Esperanto, new[] {"Michael"} }
+            {Language.Esperanto, new[] {"Michael"} },
+            {Language.German, new[] {"Laurie"} }
         };
 
-        public static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
+        private static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
         {
             {Language.English, 13 },
+            {Language.German, 13 },
             {Language.Spanish, 16 },
             {Language.French, 17 },
             {Language.Esperanto, 10 }
         };
 
         [InlineConst]
-        public const int shortNumberScale = 1000   ;
+        const int shortNumberScale = 1000   ;
         [InlineConst]
-        public const int  longNumberScale = 1000000;
+        const int  longNumberScale = 1000000;
 
         public static readonly Dictionary<Language, int> numberScale = new Dictionary<Language, int>
         {
             {Language.English, shortNumberScale },
             {Language.French,  shortNumberScale },
+            {Language.German, shortNumberScale },
             {Language.Spanish,  longNumberScale },
             {Language.Esperanto, shortNumberScale }
         };
@@ -147,7 +173,7 @@ namespace Number_Sayer_Bridge
         {
             if (alreadyDone.ContainsKey(value))
                 return alreadyDone[value];
-            HTMLAudioElement[] mixedResult = new HTMLAudioElement[] { };
+            HTMLAudioElement[] mixedResult = { };
             string format = "Sounds/" + language.ToString() + "/{0}/{1}.wav";
             try
             {
@@ -157,7 +183,7 @@ namespace Number_Sayer_Bridge
                 else
                     mixedResult.Push(new HTMLAudioElement(string.Format(format, voice, value)));
             }
-            catch (KeyNotFoundException e)
+            catch (KeyNotFoundException)
             {
                 mixedResult.Push(new HTMLAudioElement(string.Format(format, "", "")));
             }
@@ -173,11 +199,13 @@ namespace Number_Sayer_Bridge
                 case 2:
                     return LoadSound("2");
                 case 3:
-                    return thir;
+                    if (language == Language.English) return thir;
+                    return LoadSound("3");
                 case 4:
                     return LoadSound("4");
                 case 5:
-                    return fif;
+                    if (language == Language.English) return fif;
+                    return LoadSound("5");
                 case 6:
                     return LoadSound("6");
                 case 7:
@@ -209,17 +237,16 @@ namespace Number_Sayer_Bridge
                             switch (language)
                             {
                                 case Language.English:
+                                case Language.German:
                                     {
                                         result.AppendThis(GetThirFifSound(value % 10));
-                                        result.AppendThis(LoadSound("teen"));
+                                        result.AppendThis(LoadSound(language == Language.German ? "10" : "teen"));
                                         return result;
                                     }
-                                default:
-                                    break;
                             }
                         }
-                        var dig1 = value / 10;
-                        var dig2 = value % 10;
+                        BigInteger dig1 = value / 10;
+                        BigInteger dig2 = value % 10;
                         switch (language)
                         {
                             case Language.English:
@@ -232,6 +259,24 @@ namespace Number_Sayer_Bridge
                                         result.AppendThis(ty);
                                     }
                                     break;
+                                }
+                            case Language.German:
+                                {
+                                    if (dig2 != 0)
+                                    {
+                                        result.AppendThis(GetThirFifSound(dig2));
+                                        result.AppendThis(and);
+                                    }
+                                    if (dig1 == 2)
+                                        result.AppendThis(LoadSound("20"));
+                                    else if (dig1 == 7)
+                                        result.AppendThis(LoadSound("70"));
+                                    else
+                                    {
+                                        result.AppendThis(GetThirFifSound(dig1));
+                                        result.AppendThis(ty);
+                                    }
+                                    return result;
                                 }
                             case Language.Esperanto:
                                 {
@@ -250,7 +295,7 @@ namespace Number_Sayer_Bridge
                             case Language.French:
                                 {
                                     int dig120 = (int)value / 20;
-                                    var dig220 = value % 20;
+                                    BigInteger dig220 = value % 20;
                                     switch (dig120)
                                     {
                                         case 3:
@@ -272,8 +317,6 @@ namespace Number_Sayer_Bridge
                                     }
                                     break;
                                 }
-                            default:
-                                break;
                         }
                         if (dig2 != 0)
                             result.AppendThis(Say(dig2));
@@ -281,10 +324,11 @@ namespace Number_Sayer_Bridge
                     }
 
                     int hundred = (int)(value / 100);
-                    var remainder = value % 100;
+                    BigInteger remainder = value % 100;
                     switch (language)
                     {
                         case Language.English:
+                        case Language.German:
                             {
                                 result.AppendThis(Say(hundred));
                                 result.AppendThis(LoadSound("hundred"));
@@ -295,13 +339,10 @@ namespace Number_Sayer_Bridge
                                 switch (hundred)
                                 {
                                     case 1:
-                                        {
-                                            if (remainder == 0)
-                                                result.AppendThis(LoadSound("100"));
-                                            else
-                                                result.AppendThis(LoadSound("ciento"));
-                                            break;
-                                        }
+                                    {
+                                        result.AppendThis(remainder == 0 ? LoadSound("100") : LoadSound("ciento"));
+                                        break;
+                                    }
                                     case 5:
                                         {
                                             result.AppendThis(LoadSound("500"));
@@ -347,8 +388,6 @@ namespace Number_Sayer_Bridge
                                 }
                                 break;
                             }
-                        default:
-                            break;
                     }
                     if (remainder != 0)
                     {
@@ -363,9 +402,10 @@ namespace Number_Sayer_Bridge
                     case Language.Spanish:
                     case Language.French:
                     case Language.Esperanto:
+                    case Language.German:
                         {
-                            var part1 = value / 1000;
-                            var part2 = value % 1000;
+                            Number part1 = value / 1000;
+                            Number part2 = value % 1000;
                             if (part1 != 1)
                                 result.AppendThis(Say(part1));
                             result.AppendThis(LoadSound("thousand"));
@@ -373,8 +413,6 @@ namespace Number_Sayer_Bridge
                                 result.AppendThis(Say(part2));
                             return result;
                         }
-                    default:
-                        break;
                 }
             }
             Number current = 1;
@@ -385,8 +423,8 @@ namespace Number_Sayer_Bridge
             current /= languageNumberScale;
             while (true)
             {
-                var condition = n == -1;
-                var currentVal = (value / current) % languageNumberScale;
+                bool condition = n == -1;
+                Number currentVal = (value / current) % languageNumberScale;
                 if (currentVal != 0)
                 {
                     if (currentVal < 100 && condition && language == Language.English)
@@ -406,10 +444,9 @@ namespace Number_Sayer_Bridge
                                     break;
                             case Language.French:
                             case Language.Esperanto:
+                            case Language.German:
                                     result.AppendThis(LoadSound(placeValues[(n + 1) / 2]).Append(((n + 1) % 2) == 1 ? LoadSound("ard") : LoadSound("on")));
                                     break;
-                            default:
-                                break;
                         }
                 }
                 current /= languageNumberScale;
@@ -422,13 +459,14 @@ namespace Number_Sayer_Bridge
             }
         }
 
-        static string[] placeValues = new string[] { "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sedecillion", "septendecillion", "octodecillion", "novendecillion", "vigintillion" };
+        static readonly string[] placeValues = { "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sedecillion", "septendecillion", "octodecillion", "novendecillion", "vigintillion" };
         public enum Language
         {
             English,
             Spanish,
             French,
-            Esperanto
+            Esperanto,
+            German
         }
     }
 }

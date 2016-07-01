@@ -38,7 +38,7 @@
     
                 sayer = Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new Number_Sayer_Bridge.NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
     
-                var sound = sayer.say(bigInt(document.getElementById("number").value));
+                var sound = sayer.say(bigInt(document.getElementById("number").value, 10));
                 sound.play();
                 document.getElementById("said").innerHTML = System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.Array.convertAll(sound.sound, $_.Number_Sayer_Bridge.HTML.f3).join(" "), " es", "es"), " ty", "ty"), " teen", "teen");
             },

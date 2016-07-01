@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Number_Sayer_Bridge
 {
-    internal class Sound
+    public class Sound
     {
         internal Audio[] sound;
 
@@ -31,8 +31,8 @@ namespace Number_Sayer_Bridge
         
         void Play (int index)
         {
-            var audio = sound[index];
-            var audioActual = audio.audio;
+            Audio audio = sound[index];
+            HTMLAudioElement audioActual = audio.audio;
             if (sound.Length != ++index)
                 audioActual.OnEnded = v => 
                 {

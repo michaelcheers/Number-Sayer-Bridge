@@ -269,6 +269,8 @@ namespace Number_Sayer_Bridge
                                     }
                                     if (dig1 == 2)
                                         result.AppendThis(LoadSound("20"));
+                                    else if (dig1 == 7)
+                                        result.AppendThis(LoadSound("70"));
                                     else
                                     {
                                         result.AppendThis(GetThirFifSound(dig1));

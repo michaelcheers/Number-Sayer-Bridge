@@ -215,8 +215,13 @@
                                         result.appendThis(this.loadSound("20"));
                                     }
                                     else  {
-                                        result.appendThis(this.getThirFifSound(dig1));
-                                        result.appendThis(this.getty());
+                                        if (dig1.eq(7)) {
+                                            result.appendThis(this.loadSound("70"));
+                                        }
+                                        else  {
+                                            result.appendThis(this.getThirFifSound(dig1));
+                                            result.appendThis(this.getty());
+                                        }
                                     }
                                     return result;
                                 }

@@ -114,7 +114,7 @@ namespace Number_Sayer_Bridge
         public readonly Random rnd = new Random();
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
+            {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} }

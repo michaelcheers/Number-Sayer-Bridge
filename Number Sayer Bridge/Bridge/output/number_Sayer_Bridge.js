@@ -118,7 +118,7 @@
                 return this.alreadyDone.get(value);
             }
             var mixedResult = [];
-            var format = "Sounds/" + this.language + "/{0}/{1}.wav";
+            var format = "Sounds/" + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language) + "/{0}/{1}.wav";
             try {
                 if (Bridge.referenceEquals(this.voice, "mixed")) {
                     $t = Bridge.getEnumerator(Number_Sayer_Bridge.NumberSayer.knownVoices.get(this.language));

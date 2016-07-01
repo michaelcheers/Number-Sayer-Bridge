@@ -174,7 +174,7 @@ namespace Number_Sayer_Bridge
             if (alreadyDone.ContainsKey(value))
                 return alreadyDone[value];
             HTMLAudioElement[] mixedResult = { };
-            string format = "Sounds/" + language + "/{0}/{1}.wav";
+            string format = "Sounds/" + language.ToString() + "/{0}/{1}.wav";
             try
             {
                 if (voice == "mixed")

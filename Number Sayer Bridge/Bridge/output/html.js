@@ -93,7 +93,7 @@
                 Number_Sayer_Bridge.HTML.submit(null);
             }
         },
-        f2: function (ev) {
+        f2: function (e) {
             Number_Sayer_Bridge.HTML.update();
         },
         f3: function (index) {

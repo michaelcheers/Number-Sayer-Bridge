@@ -36,7 +36,7 @@ namespace Number_Sayer_Bridge
                 }
             };
 
-            language.OnChange = (ev) => Update();
+            language.OnChange = e => Update();
 
             Document.GetElementById<HTMLButtonElement>("submit").OnClick = Submit;
 

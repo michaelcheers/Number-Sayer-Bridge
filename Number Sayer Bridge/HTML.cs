@@ -62,8 +62,23 @@ namespace Number_Sayer_Bridge
             sayer = sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
 
             Sound sound = sayer.Say(BigInteger.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
-            sound.Play();
-            said.InnerHTML = Array.ConvertAll(sound.sound, v => v.name).Join(" ").Replace(" es", "es").Replace(" ty", "ty").Replace(" teen", "teen");
+            said.InnerHTML = "";
+            for (int n = 0; n < sound.sound.Length; n++)
+            {
+                var name = sound.sound[n].name;
+                switch (name)
+                {
+                    case "es":
+                    case "ty":
+                    case "teen":
+                        break;
+                    default:
+                        said.AppendChild(new HTMLSpanElement { InnerHTML = " " });
+                        break;
+                }
+                said.AppendChild(new HTMLSpanElement { Id = "s" + n, InnerHTML = name });
+            }
+            sound.Play(index => Document.GetElementById("s" + index).Style.Color = HTMLColor.Red);
         }
 
         private static void Update()

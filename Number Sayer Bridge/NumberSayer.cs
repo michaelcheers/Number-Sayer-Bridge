@@ -199,17 +199,15 @@ namespace Number_Sayer_Bridge
                 case 2:
                     return LoadSound("2");
                 case 3:
-                    if (language == Language.English) return thir;
-                    return LoadSound("3");
+                    return language == Language.English ? thir : LoadSound("3");
                 case 4:
                     return LoadSound("4");
                 case 5:
-                    if (language == Language.English) return fif;
-                    return LoadSound("5");
+                    return language == Language.English ? fif : LoadSound("5");
                 case 6:
                     return LoadSound("6");
                 case 7:
-                    return LoadSound("7");
+                    return language == Language.English ? LoadSound("7") : LoadSound("sieb");
                 case 8:
                     return LoadSound("8");
                 case 9:
@@ -245,38 +243,28 @@ namespace Number_Sayer_Bridge
                                     }
                             }
                         }
-                        BigInteger dig1 = value / 10;
-                        BigInteger dig2 = value % 10;
+                        int dig1 = (int)(value / 10);
+                        int dig2 = (int)(value % 10);
                         switch (language)
                         {
                             case Language.English:
-                                {
-                                    if (dig1 == 2)
-                                        result.AppendThis(LoadSound("20"));
-                                    else
-                                    {
-                                        result.AppendThis(GetThirFifSound(dig1));
-                                        result.AppendThis(ty);
-                                    }
-                                    break;
-                                }
                             case Language.German:
                                 {
-                                    if (dig2 != 0)
+                                    if (language == Language.German && dig2 != 0)
                                     {
-                                        result.AppendThis(GetThirFifSound(dig2));
+                                        result.AppendThis(GetEinSound(dig2));
                                         result.AppendThis(and);
                                     }
                                     if (dig1 == 2)
                                         result.AppendThis(LoadSound("20"));
-                                    else if (dig1 == 7)
-                                        result.AppendThis(LoadSound("70"));
                                     else
                                     {
                                         result.AppendThis(GetThirFifSound(dig1));
                                         result.AppendThis(ty);
                                     }
-                                    return result;
+                                    if (language == Language.German)
+                                        return result;
+                                    break;
                                 }
                             case Language.Esperanto:
                                 {
@@ -324,13 +312,14 @@ namespace Number_Sayer_Bridge
                     }
 
                     int hundred = (int)(value / 100);
-                    BigInteger remainder = value % 100;
+                    int remainder = (int)(value % 100);
                     switch (language)
                     {
                         case Language.English:
                         case Language.German:
                             {
-                                result.AppendThis(Say(hundred));
+                                if (language == Language.English || hundred != 1)
+                                    result.AppendThis(Say(hundred));
                                 result.AppendThis(LoadSound("hundred"));
                                 break;
                             }
@@ -457,6 +446,11 @@ namespace Number_Sayer_Bridge
                 if (current == 0)
                     return result;
             }
+        }
+
+        private Sound GetEinSound(int dig2)
+        {
+            return dig2 == 1 ? LoadSound("1") : Say(dig2);
         }
 
         static readonly string[] placeValues = { "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sedecillion", "septendecillion", "octodecillion", "novendecillion", "vigintillion" };

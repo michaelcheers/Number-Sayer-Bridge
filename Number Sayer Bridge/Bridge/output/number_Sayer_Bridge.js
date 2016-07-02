@@ -149,21 +149,15 @@
                 case 2: 
                     return this.loadSound("2");
                 case 3: 
-                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
-                        return this.getthir();
-                    }
-                    return this.loadSound("3");
+                    return this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? this.getthir() : this.loadSound("3");
                 case 4: 
                     return this.loadSound("4");
                 case 5: 
-                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
-                        return this.getfif();
-                    }
-                    return this.loadSound("5");
+                    return this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? this.getfif() : this.loadSound("5");
                 case 6: 
                     return this.loadSound("6");
                 case 7: 
-                    return this.loadSound("7");
+                    return this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? this.loadSound("7") : this.loadSound("sieb");
                 case 8: 
                     return this.loadSound("8");
                 case 9: 
@@ -191,44 +185,32 @@
                                     }
                             }
                         }
-                        var dig1 = value.over(10);
-                        var dig2 = value.mod(10);
+                        var dig1 = (value.over(10)).toJSNumber();
+                        var dig2 = (value.mod(10)).toJSNumber();
                         switch (this.language) {
                             case Number_Sayer_Bridge.NumberSayer.Language.English: 
+                            case Number_Sayer_Bridge.NumberSayer.Language.German: 
                                 {
-                                    if (dig1.eq(2)) {
+                                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.German && dig2 !== 0) {
+                                        result.appendThis(this.getEinSound(dig2));
+                                        result.appendThis(this.getand());
+                                    }
+                                    if (dig1 === 2) {
                                         result.appendThis(this.loadSound("20"));
                                     }
                                     else  {
-                                        result.appendThis(this.getThirFifSound(dig1));
+                                        result.appendThis(this.getThirFifSound(bigInt(dig1)));
                                         result.appendThis(this.getty());
+                                    }
+                                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.German) {
+                                        return result;
                                     }
                                     break;
                                 }
-                            case Number_Sayer_Bridge.NumberSayer.Language.German: 
-                                {
-                                    if (dig2.neq(0)) {
-                                        result.appendThis(this.getThirFifSound(dig2));
-                                        result.appendThis(this.getand());
-                                    }
-                                    if (dig1.eq(2)) {
-                                        result.appendThis(this.loadSound("20"));
-                                    }
-                                    else  {
-                                        if (dig1.eq(7)) {
-                                            result.appendThis(this.loadSound("70"));
-                                        }
-                                        else  {
-                                            result.appendThis(this.getThirFifSound(dig1));
-                                            result.appendThis(this.getty());
-                                        }
-                                    }
-                                    return result;
-                                }
                             case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
                                 {
-                                    if (dig1.neq(1)) {
-                                        result.appendThis(this.say(dig1));
+                                    if (dig1 !== 1) {
+                                        result.appendThis(this.say(bigInt(dig1)));
                                     }
                                     result.appendThis(this.loadSound("10"));
                                     break;
@@ -236,7 +218,7 @@
                             case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
                                 {
                                     result.appendThis(this.loadSound(dig1 + "0"));
-                                    if (dig2.neq(0)) {
+                                    if (dig2 !== 0) {
                                         result.appendThis(this.getand());
                                     }
                                     break;
@@ -259,7 +241,7 @@
                                         default: 
                                             {
                                                 result.appendThis(this.loadSound(dig1 + "0"));
-                                                if (dig2.eq(1)) {
+                                                if (dig2 === 1) {
                                                     result.appendThis(this.getand());
                                                 }
                                                 break;
@@ -268,19 +250,21 @@
                                     break;
                                 }
                         }
-                        if (dig2.neq(0)) {
-                            result.appendThis(this.say(dig2));
+                        if (dig2 !== 0) {
+                            result.appendThis(this.say(bigInt(dig2)));
                         }
                         return result;
                     }
     
                     var hundred = (value.over(100)).toJSNumber();
-                    var remainder = value.mod(100);
+                    var remainder = (value.mod(100)).toJSNumber();
                     switch (this.language) {
                         case Number_Sayer_Bridge.NumberSayer.Language.English: 
                         case Number_Sayer_Bridge.NumberSayer.Language.German: 
                             {
-                                result.appendThis(this.say(bigInt(hundred)));
+                                if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English || hundred !== 1) {
+                                    result.appendThis(this.say(bigInt(hundred)));
+                                }
                                 result.appendThis(this.loadSound("hundred"));
                                 break;
                             }
@@ -289,7 +273,7 @@
                                 switch (hundred) {
                                     case 1: 
                                         {
-                                            result.appendThis(remainder.eq(0) ? this.loadSound("100") : this.loadSound("ciento"));
+                                            result.appendThis(remainder === 0 ? this.loadSound("100") : this.loadSound("ciento"));
                                             break;
                                         }
                                     case 5: 
@@ -323,7 +307,7 @@
                                     case 1: 
                                         {
                                             result.appendThis(this.loadSound("hundred"));
-                                            if (remainder.eq(1) && this.language === Number_Sayer_Bridge.NumberSayer.Language.French) {
+                                            if (remainder === 1 && this.language === Number_Sayer_Bridge.NumberSayer.Language.French) {
                                                 result.appendThis(this.loadSound("and"));
                                             }
                                             break;
@@ -338,11 +322,11 @@
                                 break;
                             }
                     }
-                    if (remainder.neq(0)) {
+                    if (remainder !== 0) {
                         if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
                             result.appendThis(this.getand());
                         }
-                        result.appendThis(this.say(remainder));
+                        result.appendThis(this.say(bigInt(remainder)));
                     }
                     ;
                     return result;
@@ -413,6 +397,9 @@
                     return result;
                 }
             }
+        },
+        getEinSound: function (dig2) {
+            return dig2 === 1 ? this.loadSound("1") : this.say(bigInt(dig2));
         }
     });
     
@@ -439,17 +426,21 @@
             this.sound = [];
         },
         play: function () {
+            this.play$1($_.Number_Sayer_Bridge.Sound.f1);
+        },
+        play$1: function (callStart) {
             if (this.sound.length > 0) {
-                this.play$1(0);
+                this.play$2(0, callStart);
             }
         },
-        play$1: function (index) {
+        play$2: function (index, callStart) {
+            callStart(index);
             var audio = this.sound[index];
             var audioActual = audio.getaudio();
             if (this.sound.length !== ((index = (index + 1) | 0))) {
                 audioActual.onended = Bridge.fn.bind(this, function (v) {
-                    v.target.onended = $_.Number_Sayer_Bridge.Sound.f1;
-                    this.play$1(index);
+                    v.target.onended = $_.Number_Sayer_Bridge.Sound.f2;
+                    this.play$2(index, callStart);
                 });
             }
             audioActual.play();
@@ -467,7 +458,9 @@
     Bridge.ns("Number_Sayer_Bridge.Sound", $_);
     
     Bridge.apply($_.Number_Sayer_Bridge.Sound, {
-        f1: function (v2) {
+        f1: function (v) {
+        },
+        f2: function (v2) {
         }
     });
     

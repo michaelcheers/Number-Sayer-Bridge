@@ -39,8 +39,26 @@
                 sayer = Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new Number_Sayer_Bridge.NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
     
                 var sound = sayer.say(bigInt(document.getElementById("number").value, 10));
-                sound.play();
-                document.getElementById("said").innerHTML = System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.Array.convertAll(sound.sound, $_.Number_Sayer_Bridge.HTML.f3).join(" "), " es", "es"), " ty", "ty"), " teen", "teen");
+                document.getElementById("said").innerHTML = "";
+                for (var n = 0; n < sound.sound.length; n = (n + 1) | 0) {
+                    var name = sound.sound[n].name;
+                    switch (name) {
+                        case "es": 
+                        case "ty": 
+                        case "teen": 
+                            break;
+                        default: 
+                            document.getElementById("said").appendChild(Bridge.merge(document.createElement('span'), {
+                                innerHTML: " "
+                            } ));
+                            break;
+                    }
+                    document.getElementById("said").appendChild(Bridge.merge(document.createElement('span'), {
+                        id: "s" + n,
+                        innerHTML: name
+                    } ));
+                }
+                sound.play$1($_.Number_Sayer_Bridge.HTML.f3);
             },
             update: function () {
                 var $t;
@@ -78,8 +96,8 @@
         f2: function (ev) {
             Number_Sayer_Bridge.HTML.update();
         },
-        f3: function (v) {
-            return v.name;
+        f3: function (index) {
+            document.getElementById("s" + index).style.color = "red";
         }
     });
     

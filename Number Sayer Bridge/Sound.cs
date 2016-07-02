@@ -24,20 +24,26 @@ namespace Number_Sayer_Bridge
             sound = new Audio[] { };
         }
 
-        public void Play()
+        public void Play ()
         {
-            if (sound.Length > 0) Play(0);
+            Play(v => { });
+        }
+
+        public void Play(Action<int> callStart)
+        {
+            if (sound.Length > 0) Play(0, callStart);
         }
         
-        void Play (int index)
+        void Play (int index, Action<int> callStart)
         {
+            callStart(index);
             Audio audio = sound[index];
             HTMLAudioElement audioActual = audio.audio;
             if (sound.Length != ++index)
                 audioActual.OnEnded = v => 
                 {
                     v.Target.OnEnded = v2 => { };
-                    Play(index);
+                    Play(index, callStart);
                 };
             audioActual.Play();
         }

@@ -418,8 +418,9 @@ namespace Number_Sayer_Bridge
                 {
                     if (currentVal < 100 && condition && language == Language.English)
                         result.AppendThis(and);
-                    if (currentVal != 1 || language == Language.English)
-                        result.AppendThis((currentVal == 1 && language == Language.Spanish) ? LoadSound("one"): Say(currentVal));
+                    int spanishAPart = (int)(currentVal / 1000);
+                    int spanishBPart = (int)(currentVal % 1000);
+                    result.AppendThis((spanishBPart == 1 && !condition && language == Language.Spanish) ? (spanishAPart == 0 ? new Sound() : Say(new Number(spanishAPart * 1000))).Append(LoadSound("one")): Say(currentVal));
                     if (!condition)
                         switch (language)
                         {

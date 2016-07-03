@@ -32,7 +32,7 @@ namespace System.Numerics
         public static extern BigInteger Pow(BigInteger a, GenNum b);
 
         [Template("bigInt({0}).pow({1})")]
-        public static extern BigInteger Pow(GenNum a, GenNum b);
+        public static extern BigInteger Pow(int a, GenNum b);
 
 #pragma warning disable CS0626 // Method, operator, or accessor is marked external and has no attributes on it
 #pragma warning disable CS0824 // Method, operator, or accessor is marked external and has no attributes on it

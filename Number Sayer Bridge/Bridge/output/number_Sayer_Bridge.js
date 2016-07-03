@@ -365,9 +365,9 @@
                     if (currentVal.lt(100) && condition && this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
                         result.appendThis(this.getand());
                     }
-                    if (currentVal.neq(1) || this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
-                        result.appendThis((currentVal.eq(1) && this.language === Number_Sayer_Bridge.NumberSayer.Language.Spanish) ? this.loadSound("one") : this.say(currentVal));
-                    }
+                    var spanishAPart = (currentVal.over(1000)).toJSNumber();
+                    var spanishBPart = (currentVal.mod(1000)).toJSNumber();
+                    result.appendThis((spanishBPart === 1 && !condition && this.language === Number_Sayer_Bridge.NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound("constructor") : this.say(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say(currentVal));
                     if (!condition) {
                         switch (this.language) {
                             case Number_Sayer_Bridge.NumberSayer.Language.English: 
@@ -449,7 +449,10 @@
             this.sound = this.append(sound).sound;
         },
         append: function (sound) {
-            return new Number_Sayer_Bridge.Sound("constructor$2", this.sound.concat.apply(this.sound, sound.sound));
+            var result = System.Array.init(((this.sound.length + sound.sound.length) | 0), null);
+            System.Array.copy(this.sound, 0, result, 0, this.sound.length);
+            System.Array.copy(sound.sound, 0, result, this.sound.length, sound.sound.length);
+            return new Number_Sayer_Bridge.Sound("constructor$2", result);
         }
     });
     

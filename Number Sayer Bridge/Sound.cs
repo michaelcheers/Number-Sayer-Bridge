@@ -55,7 +55,10 @@ namespace Number_Sayer_Bridge
 
         public Sound Append(Sound sound)
         {
-            return new Sound(this.sound.Concat(sound.sound).As<Audio[]>());
+            Audio[] result = new Audio[this.sound.Length + sound.sound.Length];
+            this.sound.CopyTo(result, 0);
+            sound.sound.CopyTo(result, this.sound.Length);
+            return new Sound(result);
         }
     }
 

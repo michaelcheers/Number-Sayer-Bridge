@@ -19,6 +19,42 @@
     }
     });
     
+    Bridge.define('Number_Sayer_Bridge.BigDecimal', {
+        statics: {
+            parse: function (value) {
+                var decPoints = value.split(String.fromCharCode(46));
+                switch (decPoints.length) {
+                    case 1: 
+                        return new Number_Sayer_Bridge.BigDecimal(bigInt(value, 10), 0);
+                    case 2: 
+                        var b = decPoints[1];
+                        return new Number_Sayer_Bridge.BigDecimal(bigInt(decPoints[0] + b, 10), decPoints[1].length);
+                    default: 
+                        throw new System.FormatException();
+                }
+            }
+        },
+        value: null,
+        pow10Div: 0,
+        constructor: function (value, pow10Div) {
+            this.value = value;
+            this.pow10Div = pow10Div;
+        },
+        getPartA: function () {
+            return this.value.over(bigInt(10).pow(this.pow10Div));
+        },
+        getPartB: function () {
+            return this.value.mod(bigInt(10).pow(this.pow10Div));
+        },
+        toString: function () {
+            var vString = this.value.toString();
+            if (this.pow10Div === 0) {
+                return vString;
+            }
+            return System.String.insert(((vString.length - this.pow10Div) | 0), vString, ".");
+        }
+    });
+    
     Bridge.define('Number_Sayer_Bridge.NumberSayer', {
         statics: {
             knownVoices: null,
@@ -28,7 +64,7 @@
             config: {
                 init: function () {
                     this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"]],
+        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Seamus"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],
@@ -165,7 +201,7 @@
             }
             throw new System.ArgumentException(value + " should only be 1 digit.");
         },
-        say: function (value) {
+        say$1: function (value) {
             var result = new Number_Sayer_Bridge.Sound("constructor");
             if (value.lt(1000000)) {
                 if (value.lt(1000)) {
@@ -210,7 +246,7 @@
                             case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
                                 {
                                     if (dig1 !== 1) {
-                                        result.appendThis(this.say(bigInt(dig1)));
+                                        result.appendThis(this.say$1(bigInt(dig1)));
                                     }
                                     result.appendThis(this.loadSound("10"));
                                     break;
@@ -235,7 +271,7 @@
                                                 if (dig120 === 3 && dig220.eq(1)) {
                                                     result.appendThis(this.getand());
                                                 }
-                                                result.appendThis(this.say(dig220));
+                                                result.appendThis(this.say$1(dig220));
                                                 return result;
                                             }
                                         default: 
@@ -251,7 +287,7 @@
                                 }
                         }
                         if (dig2 !== 0) {
-                            result.appendThis(this.say(bigInt(dig2)));
+                            result.appendThis(this.say$1(bigInt(dig2)));
                         }
                         return result;
                     }
@@ -263,7 +299,7 @@
                         case Number_Sayer_Bridge.NumberSayer.Language.German: 
                             {
                                 if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English || hundred !== 1) {
-                                    result.appendThis(this.say(bigInt(hundred)));
+                                    result.appendThis(this.say$1(bigInt(hundred)));
                                 }
                                 result.appendThis(this.loadSound("hundred"));
                                 break;
@@ -293,7 +329,7 @@
                                         }
                                     default: 
                                         {
-                                            result.appendThis(this.say(bigInt(hundred)));
+                                            result.appendThis(this.say$1(bigInt(hundred)));
                                             result.appendThis(this.loadSound("hundred"));
                                             break;
                                         }
@@ -314,7 +350,7 @@
                                         }
                                     default: 
                                         {
-                                            result.appendThis(this.say(bigInt(hundred)));
+                                            result.appendThis(this.say$1(bigInt(hundred)));
                                             result.appendThis(this.loadSound("hundred"));
                                             break;
                                         }
@@ -326,7 +362,7 @@
                         if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
                             result.appendThis(this.getand());
                         }
-                        result.appendThis(this.say(bigInt(remainder)));
+                        result.appendThis(this.say$1(bigInt(remainder)));
                     }
                     ;
                     return result;
@@ -340,11 +376,11 @@
                             var part1 = value.over(1000);
                             var part2 = value.mod(1000);
                             if (part1.neq(1)) {
-                                result.appendThis(this.say(part1));
+                                result.appendThis(this.say$1(part1));
                             }
                             result.appendThis(this.loadSound("thousand"));
                             if (part2.neq(0)) {
-                                result.appendThis(this.say(part2));
+                                result.appendThis(this.say$1(part2));
                             }
                             return result;
                         }
@@ -367,7 +403,7 @@
                     }
                     var spanishAPart = (currentVal.over(1000)).toJSNumber();
                     var spanishBPart = (currentVal.mod(1000)).toJSNumber();
-                    result.appendThis((spanishBPart === 1 && !condition && this.language === Number_Sayer_Bridge.NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound("constructor") : this.say(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say(currentVal));
+                    result.appendThis((spanishBPart === 1 && !condition && this.language === Number_Sayer_Bridge.NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound("constructor") : this.say$1(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say$1(currentVal));
                     if (!condition) {
                         switch (this.language) {
                             case Number_Sayer_Bridge.NumberSayer.Language.English: 
@@ -390,7 +426,7 @@
                 current = current.over(languageNumberScale);
                 var valMod1000000;
                 if (current.eq(1000) && ((valMod1000000 = (value.mod(1000000)).toJSNumber())) !== 0 && this.language !== Number_Sayer_Bridge.NumberSayer.Language.English) {
-                    return result.append(this.say(bigInt(valMod1000000)));
+                    return result.append(this.say$1(bigInt(valMod1000000)));
                 }
                 n = (n - 1) | 0;
                 if (current.eq(0)) {
@@ -398,8 +434,36 @@
                 }
             }
         },
+        say: function (value) {
+            switch (this.language) {
+                case Number_Sayer_Bridge.NumberSayer.Language.English: 
+                    {
+                        var partB = value.getPartB();
+                        return this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.Number_Sayer_Bridge.NumberSayer.f1)))));
+                    }
+                case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
+                case Number_Sayer_Bridge.NumberSayer.Language.French: 
+                case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                    {
+                        var partB1 = value.getPartB();
+                        return this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(this.say$1(partB1)));
+                    }
+            }
+            throw new System.NotImplementedException("Unhandled language: " + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language));
+        },
         getEinSound: function (dig2) {
-            return dig2 === 1 ? this.loadSound("1") : this.say(bigInt(dig2));
+            return dig2 === 1 ? this.loadSound("1") : this.say$1(bigInt(dig2));
+        }
+    });
+    
+    var $_ = {};
+    
+    Bridge.ns("Number_Sayer_Bridge.NumberSayer", $_);
+    
+    Bridge.apply($_.Number_Sayer_Bridge.NumberSayer, {
+        f1: function (v) {
+            return this.smalls[System.Int32.parse(String.fromCharCode(v))].sound[0];
         }
     });
     
@@ -455,8 +519,6 @@
             return new Number_Sayer_Bridge.Sound("constructor$2", result);
         }
     });
-    
-    var $_ = {};
     
     Bridge.ns("Number_Sayer_Bridge.Sound", $_);
     

@@ -61,7 +61,7 @@ namespace Number_Sayer_Bridge
             
             sayer = sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
 
-            Sound sound = sayer.Say(BigInteger.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
+            Sound sound = sayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
             said.InnerHTML = "";
             for (int n = 0; n < sound.sound.Length; n++)
             {

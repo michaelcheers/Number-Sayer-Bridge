@@ -38,6 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BigDecimal.cs" />
     <Compile Include="BigInteger.cs" />
     <Compile Include="HTML.cs" />
     <Compile Include="NumberSayer.cs" />
@@ -109,6 +110,7 @@
       <HintPath>..\packages\Bridge.Html5.1.14.0\lib\net40\Bridge.Html5.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bridge\output\bridge.js" />

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Number Sayer Bridge", "Number Sayer Bridge\Number Sayer Bridge.csproj", "{47F38B72-740C-47C6-978F-6B81B9E1B923}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Number Recorder", "Number Recorder\Number Recorder.csproj", "{F51B8480-3801-4FBB-8C36-647F167290E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{47F38B72-740C-47C6-978F-6B81B9E1B923}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47F38B72-740C-47C6-978F-6B81B9E1B923}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47F38B72-740C-47C6-978F-6B81B9E1B923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F51B8480-3801-4FBB-8C36-647F167290E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F51B8480-3801-4FBB-8C36-647F167290E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F51B8480-3801-4FBB-8C36-647F167290E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F51B8480-3801-4FBB-8C36-647F167290E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

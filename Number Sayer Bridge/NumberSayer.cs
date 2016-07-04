@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Bridge.Linq;
 using Bridge;
 using Bridge.Html5;
 using System.Numerics;
 
 namespace Number_Sayer_Bridge
 {
-    using Number = BigInteger;
+    using WholeNumber = BigInteger;
+    using Number = BigDecimal;
 
     public class NumberSayer
     {
@@ -137,7 +140,7 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Seamus"} },
+            {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Seamus"} },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} },
@@ -190,7 +193,7 @@ namespace Number_Sayer_Bridge
             return (alreadyDone[value] = new Sound(new Audio(mixedResult, value, rnd)));
         }
 
-        public Sound GetThirFifSound(Number value)
+        public Sound GetThirFifSound(WholeNumber value)
         {
             switch ((int)value)
             {
@@ -216,7 +219,7 @@ namespace Number_Sayer_Bridge
             throw new ArgumentException(value + " should only be 1 digit.");
         }
 
-        public Sound Say(Number value)
+        public Sound Say (WholeNumber value)
         {
             Sound result = new Sound();
             if (value < 1000000)
@@ -393,8 +396,8 @@ namespace Number_Sayer_Bridge
                     case Language.Esperanto:
                     case Language.German:
                         {
-                            Number part1 = value / 1000;
-                            Number part2 = value % 1000;
+                            WholeNumber part1 = value / 1000;
+                            WholeNumber part2 = value % 1000;
                             if (part1 != 1)
                                 result.AppendThis(Say(part1));
                             result.AppendThis(LoadSound("thousand"));
@@ -404,23 +407,23 @@ namespace Number_Sayer_Bridge
                         }
                 }
             }
-            Number current = 1;
+            WholeNumber current = 1;
             int n = 0;
-            Number languageNumberScale = numberScale[language];
+            WholeNumber languageNumberScale = numberScale[language];
             for (; value >= current; n++, current *= languageNumberScale) ;
             n -= 2;
             current /= languageNumberScale;
             while (true)
             {
                 bool condition = n == -1;
-                Number currentVal = (value / current) % languageNumberScale;
+                WholeNumber currentVal = (value / current) % languageNumberScale;
                 if (currentVal != 0)
                 {
                     if (currentVal < 100 && condition && language == Language.English)
                         result.AppendThis(and);
                     int spanishAPart = (int)(currentVal / 1000);
                     int spanishBPart = (int)(currentVal % 1000);
-                    result.AppendThis((spanishBPart == 1 && !condition && language == Language.Spanish) ? (spanishAPart == 0 ? new Sound() : Say(new Number(spanishAPart * 1000))).Append(LoadSound("one")): Say(currentVal));
+                    result.AppendThis((spanishBPart == 1 && !condition && language == Language.Spanish) ? (spanishAPart == 0 ? new Sound() : Say(new WholeNumber(spanishAPart * 1000))).Append(LoadSound("one")): Say(currentVal));
                     if (!condition)
                         switch (language)
                         {
@@ -447,6 +450,26 @@ namespace Number_Sayer_Bridge
                 if (current == 0)
                     return result;
             }
+        }
+        public Sound Say (Number value)
+        {
+            switch (language)
+            {
+                case Language.English:
+                    {
+                        WholeNumber partB = value.PartB;
+                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0]))));
+                    }
+                case Language.Spanish:
+                case Language.French:
+                case Language.German:
+                case Language.Esperanto:
+                    {
+                        WholeNumber partB = value.PartB;
+                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(Say(partB)));
+                    }
+            }
+            throw new NotImplementedException("Unhandled language: " + language.ToString());
         }
 
         private Sound GetEinSound(int dig2)

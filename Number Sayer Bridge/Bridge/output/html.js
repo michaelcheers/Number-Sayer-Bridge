@@ -38,7 +38,7 @@
     
                 sayer = Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new Number_Sayer_Bridge.NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
     
-                var sound = sayer.say(bigInt(document.getElementById("number").value, 10));
+                var sound = sayer.say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
                 document.getElementById("said").innerHTML = "";
                 for (var n = 0; n < sound.sound.length; n = (n + 1) | 0) {
                     var name = sound.sound[n].name;

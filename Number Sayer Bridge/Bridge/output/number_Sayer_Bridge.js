@@ -64,7 +64,7 @@
             config: {
                 init: function () {
                     this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus"]],
+        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],

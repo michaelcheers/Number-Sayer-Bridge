@@ -64,7 +64,7 @@
             config: {
                 init: function () {
                     this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Seamus"]],
+        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],
@@ -193,9 +193,9 @@
                 case 6: 
                     return this.loadSound("6");
                 case 7: 
-                    return this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? this.loadSound("7") : this.loadSound("sieb");
+                    return this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? "7" : "sieb");
                 case 8: 
-                    return this.loadSound("8");
+                    return this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? "eigh" : "8");
                 case 9: 
                     return this.loadSound("9");
             }

@@ -140,7 +140,7 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Seamus"} },
+            {Language.English, new[] {"Ally", "Ally (New)", "Ben", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus" } },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} },
@@ -210,9 +210,9 @@ namespace Number_Sayer_Bridge
                 case 6:
                     return LoadSound("6");
                 case 7:
-                    return language == Language.English ? LoadSound("7") : LoadSound("sieb");
+                    return LoadSound(language == Language.English ? "7" : "sieb");
                 case 8:
-                    return LoadSound("8");
+                    return LoadSound(language == Language.English ? "eigh" : "8");
                 case 9:
                     return LoadSound("9");
             }

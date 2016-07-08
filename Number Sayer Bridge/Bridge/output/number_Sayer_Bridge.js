@@ -271,7 +271,9 @@
                                                 if (dig120 === 3 && dig220.eq(1)) {
                                                     result.appendThis(this.getand());
                                                 }
-                                                result.appendThis(this.say$1(dig220));
+                                                if (dig220.neq(0)) {
+                                                    result.appendThis(this.say$1(dig220));
+                                                }
                                                 return result;
                                             }
                                         default: 

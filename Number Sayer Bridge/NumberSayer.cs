@@ -295,7 +295,8 @@ namespace Number_Sayer_Bridge
                                                 result.AppendThis(LoadSound(dig120 * 2 + "0"));
                                                 if (dig120 == 3 && dig220 == 1)
                                                     result.AppendThis(and);
-                                                result.AppendThis(Say(dig220));
+                                                if (dig220 != 0)
+                                                    result.AppendThis(Say(dig220));
                                                 return result;
                                             }
                                         default:

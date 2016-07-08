@@ -39,6 +39,7 @@ namespace Number_Sayer_Bridge
             language.OnChange = e => Update();
 
             Document.GetElementById<HTMLButtonElement>("submit").OnClick = Submit;
+            Document.GetElementById<HTMLButtonElement>("count") .OnClick = Count;
 
             language.InnerHTML = "";
             foreach (NumberSayer.Language item in Enum.GetValues(typeof(NumberSayer.Language)))
@@ -52,16 +53,31 @@ namespace Number_Sayer_Bridge
             Update();
         }
 
+        private static void Count(MouseEvent<HTMLButtonElement> arg)
+        {
+            BigInteger to = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("to").Value);
+            Sound sound = new Sound();
+            for (BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value); n <= to; n = n + BigInteger.One)
+                sound.AppendThis(NumberSayer.Say(n));
+            sound.Play();
+        }
+
         private static Dictionary<string, NumberSayer> sayers = new Dictionary<string, NumberSayer>();
+
+        [Name(false)]
+        private static NumberSayer NumberSayer
+        {
+            get
+            {
+                string key = currentVoice + currentLanguage.ToString();
+
+                return sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
+            }
+        }
 
         private static void Submit(MouseEvent<HTMLButtonElement> arg)
         {
-            string key = currentVoice + currentLanguage.ToString();
-            NumberSayer sayer;
-            
-            sayer = sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
-
-            Sound sound = sayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
+            Sound sound = NumberSayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
             said.InnerHTML = "";
             for (int n = 0; n < sound.sound.Length; n++)
             {

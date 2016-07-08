@@ -10,6 +10,12 @@
                     Bridge.ready(this.start);
                 }
             },
+            getNumberSayer: function () {
+                var $t;
+                var key = document.getElementById("voice").value + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, document.getElementById("language").selectedIndex);
+    
+                return Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new Number_Sayer_Bridge.NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
+            },
             start: function () {
                 var $t;
                 document.getElementById("number").onkeydown = $_.Number_Sayer_Bridge.HTML.f1;
@@ -17,6 +23,7 @@
                 document.getElementById("language").onchange = $_.Number_Sayer_Bridge.HTML.f2;
     
                 document.getElementById("submit").onclick = Number_Sayer_Bridge.HTML.submit;
+                document.getElementById("count").onclick = Number_Sayer_Bridge.HTML.count;
     
                 document.getElementById("language").innerHTML = "";
                 $t = Bridge.getEnumerator(System.Enum.getValues(Number_Sayer_Bridge.NumberSayer.Language));
@@ -31,14 +38,16 @@
     
                 Number_Sayer_Bridge.HTML.update();
             },
+            count: function (arg) {
+                var to = bigInt(document.getElementById("to").value, 10);
+                var sound = new Number_Sayer_Bridge.Sound("constructor");
+                for (var n = bigInt(document.getElementById("from").value, 10); n.lesserOrEquals(to); n = n.add(bigInt(1))) {
+                    sound.appendThis(Number_Sayer_Bridge.HTML.getNumberSayer().say$1(n));
+                }
+                sound.play();
+            },
             submit: function (arg) {
-                var $t;
-                var key = document.getElementById("voice").value + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, document.getElementById("language").selectedIndex);
-                var sayer;
-    
-                sayer = Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new Number_Sayer_Bridge.NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
-    
-                var sound = sayer.say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
+                var sound = Number_Sayer_Bridge.HTML.getNumberSayer().say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
                 document.getElementById("said").innerHTML = "";
                 for (var n = 0; n < sound.sound.length; n = (n + 1) | 0) {
                     var name = sound.sound[n].name;

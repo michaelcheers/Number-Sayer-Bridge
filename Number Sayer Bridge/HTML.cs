@@ -35,6 +35,11 @@ namespace Number_Sayer_Bridge
                     Submit(null);
                 }
             };
+            new[] { Document.GetElementById("from"), Document.GetElementById("to") }.ForEach(item => item.OnKeyDown = ev =>
+            {
+                if (ev.IsKeyboardEvent() && ev.As<KeyboardEvent>().KeyCode == 13)
+                    Count(null);
+            });
 
             language.OnChange = e => Update();
 

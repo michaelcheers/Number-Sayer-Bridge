@@ -46,6 +46,24 @@
         getPartB: function () {
             return this.value.mod(bigInt(10).pow(this.pow10Div));
         },
+        getN0s: function () {
+            var $t;
+            if (this.pow10Div === 0 || this.getPartB().eq(0)) {
+                return bigInt(0);
+            }
+            var n0s = 0;
+            $t = Bridge.getEnumerator(this.toString().split(String.fromCharCode(46))[1]);
+            while ($t.moveNext()) {
+                var item = $t.getCurrent();
+                if (item === 48) {
+                    n0s = (n0s + 1) | 0;
+                }
+                else  {
+                    return bigInt(n0s);
+                }
+            }
+            throw new System.Exception("Something bad happenned.");
+        },
         toString: function () {
             var vString = this.value.toString();
             if (this.pow10Div === 0) {
@@ -64,7 +82,7 @@
             config: {
                 init: function () {
                     this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus", "Sylvia"]],
+        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
         [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],
@@ -437,11 +455,15 @@
             }
         },
         say: function (value) {
+            var s0s = new Number_Sayer_Bridge.Sound("constructor");
+            for (var n = 0; bigInt(n).lt(value.getN0s()); n = (n + 1) | 0) {
+                s0s.appendThis(this.loadSound("0"));
+            }
             switch (this.language) {
                 case Number_Sayer_Bridge.NumberSayer.Language.English: 
                     {
                         var partB = value.getPartB();
-                        return this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.Number_Sayer_Bridge.NumberSayer.f1)))));
+                        return this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(s0s).append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.Number_Sayer_Bridge.NumberSayer.f1)))));
                     }
                 case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
                 case Number_Sayer_Bridge.NumberSayer.Language.French: 
@@ -449,7 +471,7 @@
                 case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
                     {
                         var partB1 = value.getPartB();
-                        return this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(this.say$1(partB1)));
+                        return this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(s0s).append(this.say$1(partB1)));
                     }
             }
             throw new System.NotImplementedException("Unhandled language: " + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bridge;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -46,6 +47,25 @@ namespace Number_Sayer_Bridge
             get
             {
                 return value % BigInteger.Pow(10, pow10Div);
+            }
+        }
+
+        [Name("N0s")]
+        public BigInteger Decimal0sAtBeginningOfPartB
+        {
+            get
+            {
+                if (pow10Div == 0 || PartB == 0)
+                    return 0;
+                int n0s = 0;
+                foreach (var item in ToString().Split('.')[1])
+                {
+                    if (item == '0')
+                        n0s++;
+                    else
+                        return n0s;
+                }
+                throw new Exception("Something bad happenned.");
             }
         }
 

@@ -19,8 +19,9 @@
             start: function () {
                 var $t;
                 document.getElementById("number").onkeydown = $_.Number_Sayer_Bridge.HTML.f1;
+                Bridge.Linq.Enumerable.from([document.getElementById("from"), document.getElementById("to")]).forEach($_.Number_Sayer_Bridge.HTML.f3);
     
-                document.getElementById("language").onchange = $_.Number_Sayer_Bridge.HTML.f2;
+                document.getElementById("language").onchange = $_.Number_Sayer_Bridge.HTML.f4;
     
                 document.getElementById("submit").onclick = Number_Sayer_Bridge.HTML.submit;
                 document.getElementById("count").onclick = Number_Sayer_Bridge.HTML.count;
@@ -67,7 +68,7 @@
                         innerHTML: name
                     } ));
                 }
-                sound.play$1($_.Number_Sayer_Bridge.HTML.f3);
+                sound.play$1($_.Number_Sayer_Bridge.HTML.f5);
             },
             update: function () {
                 var $t;
@@ -102,10 +103,18 @@
                 Number_Sayer_Bridge.HTML.submit(null);
             }
         },
-        f2: function (e) {
+        f2: function (ev) {
+            if (Bridge.is(ev, KeyboardEvent) && ev.keyCode === 13) {
+                Number_Sayer_Bridge.HTML.count(null);
+            }
+        },
+        f3: function (item) {
+            item.onkeydown = $_.Number_Sayer_Bridge.HTML.f2;
+        },
+        f4: function (e) {
             Number_Sayer_Bridge.HTML.update();
         },
-        f3: function (index) {
+        f5: function (index) {
             document.getElementById("s" + index).style.color = "red";
         }
     });

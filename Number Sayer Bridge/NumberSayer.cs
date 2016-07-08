@@ -140,7 +140,7 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus", "Sylvia" } },
+            {Language.English, new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} },
@@ -454,12 +454,15 @@ namespace Number_Sayer_Bridge
         }
         public Sound Say (Number value)
         {
+            Sound s0s = new Sound();
+            for (int n = 0; n < value.Decimal0sAtBeginningOfPartB; n++)
+                s0s.AppendThis(LoadSound("0"));
             switch (language)
             {
                 case Language.English:
                     {
                         WholeNumber partB = value.PartB;
-                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0]))));
+                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0]))));
                     }
                 case Language.Spanish:
                 case Language.French:
@@ -467,7 +470,7 @@ namespace Number_Sayer_Bridge
                 case Language.Esperanto:
                     {
                         WholeNumber partB = value.PartB;
-                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(Say(partB)));
+                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(Say(partB)));
                     }
             }
             throw new NotImplementedException("Unhandled language: " + language.ToString());

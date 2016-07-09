@@ -82,7 +82,7 @@
         }
     });
     
-    Bridge.define('Number_Sayer_Bridge.NumberSayer', {
+    Bridge.define('NumberSayer', {
         statics: {
             knownVoices: null,
             irregularStarters: null,
@@ -90,26 +90,28 @@
             placeValues: null,
             config: {
                 init: function () {
-                    this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,Array)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia"]],
-        [Number_Sayer_Bridge.NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
-        [Number_Sayer_Bridge.NumberSayer.Language.French, ["Ben"]],
-        [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, ["Michael"]],
-        [Number_Sayer_Bridge.NumberSayer.Language.German, ["Laurie"]]
+                    this.knownVoices = Bridge.merge(new System.Collections.Generic.Dictionary$2(NumberSayer.Language,Array)(), [
+        [NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus", "Sylvia"]],
+        [NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
+        [NumberSayer.Language.French, ["Ben"]],
+        [NumberSayer.Language.Esperanto, ["Michael"]],
+        [NumberSayer.Language.German, ["Laurie"]]
     ] );
-                    this.irregularStarters = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,System.Int32)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, 13],
-        [Number_Sayer_Bridge.NumberSayer.Language.German, 13],
-        [Number_Sayer_Bridge.NumberSayer.Language.Spanish, 16],
-        [Number_Sayer_Bridge.NumberSayer.Language.French, 17],
-        [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, 10]
+                    this.irregularStarters = Bridge.merge(new System.Collections.Generic.Dictionary$2(NumberSayer.Language,System.Int32)(), [
+        [NumberSayer.Language.English, 13],
+        [NumberSayer.Language.German, 13],
+        [NumberSayer.Language.Spanish, 16],
+        [NumberSayer.Language.French, 17],
+        [NumberSayer.Language.Esperanto, 10],
+        [NumberSayer.Language.Chinese, 10]
     ] );
-                    this.numberScale = Bridge.merge(new System.Collections.Generic.Dictionary$2(Number_Sayer_Bridge.NumberSayer.Language,System.Int32)(), [
-        [Number_Sayer_Bridge.NumberSayer.Language.English, 1000],
-        [Number_Sayer_Bridge.NumberSayer.Language.French, 1000],
-        [Number_Sayer_Bridge.NumberSayer.Language.German, 1000],
-        [Number_Sayer_Bridge.NumberSayer.Language.Spanish, 1000000],
-        [Number_Sayer_Bridge.NumberSayer.Language.Esperanto, 1000]
+                    this.numberScale = Bridge.merge(new System.Collections.Generic.Dictionary$2(NumberSayer.Language,System.Int32)(), [
+        [NumberSayer.Language.English, 1000],
+        [NumberSayer.Language.French, 1000],
+        [NumberSayer.Language.German, 1000],
+        [NumberSayer.Language.Spanish, 1000000],
+        [NumberSayer.Language.Esperanto, 1000],
+        [NumberSayer.Language.Chinese, 10000]
     ] );
                     this.placeValues = ["thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sedecillion", "septendecillion", "octodecillion", "novendecillion", "vigintillion"];
                 }
@@ -130,33 +132,34 @@
             if (language === void 0) { language = 0; }
             if (voice === void 0) { voice = "Michael"; }
     
-            if (!System.Enum.isDefined(Number_Sayer_Bridge.NumberSayer.Language, language)) {
+            if (!System.Enum.isDefined(NumberSayer.Language, language)) {
                 throw new System.ArgumentOutOfRangeException("language", "Value should be defined in the Language enum.");
             }
             this.language = language;
             this.voice = voice;
             switch (language) {
-                case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                case NumberSayer.Language.Esperanto: 
+                case NumberSayer.Language.Chinese: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("1"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9")];
                         break;
                     }
-                case Number_Sayer_Bridge.NumberSayer.Language.English: 
+                case NumberSayer.Language.English: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("1"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12")];
                         break;
                     }
-                case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
+                case NumberSayer.Language.Spanish: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("1"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12"), this.loadSound("13"), this.loadSound("14"), this.loadSound("15")];
                         break;
                     }
-                case Number_Sayer_Bridge.NumberSayer.Language.French: 
+                case NumberSayer.Language.French: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("1"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12"), this.loadSound("13"), this.loadSound("14"), this.loadSound("15"), this.loadSound("16")];
                         break;
                     }
-                case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                case NumberSayer.Language.German: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("eins"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12")];
                         break;
@@ -181,10 +184,10 @@
                 return this.alreadyDone.get(value);
             }
             var mixedResult = [];
-            var format = "Sounds/" + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language) + "/{0}/{1}.wav";
+            var format = "Sounds/" + System.Enum.toString(NumberSayer.Language, this.language) + "/{0}/{1}.wav";
             try {
                 if (Bridge.referenceEquals(this.voice, "mixed")) {
-                    $t = Bridge.getEnumerator(Number_Sayer_Bridge.NumberSayer.knownVoices.get(this.language));
+                    $t = Bridge.getEnumerator(NumberSayer.knownVoices.get(this.language));
                     while ($t.moveNext()) {
                         var item = $t.getCurrent();
                         mixedResult.push(new Audio(System.String.format(format, item, value)));
@@ -212,17 +215,17 @@
                 case 2: 
                     return this.loadSound("2");
                 case 3: 
-                    return this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? this.getthir() : this.loadSound("3");
+                    return this.language === NumberSayer.Language.English ? this.getthir() : this.loadSound("3");
                 case 4: 
                     return this.loadSound("4");
                 case 5: 
-                    return this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? this.getfif() : this.loadSound("5");
+                    return this.language === NumberSayer.Language.English ? this.getfif() : this.loadSound("5");
                 case 6: 
                     return this.loadSound("6");
                 case 7: 
-                    return this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? "7" : "sieb");
+                    return this.loadSound(this.language === NumberSayer.Language.English ? "7" : "sieb");
                 case 8: 
-                    return this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.English ? "eigh" : "8");
+                    return this.loadSound(this.language === NumberSayer.Language.English ? "eigh" : "8");
                 case 9: 
                     return this.loadSound("9");
             }
@@ -234,16 +237,16 @@
                 if (value.lt(1000)) {
                     if (value.lt(100)) {
                         if (value.lt(20)) {
-                            if (value.lt(Number_Sayer_Bridge.NumberSayer.irregularStarters.get(this.language))) {
+                            if (value.lt(NumberSayer.irregularStarters.get(this.language))) {
                                 result.appendThis(this.smalls[value.toJSNumber()]);
                                 return result;
                             }
                             switch (this.language) {
-                                case Number_Sayer_Bridge.NumberSayer.Language.English: 
-                                case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                                case NumberSayer.Language.English: 
+                                case NumberSayer.Language.German: 
                                     {
                                         result.appendThis(this.getThirFifSound(value.mod(10)));
-                                        result.appendThis(this.loadSound(this.language === Number_Sayer_Bridge.NumberSayer.Language.German ? "10" : "teen"));
+                                        result.appendThis(this.loadSound(this.language === NumberSayer.Language.German ? "10" : "teen"));
                                         return result;
                                     }
                             }
@@ -251,10 +254,10 @@
                         var dig1 = (value.over(10)).toJSNumber();
                         var dig2 = (value.mod(10)).toJSNumber();
                         switch (this.language) {
-                            case Number_Sayer_Bridge.NumberSayer.Language.English: 
-                            case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                            case NumberSayer.Language.English: 
+                            case NumberSayer.Language.German: 
                                 {
-                                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.German && dig2 !== 0) {
+                                    if (this.language === NumberSayer.Language.German && dig2 !== 0) {
                                         result.appendThis(this.getEinSound(dig2));
                                         result.appendThis(this.getand());
                                     }
@@ -265,12 +268,13 @@
                                         result.appendThis(this.getThirFifSound(bigInt(dig1)));
                                         result.appendThis(this.getty());
                                     }
-                                    if (this.language === Number_Sayer_Bridge.NumberSayer.Language.German) {
+                                    if (this.language === NumberSayer.Language.German) {
                                         return result;
                                     }
                                     break;
                                 }
-                            case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                            case NumberSayer.Language.Esperanto: 
+                            case NumberSayer.Language.Chinese: 
                                 {
                                     if (dig1 !== 1) {
                                         result.appendThis(this.say$1(bigInt(dig1)));
@@ -278,7 +282,7 @@
                                     result.appendThis(this.loadSound("10"));
                                     break;
                                 }
-                            case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
+                            case NumberSayer.Language.Spanish: 
                                 {
                                     result.appendThis(this.loadSound(dig1 + "0"));
                                     if (dig2 !== 0) {
@@ -286,7 +290,7 @@
                                     }
                                     break;
                                 }
-                            case Number_Sayer_Bridge.NumberSayer.Language.French: 
+                            case NumberSayer.Language.French: 
                                 {
                                     var dig120 = (Bridge.Int.div(value.toJSNumber(), 20)) | 0;
                                     var dig220 = value.mod(20);
@@ -298,9 +302,7 @@
                                                 if (dig120 === 3 && dig220.eq(1)) {
                                                     result.appendThis(this.getand());
                                                 }
-                                                if (dig220.neq(0)) {
-                                                    result.appendThis(this.say$1(dig220));
-                                                }
+                                                result.appendThis(this.say$1(dig220));
                                                 return result;
                                             }
                                         default: 
@@ -324,16 +326,16 @@
                     var hundred = (value.over(100)).toJSNumber();
                     var remainder = (value.mod(100)).toJSNumber();
                     switch (this.language) {
-                        case Number_Sayer_Bridge.NumberSayer.Language.English: 
-                        case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                        case NumberSayer.Language.English: 
+                        case NumberSayer.Language.German: 
                             {
-                                if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English || hundred !== 1) {
+                                if (this.language === NumberSayer.Language.English || hundred !== 1) {
                                     result.appendThis(this.say$1(bigInt(hundred)));
                                 }
                                 result.appendThis(this.loadSound("hundred"));
                                 break;
                             }
-                        case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
+                        case NumberSayer.Language.Spanish: 
                             {
                                 switch (hundred) {
                                     case 1: 
@@ -365,14 +367,27 @@
                                 }
                                 break;
                             }
-                        case Number_Sayer_Bridge.NumberSayer.Language.French: 
-                        case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                        case NumberSayer.Language.Chinese: 
+                            {
+                                switch (hundred) {
+                                    case 2: 
+                                        result.appendThis(this.loadSound("liang"));
+                                        break;
+                                    default: 
+                                        result.appendThis(this.say$1(bigInt(hundred)));
+                                        result.appendThis(this.loadSound("hundred"));
+                                        break;
+                                }
+                                throw new System.Exception();
+                            }
+                        case NumberSayer.Language.French: 
+                        case NumberSayer.Language.Esperanto: 
                             {
                                 switch (hundred) {
                                     case 1: 
                                         {
                                             result.appendThis(this.loadSound("hundred"));
-                                            if (remainder === 1 && this.language === Number_Sayer_Bridge.NumberSayer.Language.French) {
+                                            if (remainder === 1 && this.language === NumberSayer.Language.French) {
                                                 result.appendThis(this.loadSound("and"));
                                             }
                                             break;
@@ -388,7 +403,7 @@
                             }
                     }
                     if (remainder !== 0) {
-                        if (this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
+                        if (this.language === NumberSayer.Language.English) {
                             result.appendThis(this.getand());
                         }
                         result.appendThis(this.say$1(bigInt(remainder)));
@@ -397,10 +412,10 @@
                     return result;
                 }
                 switch (this.language) {
-                    case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
-                    case Number_Sayer_Bridge.NumberSayer.Language.French: 
-                    case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
-                    case Number_Sayer_Bridge.NumberSayer.Language.German: 
+                    case NumberSayer.Language.Spanish: 
+                    case NumberSayer.Language.French: 
+                    case NumberSayer.Language.Esperanto: 
+                    case NumberSayer.Language.German: 
                         {
                             var part1 = value.over(1000);
                             var part2 = value.mod(1000);
@@ -417,7 +432,7 @@
             }
             var current = bigInt(1);
             var n = 0;
-            var languageNumberScale = bigInt(Number_Sayer_Bridge.NumberSayer.numberScale.get(this.language));
+            var languageNumberScale = bigInt(NumberSayer.numberScale.get(this.language));
             for (; value.greaterOrEquals(current); n = (n + 1) | 0, current = current.times(languageNumberScale)) {
                 ;
             }
@@ -427,34 +442,34 @@
                 var condition = n === -1;
                 var currentVal = (value.over(current)).mod(languageNumberScale);
                 if (currentVal.neq(0)) {
-                    if (currentVal.lt(100) && condition && this.language === Number_Sayer_Bridge.NumberSayer.Language.English) {
+                    if (currentVal.lt(100) && condition && this.language === NumberSayer.Language.English) {
                         result.appendThis(this.getand());
                     }
                     var spanishAPart = (currentVal.over(1000)).toJSNumber();
                     var spanishBPart = (currentVal.mod(1000)).toJSNumber();
-                    result.appendThis((spanishBPart === 1 && !condition && this.language === Number_Sayer_Bridge.NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound("constructor") : this.say$1(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say$1(currentVal));
+                    result.appendThis((spanishBPart === 1 && !condition && this.language === NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound("constructor") : this.say$1(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say$1(currentVal));
                     if (!condition) {
                         switch (this.language) {
-                            case Number_Sayer_Bridge.NumberSayer.Language.English: 
-                                result.appendThis(this.loadSound(Number_Sayer_Bridge.NumberSayer.placeValues[n]));
+                            case NumberSayer.Language.English: 
+                                result.appendThis(this.loadSound(NumberSayer.placeValues[n]));
                                 break;
-                            case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
-                                result.appendThis(this.loadSound(Number_Sayer_Bridge.NumberSayer.placeValues[((n + 1) | 0)]));
+                            case NumberSayer.Language.Spanish: 
+                                result.appendThis(this.loadSound(NumberSayer.placeValues[((n + 1) | 0)]));
                                 if (currentVal.neq(1)) {
                                     result.appendThis(this.loadSound("es"));
                                 }
                                 break;
-                            case Number_Sayer_Bridge.NumberSayer.Language.French: 
-                            case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
-                            case Number_Sayer_Bridge.NumberSayer.Language.German: 
-                                result.appendThis(this.loadSound(Number_Sayer_Bridge.NumberSayer.placeValues[((Bridge.Int.div((((n + 1) | 0)), 2)) | 0)]).append(((((n + 1) | 0)) % 2) === 1 ? this.loadSound("ard") : this.loadSound("on")));
+                            case NumberSayer.Language.French: 
+                            case NumberSayer.Language.Esperanto: 
+                            case NumberSayer.Language.German: 
+                                result.appendThis(this.loadSound(NumberSayer.placeValues[((Bridge.Int.div((((n + 1) | 0)), 2)) | 0)]).append(((((n + 1) | 0)) % 2) === 1 ? this.loadSound("ard") : this.loadSound("on")));
                                 break;
                         }
                     }
                 }
                 current = current.over(languageNumberScale);
                 var valMod1000000;
-                if (current.eq(1000) && ((valMod1000000 = (value.mod(1000000)).toJSNumber())) !== 0 && this.language !== Number_Sayer_Bridge.NumberSayer.Language.English) {
+                if (current.eq(1000) && ((valMod1000000 = (value.mod(1000000)).toJSNumber())) !== 0 && this.language !== NumberSayer.Language.English) {
                     return result.append(this.say$1(bigInt(valMod1000000)));
                 }
                 n = (n - 1) | 0;
@@ -464,26 +479,22 @@
             }
         },
         say: function (value) {
-            var s0s = new Number_Sayer_Bridge.Sound("constructor");
-            for (var n = 0; bigInt(n).lt(value.getN0s()); n = (n + 1) | 0) {
-                s0s.appendThis(this.loadSound("0"));
-            }
             switch (this.language) {
-                case Number_Sayer_Bridge.NumberSayer.Language.English: 
+                case NumberSayer.Language.English: 
                     {
                         var partB = value.getPartB();
-                        return this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(s0s).append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.Number_Sayer_Bridge.NumberSayer.f1)))));
+                        return this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.NumberSayer.f1)))));
                     }
-                case Number_Sayer_Bridge.NumberSayer.Language.Spanish: 
-                case Number_Sayer_Bridge.NumberSayer.Language.French: 
-                case Number_Sayer_Bridge.NumberSayer.Language.German: 
-                case Number_Sayer_Bridge.NumberSayer.Language.Esperanto: 
+                case NumberSayer.Language.Spanish: 
+                case NumberSayer.Language.French: 
+                case NumberSayer.Language.German: 
+                case NumberSayer.Language.Esperanto: 
                     {
                         var partB1 = value.getPartB();
-                        return this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(s0s).append(this.say$1(partB1)));
+                        return this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(this.say$1(partB1)));
                     }
             }
-            throw new System.NotImplementedException("Unhandled language: " + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, this.language));
+            throw new System.NotImplementedException("Unhandled language: " + System.Enum.toString(NumberSayer.Language, this.language));
         },
         getEinSound: function (dig2) {
             return dig2 === 1 ? this.loadSound("1") : this.say$1(bigInt(dig2));
@@ -492,21 +503,22 @@
     
     var $_ = {};
     
-    Bridge.ns("Number_Sayer_Bridge.NumberSayer", $_);
+    Bridge.ns("NumberSayer", $_);
     
-    Bridge.apply($_.Number_Sayer_Bridge.NumberSayer, {
+    Bridge.apply($_.NumberSayer, {
         f1: function (v) {
             return this.smalls[System.Int32.parse(String.fromCharCode(v))].sound[0];
         }
     });
     
-    Bridge.define('Number_Sayer_Bridge.NumberSayer.Language', {
+    Bridge.define('NumberSayer.Language', {
         statics: {
             English: 0,
             Spanish: 1,
             French: 2,
             Esperanto: 3,
-            German: 4
+            Chinese: 4,
+            German: 5
         },
         $enum: true
     });

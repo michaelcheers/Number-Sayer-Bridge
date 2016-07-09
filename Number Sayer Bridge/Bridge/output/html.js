@@ -6,15 +6,15 @@
             sayers: null,
             config: {
                 init: function () {
-                    this.sayers = new System.Collections.Generic.Dictionary$2(String,Number_Sayer_Bridge.NumberSayer)();
+                    this.sayers = new System.Collections.Generic.Dictionary$2(String,NumberSayer)();
                     Bridge.ready(this.start);
                 }
             },
             getNumberSayer: function () {
                 var $t;
-                var key = document.getElementById("voice").value + System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, document.getElementById("language").selectedIndex);
+                var key = document.getElementById("voice").value + System.Enum.toString(NumberSayer.Language, document.getElementById("language").selectedIndex);
     
-                return Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new Number_Sayer_Bridge.NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
+                return Number_Sayer_Bridge.HTML.sayers.containsKey(key) ? Number_Sayer_Bridge.HTML.sayers.get(key) : (($t = new NumberSayer(document.getElementById("language").selectedIndex, document.getElementById("voice").value), Number_Sayer_Bridge.HTML.sayers.set(key, $t), $t));
             },
             start: function () {
                 var $t;
@@ -27,12 +27,12 @@
                 document.getElementById("count").onclick = Number_Sayer_Bridge.HTML.count;
     
                 document.getElementById("language").innerHTML = "";
-                $t = Bridge.getEnumerator(System.Enum.getValues(Number_Sayer_Bridge.NumberSayer.Language));
+                $t = Bridge.getEnumerator(System.Enum.getValues(NumberSayer.Language));
                 while ($t.moveNext()) {
                     var item = $t.getCurrent();
                     document.getElementById("language").appendChild(Bridge.merge(document.createElement('option'), {
-                        value: System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, item),
-                        innerHTML: System.Enum.toString(Number_Sayer_Bridge.NumberSayer.Language, item)
+                        value: System.Enum.toString(NumberSayer.Language, item),
+                        innerHTML: System.Enum.toString(NumberSayer.Language, item)
                     } ));
                 }
                 document.getElementById("language").selectedIndex = 0;
@@ -73,7 +73,7 @@
             update: function () {
                 var $t;
                 document.getElementById("voice").innerHTML = "";
-                var currentKnownVoices = Number_Sayer_Bridge.NumberSayer.knownVoices.get(document.getElementById("language").selectedIndex);
+                var currentKnownVoices = NumberSayer.knownVoices.get(document.getElementById("language").selectedIndex);
     
                 $t = Bridge.getEnumerator(currentKnownVoices);
                 while ($t.moveNext()) {

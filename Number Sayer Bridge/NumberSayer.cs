@@ -10,7 +10,8 @@ namespace Number_Sayer_Bridge
 {
     using WholeNumber = BigInteger;
     using Number = BigDecimal;
-
+    
+    [Namespace(false)]
     public class NumberSayer
     {
         public Language language;
@@ -26,6 +27,7 @@ namespace Number_Sayer_Bridge
             switch (language)
             {
                 case Language.Esperanto:
+                case Language.Chinese:
                     {
                         smalls = new[]
                         {
@@ -140,7 +142,7 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
+            {Language.English, new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Michael (New)", "Michael (New 2)", "Seamus", "Sylvia" } },
             {Language.Spanish, new[] {"Ana", "Sylvia"} },
             {Language.French,  new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} },
@@ -153,13 +155,16 @@ namespace Number_Sayer_Bridge
             {Language.German, 13 },
             {Language.Spanish, 16 },
             {Language.French, 17 },
-            {Language.Esperanto, 10 }
+            {Language.Esperanto, 10 },
+            {Language.Chinese, 10 }
         };
 
         [InlineConst]
         const int shortNumberScale = 1000   ;
         [InlineConst]
-        const int  longNumberScale = 1000000;
+        const int longNumberScale = 1000000 ;
+        [InlineConst]
+        const int chineseNumberScale = 10000;
 
         public static readonly Dictionary<Language, int> numberScale = new Dictionary<Language, int>
         {
@@ -167,7 +172,8 @@ namespace Number_Sayer_Bridge
             {Language.French,  shortNumberScale },
             {Language.German, shortNumberScale },
             {Language.Spanish,  longNumberScale },
-            {Language.Esperanto, shortNumberScale }
+            {Language.Esperanto, shortNumberScale },
+            {Language.Chinese, chineseNumberScale }
         };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
@@ -270,6 +276,7 @@ namespace Number_Sayer_Bridge
                                     break;
                                 }
                             case Language.Esperanto:
+                            case Language.Chinese:
                                 {
                                     if (dig1 != 1)
                                         result.AppendThis(Say(dig1));
@@ -295,8 +302,7 @@ namespace Number_Sayer_Bridge
                                                 result.AppendThis(LoadSound(dig120 * 2 + "0"));
                                                 if (dig120 == 3 && dig220 == 1)
                                                     result.AppendThis(and);
-                                                if (dig220 != 0)
-                                                    result.AppendThis(Say(dig220));
+                                                result.AppendThis(Say(dig220));
                                                 return result;
                                             }
                                         default:
@@ -359,6 +365,20 @@ namespace Number_Sayer_Bridge
                                         }
                                 }
                                 break;
+                            }
+                        case Language.Chinese:
+                            {
+                                switch (hundred)
+                                {
+                                    case 2:
+                                        result.AppendThis(LoadSound("liang"));
+                                        break;
+                                    default:
+                                        result.AppendThis(Say(hundred));
+                                        result.AppendThis(LoadSound("hundred"));
+                                        break;
+                                }
+                                throw new Exception();
                             }
                         case Language.French:
                         case Language.Esperanto:
@@ -454,15 +474,12 @@ namespace Number_Sayer_Bridge
         }
         public Sound Say (Number value)
         {
-            Sound s0s = new Sound();
-            for (int n = 0; n < value.Decimal0sAtBeginningOfPartB; n++)
-                s0s.AppendThis(LoadSound("0"));
             switch (language)
             {
                 case Language.English:
                     {
                         WholeNumber partB = value.PartB;
-                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0]))));
+                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0]))));
                     }
                 case Language.Spanish:
                 case Language.French:
@@ -470,7 +487,7 @@ namespace Number_Sayer_Bridge
                 case Language.Esperanto:
                     {
                         WholeNumber partB = value.PartB;
-                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(Say(partB)));
+                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(Say(partB)));
                     }
             }
             throw new NotImplementedException("Unhandled language: " + language.ToString());
@@ -488,6 +505,7 @@ namespace Number_Sayer_Bridge
             Spanish,
             French,
             Esperanto,
+            Chinese,
             German
         }
     }

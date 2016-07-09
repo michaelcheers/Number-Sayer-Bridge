@@ -44,7 +44,7 @@
             return this.value.over(bigInt(10).pow(this.pow10Div));
         },
         getPartB: function () {
-            return this.value.mod(bigInt(10).pow(this.pow10Div));
+            return this.value.mod(bigInt(10).pow(this.pow10Div)).abs();
         },
         getN0s: function () {
             var $t;
@@ -55,17 +55,24 @@
             $t = Bridge.getEnumerator(this.toString().split(String.fromCharCode(46))[1]);
             while ($t.moveNext()) {
                 var item = $t.getCurrent();
-                if (item === 48) {
-                    n0s = (n0s + 1) | 0;
-                }
-                else  {
-                    return bigInt(n0s);
+                switch (item) {
+                    case 48: 
+                        n0s = (n0s + 1) | 0;
+                        break;
+                    case 45: 
+                        break;
+                    default: 
+                        return bigInt(n0s);
                 }
             }
             throw new System.Exception("Something bad happenned.");
         },
         toString: function () {
+            var negative = this.value.lt(bigInt.zero);
             var vString = this.value.toString();
+            if (negative) {
+                vString = vString.substr(1);
+            }
             if (this.pow10Div === 0) {
                 return vString;
             }
@@ -78,7 +85,7 @@
                 vString = leftPiece + vString;
                 insertLoc = 0;
             }
-            return System.String.insert(insertLoc, vString, ".");
+            return System.String.insert(insertLoc, vString, "." + (negative ? "-" : ""));
         }
     });
     
@@ -229,6 +236,9 @@
             throw new System.ArgumentException(value + " should only be 1 digit.");
         },
         say$1: function (value) {
+            if (value.lt(0)) {
+                return this.loadSound("minus").append(this.say$1(value.negate()));
+            }
             var result = new Number_Sayer_Bridge.Sound("constructor");
             if (value.lt(1000000)) {
                 if (value.lt(1000)) {
@@ -462,11 +472,16 @@
             }
         },
         say: function (value) {
+            var s0s = new Number_Sayer_Bridge.Sound("constructor");
+            for (var n = 0; bigInt(n).lt(value.getN0s()); n = (n + 1) | 0) {
+                s0s.appendThis(this.loadSound("0"));
+            }
+            var negative = value.value.lt(0) && value.getPartA().eq(0);
             switch (this.language) {
                 case NumberSayer.Language.English: 
                     {
                         var partB = value.getPartB();
-                        return this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.NumberSayer.f1)))));
+                        return (negative ? this.loadSound("minus") : new Number_Sayer_Bridge.Sound("constructor")).append(this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(s0s).append(new Number_Sayer_Bridge.Sound("constructor$2", System.Array.convertAll(System.String.toCharArray(partB.toString(), 0, partB.toString().length), Bridge.fn.bind(this, $_.NumberSayer.f1))))));
                     }
                 case NumberSayer.Language.Spanish: 
                 case NumberSayer.Language.French: 
@@ -474,7 +489,7 @@
                 case NumberSayer.Language.Esperanto: 
                     {
                         var partB1 = value.getPartB();
-                        return this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(this.say$1(partB1)));
+                        return (negative ? this.loadSound("minus") : new Number_Sayer_Bridge.Sound("constructor")).append(this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound("constructor") : this.loadSound("point").append(s0s).append(this.say$1(partB1))));
                     }
             }
             throw new System.NotImplementedException("Unhandled language: " + System.Enum.toString(NumberSayer.Language, this.language));

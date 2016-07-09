@@ -224,6 +224,10 @@ namespace Number_Sayer_Bridge
 
         public Sound Say (WholeNumber value)
         {
+            if (value < 0)
+            {
+                return LoadSound("minus").Append(Say(-value));
+            }
             Sound result = new Sound();
             if (value < 1000000)
             {
@@ -456,12 +460,16 @@ namespace Number_Sayer_Bridge
         }
         public Sound Say (Number value)
         {
+            Sound s0s = new Sound();
+            for (int n = 0; n < value.Decimal0sAtBeginningOfPartB; n++)
+                s0s.AppendThis(LoadSound("0"));
+            bool negative = value.value < 0 && value.PartA == 0;
             switch (language)
             {
                 case Language.English:
                     {
                         WholeNumber partB = value.PartB;
-                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0]))));
+                        return (negative ? LoadSound("minus") : new Sound()).Append(Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(new Sound(Array.ConvertAll(partB.ToString().ToCharArray(), v => smalls[int.Parse(v.ToString())].sound[0])))));
                     }
                 case Language.Spanish:
                 case Language.French:
@@ -469,7 +477,7 @@ namespace Number_Sayer_Bridge
                 case Language.Esperanto:
                     {
                         WholeNumber partB = value.PartB;
-                        return Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(Say(partB)));
+                        return (negative ? LoadSound("minus") : new Sound()).Append(Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(Say(partB))));
                     }
             }
             throw new NotImplementedException("Unhandled language: " + language.ToString());

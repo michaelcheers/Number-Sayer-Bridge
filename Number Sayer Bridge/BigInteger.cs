@@ -94,6 +94,9 @@ namespace System.Numerics
         [Template("{0}.shiftRight({1})")]
         public static extern BigInteger operator >>(BigInteger a, int b);
 
+        [Template("{0}.negate()")]
+        public static extern BigInteger operator - (BigInteger value);
+
         [Template("{0}.minus({1})")]
         public static extern BigInteger operator -(BigInteger a, GenNum b);
 

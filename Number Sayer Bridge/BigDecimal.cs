@@ -46,7 +46,7 @@ namespace Number_Sayer_Bridge
         {
             get
             {
-                return value % BigInteger.Pow(10, pow10Div);
+                return BigInteger.Abs(value % BigInteger.Pow(10, pow10Div));
             }
         }
 
@@ -60,10 +60,16 @@ namespace Number_Sayer_Bridge
                 int n0s = 0;
                 foreach (var item in ToString().Split('.')[1])
                 {
-                    if (item == '0')
-                        n0s++;
-                    else
-                        return n0s;
+                    switch (item)
+                    {
+                        case '0':
+                            n0s++;
+                            break;
+                        case '-':
+                            break;
+                        default:
+                            return n0s;
+                        }
                 }
                 throw new Exception("Something bad happenned.");
             }
@@ -71,7 +77,10 @@ namespace Number_Sayer_Bridge
 
         public override string ToString()
         {
+            bool negative = value < BigInteger.Zero;
             string vString = value.ToString();
+            if (negative)
+                vString = vString.Substring(1);
             if (pow10Div == 0)
                 return vString;
             int insertLoc = vString.Length - pow10Div;
@@ -82,7 +91,7 @@ namespace Number_Sayer_Bridge
                 vString = leftPiece + vString;
                 insertLoc = 0;
             }
-            return vString.Insert(insertLoc, ".");
+            return vString.Insert(insertLoc, "." + (negative ? "-" : ""));
         }
     }
 }

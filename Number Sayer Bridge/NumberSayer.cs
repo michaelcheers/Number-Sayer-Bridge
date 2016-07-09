@@ -27,7 +27,6 @@ namespace Number_Sayer_Bridge
             switch (language)
             {
                 case Language.Esperanto:
-                case Language.Chinese:
                     {
                         smalls = new[]
                         {
@@ -156,7 +155,6 @@ namespace Number_Sayer_Bridge
             {Language.Spanish, 16 },
             {Language.French, 17 },
             {Language.Esperanto, 10 },
-            {Language.Chinese, 10 }
         };
 
         [InlineConst]
@@ -172,8 +170,7 @@ namespace Number_Sayer_Bridge
             {Language.French,  shortNumberScale },
             {Language.German, shortNumberScale },
             {Language.Spanish,  longNumberScale },
-            {Language.Esperanto, shortNumberScale },
-            {Language.Chinese, chineseNumberScale }
+            {Language.Esperanto, shortNumberScale }
         };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
@@ -276,7 +273,6 @@ namespace Number_Sayer_Bridge
                                     break;
                                 }
                             case Language.Esperanto:
-                            case Language.Chinese:
                                 {
                                     if (dig1 != 1)
                                         result.AppendThis(Say(dig1));
@@ -365,20 +361,6 @@ namespace Number_Sayer_Bridge
                                         }
                                 }
                                 break;
-                            }
-                        case Language.Chinese:
-                            {
-                                switch (hundred)
-                                {
-                                    case 2:
-                                        result.AppendThis(LoadSound("liang"));
-                                        break;
-                                    default:
-                                        result.AppendThis(Say(hundred));
-                                        result.AppendThis(LoadSound("hundred"));
-                                        break;
-                                }
-                                throw new Exception();
                             }
                         case Language.French:
                         case Language.Esperanto:
@@ -505,7 +487,6 @@ namespace Number_Sayer_Bridge
             Spanish,
             French,
             Esperanto,
-            Chinese,
             German
         }
     }

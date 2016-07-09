@@ -102,16 +102,14 @@
         [NumberSayer.Language.German, 13],
         [NumberSayer.Language.Spanish, 16],
         [NumberSayer.Language.French, 17],
-        [NumberSayer.Language.Esperanto, 10],
-        [NumberSayer.Language.Chinese, 10]
+        [NumberSayer.Language.Esperanto, 10]
     ] );
                     this.numberScale = Bridge.merge(new System.Collections.Generic.Dictionary$2(NumberSayer.Language,System.Int32)(), [
         [NumberSayer.Language.English, 1000],
         [NumberSayer.Language.French, 1000],
         [NumberSayer.Language.German, 1000],
         [NumberSayer.Language.Spanish, 1000000],
-        [NumberSayer.Language.Esperanto, 1000],
-        [NumberSayer.Language.Chinese, 10000]
+        [NumberSayer.Language.Esperanto, 1000]
     ] );
                     this.placeValues = ["thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sedecillion", "septendecillion", "octodecillion", "novendecillion", "vigintillion"];
                 }
@@ -139,7 +137,6 @@
             this.voice = voice;
             switch (language) {
                 case NumberSayer.Language.Esperanto: 
-                case NumberSayer.Language.Chinese: 
                     {
                         this.smalls = [this.loadSound("0"), this.loadSound("1"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9")];
                         break;
@@ -274,7 +271,6 @@
                                     break;
                                 }
                             case NumberSayer.Language.Esperanto: 
-                            case NumberSayer.Language.Chinese: 
                                 {
                                     if (dig1 !== 1) {
                                         result.appendThis(this.say$1(bigInt(dig1)));
@@ -366,19 +362,6 @@
                                         }
                                 }
                                 break;
-                            }
-                        case NumberSayer.Language.Chinese: 
-                            {
-                                switch (hundred) {
-                                    case 2: 
-                                        result.appendThis(this.loadSound("liang"));
-                                        break;
-                                    default: 
-                                        result.appendThis(this.say$1(bigInt(hundred)));
-                                        result.appendThis(this.loadSound("hundred"));
-                                        break;
-                                }
-                                throw new System.Exception();
                             }
                         case NumberSayer.Language.French: 
                         case NumberSayer.Language.Esperanto: 
@@ -517,8 +500,7 @@
             Spanish: 1,
             French: 2,
             Esperanto: 3,
-            Chinese: 4,
-            German: 5
+            German: 4
         },
         $enum: true
     });

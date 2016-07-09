@@ -69,7 +69,16 @@
             if (this.pow10Div === 0) {
                 return vString;
             }
-            return System.String.insert(((vString.length - this.pow10Div) | 0), vString, ".");
+            var insertLoc = (vString.length - this.pow10Div) | 0;
+            if (insertLoc < 0) {
+                var leftPiece = "";
+                for (var n = 0; n > insertLoc; n = (n - 1) | 0) {
+                    leftPiece += "0";
+                }
+                vString = leftPiece + vString;
+                insertLoc = 0;
+            }
+            return System.String.insert(insertLoc, vString, ".");
         }
     });
     

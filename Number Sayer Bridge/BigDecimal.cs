@@ -74,7 +74,15 @@ namespace Number_Sayer_Bridge
             string vString = value.ToString();
             if (pow10Div == 0)
                 return vString;
-            return vString.Insert(vString.Length - pow10Div, ".");
+            int insertLoc = vString.Length - pow10Div;
+            if (insertLoc < 0)
+            {
+                string leftPiece = "";
+                for (int n = 0; n > insertLoc; n--) leftPiece += "0";
+                vString = leftPiece + vString;
+                insertLoc = 0;
+            }
+            return vString.Insert(insertLoc, ".");
         }
     }
 }

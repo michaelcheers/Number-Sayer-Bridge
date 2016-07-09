@@ -51,7 +51,7 @@ namespace Number_Recorder
         Language currentLanguage;
         Dictionary<Language, string> exampleVoices = new Dictionary<Language, string>
         {
-            { Language.English, "Michael (New)" },
+            { Language.English, "Sylvia" },
             { Language.Spanish, "Ana" },
             { Language.French, "Ben" },
             { Language.German, "Laurie" },

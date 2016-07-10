@@ -458,6 +458,12 @@ namespace Number_Sayer_Bridge
                     return result;
             }
         }
+
+        public Sound Say (string value)
+        {
+            return Say(Number.Parse(value));
+        }
+
         public Sound Say (Number value)
         {
             Sound s0s = new Sound();

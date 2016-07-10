@@ -471,6 +471,9 @@
                 }
             }
         },
+        say$2: function (value) {
+            return this.say(Number_Sayer_Bridge.BigDecimal.parse(value));
+        },
         say: function (value) {
             var s0s = new Number_Sayer_Bridge.Sound("constructor");
             for (var n = 0; bigInt(n).lt(value.getN0s()); n = (n + 1) | 0) {

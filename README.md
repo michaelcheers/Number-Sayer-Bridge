@@ -9,7 +9,7 @@ I have made a Number Sayer in Bridge that has the following languages:
 - German.
 
 To try out, click [here](http://michael.cheersgames.com/Number%20Sayer/www).
-You can try out the UI or if you want you can try out the api by pressing Ctrl+Shift+J and typing:
+You can try out the UI or if you want you can try out the api you can by pressing Ctrl+Shift+J and typing:
 ```javascript
 new NumberSayer(NumberSayer.Language.English, "Michael").say$2('3').play()
 ```

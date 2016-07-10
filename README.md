@@ -6,3 +6,4 @@ I have made a Number Sayer in Bridge that has the following languages:
 - Esperanto
 - French
 - Spanish.
+- German.

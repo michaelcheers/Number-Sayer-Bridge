@@ -15,6 +15,11 @@
             this.name = name;
     },
     getaudio: function () {
+        if (this.value.length === 0) {
+            var error = "No valid audio for " + this.name + ".";
+            Bridge.global.alert(error);
+            throw new System.Exception(error);
+        }
         return this.value[this.rnd.next$1(this.value.length)];
     }
     });
@@ -102,7 +107,7 @@
         [NumberSayer.Language.Spanish, ["Ana", "Sylvia"]],
         [NumberSayer.Language.French, ["Ben"]],
         [NumberSayer.Language.Esperanto, ["Michael"]],
-        [NumberSayer.Language.German, ["Laurie"]]
+        [NumberSayer.Language.German, ["Ally", "Laurie"]]
     ] );
                     this.irregularStarters = Bridge.merge(new System.Collections.Generic.Dictionary$2(NumberSayer.Language,System.Int32)(), [
         [NumberSayer.Language.English, 13],
@@ -190,15 +195,17 @@
             var mixedResult = [];
             var format = "Sounds/" + System.Enum.toString(NumberSayer.Language, this.language) + "/{0}/{1}.wav";
             try {
-                if (Bridge.referenceEquals(this.voice, "mixed")) {
-                    $t = Bridge.getEnumerator(NumberSayer.knownVoices.get(this.language));
-                    while ($t.moveNext()) {
-                        var item = $t.getCurrent();
-                        mixedResult.push(new Audio(System.String.format(format, item, value)));
-                    }
-                }
-                else  {
-                    mixedResult.push(new Audio(System.String.format(format, this.voice, value)));
+                switch (this.voice) {
+                    case "mixed": 
+                        $t = Bridge.getEnumerator(NumberSayer.knownVoices.get(this.language));
+                        while ($t.moveNext()) {
+                            var item = $t.getCurrent();
+                            mixedResult.push(this.createAudio(System.String.format(format, item, value), mixedResult));
+                        }
+                        break;
+                    default: 
+                        mixedResult.push(this.createAudio(System.String.format(format, this.voice, value), mixedResult));
+                        break;
                 }
             }
             catch ($e1) {
@@ -211,6 +218,26 @@
                 }
             }
             return (($t1 = new Number_Sayer_Bridge.Sound("constructor$1", new Number_Sayer_Bridge.Audio(mixedResult, value, this.rnd)), this.alreadyDone.set(value, $t1), $t1));
+        },
+        createAudio: function (value, mixedResult) {
+            var result = new Audio();
+            result.onerror = function (message, url, lineNumber, columnNumber, error) {
+                var index = Bridge.Linq.Enumerable.from(mixedResult).indexOf(result);
+                if (index > -1) {
+                    mixedResult.splice(index, 1);
+                }
+                /*;
+                return false; /// Unreachable code detected
+    
+    
+                */
+            };
+            var source = Bridge.merge(document.createElement('source'), {
+                src: value,
+                onerror: result.onerror
+            } );
+            result.appendChild(source);
+            return result;
         },
         getThirFifSound: function (value) {
             switch (value.toJSNumber()) {

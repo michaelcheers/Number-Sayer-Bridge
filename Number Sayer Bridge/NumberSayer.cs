@@ -141,11 +141,11 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English, new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
-            {Language.Spanish, new[] {"Ana", "Sylvia"} },
-            {Language.French,  new[] {"Ben"} },
+            {Language.English,   new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
+            {Language.Spanish,   new[] {"Ana", "Sylvia"} },
+            {Language.French,    new[] {"Ben"} },
             {Language.Esperanto, new[] {"Michael"} },
-            {Language.German, new[] {"Laurie"} }
+            {Language.German,    new[] {"Ally", "Laurie"} }
         };
 
         private static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
@@ -183,17 +183,45 @@ namespace Number_Sayer_Bridge
             string format = "Sounds/" + language.ToString() + "/{0}/{1}.wav";
             try
             {
-                if (voice == "mixed")
-                    foreach (var item in knownVoices[language])
-                        mixedResult.Push(new HTMLAudioElement(string.Format(format, item, value)));
-                else
-                    mixedResult.Push(new HTMLAudioElement(string.Format(format, voice, value)));
+                switch (voice)
+                {
+                    case "mixed":
+                        foreach (var item in knownVoices[language])
+                            mixedResult.Push(CreateAudio(string.Format(format, item, value), mixedResult));
+                        break;
+                    default:
+                        mixedResult.Push(CreateAudio(string.Format(format, voice, value), mixedResult));
+                        break;
+                }
             }
             catch (KeyNotFoundException)
             {
                 mixedResult.Push(new HTMLAudioElement(string.Format(format, "", "")));
             }
             return (alreadyDone[value] = new Sound(new Audio(mixedResult, value, rnd)));
+        }
+
+        private HTMLAudioElement CreateAudio(string value, HTMLAudioElement[] mixedResult)
+        {
+            HTMLAudioElement result = new HTMLAudioElement();
+            result.OnError = (message, url, lineNumber, columnNumber, error) =>
+            {
+                var index = mixedResult.IndexOf(result);
+                if (index > -1)
+                    mixedResult.Splice(index, 1);
+                Script.Write("/*");
+                return false;
+#pragma warning disable CS0162 // Unreachable code detected
+                Script.Write("*/");
+#pragma warning restore CS0162 // Unreachable code detected
+            };
+            HTMLSourceElement source = new HTMLSourceElement
+            {
+                Src = value,
+                OnError = result.OnError
+            };
+            result.AppendChild(source);
+            return result;
         }
 
         public Sound GetThirFifSound(WholeNumber value)

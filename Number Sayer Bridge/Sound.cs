@@ -79,6 +79,12 @@ namespace Number_Sayer_Bridge
         {
             get
             {
+                if (value.Length == 0)
+                {
+                    string error = "No valid audio for "+name+".";
+                    Global.Alert(error);
+                    throw new Exception(error);
+                }
                 return value[rnd.Next(value.Length)];
             }
         }

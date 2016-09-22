@@ -44,7 +44,8 @@ namespace Number_Recorder
             Spanish,
             French,
             Esperanto,
-            German
+            German,
+            Roman_Numerals
         }
 
         bool started;
@@ -55,7 +56,8 @@ namespace Number_Recorder
             { Language.Spanish, "Ana" },
             { Language.French, "Ben" },
             { Language.German, "Laurie" },
-            { Language.Esperanto, "Michael" }
+            { Language.Esperanto, "Michael" },
+            { Language.Roman_Numerals, "Michael"  }
         };
 
         Dictionary<Language, string> cultures = new Dictionary<Language, string>
@@ -101,7 +103,7 @@ namespace Number_Recorder
                 GrammarBuilder gb = new GrammarBuilder();
                 gb.Append(new Choices(needToBeRecorded));
                 Grammar grammar = new Grammar(gb);
-                recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo(cultures[currentLanguage]));
+                recognizer = new SpeechRecognitionEngine(new System.Globalization.CultureInfo(cultures[currentLanguage == Language.Roman_Numerals ? Language.English : currentLanguage]));
                 recognizer.SetInputToDefaultAudioDevice();
                 recognizer.LoadGrammar(grammar);
                 recognizer.SpeechRecognized += SpeechRecognized;

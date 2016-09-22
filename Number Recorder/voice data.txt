@@ -1,4 +1,12 @@
-﻿English;
+﻿Roman_Numerals;
+d_0_0|I
+d_0_1|V
+d_1_0|X
+d_1_1|L
+d_2_0|C
+d_2_1|D
+d_2_2|M
+English;
 ty|tea
 Spanish;
 and|y

@@ -32,7 +32,7 @@
                     var item = $t.getCurrent();
                     document.getElementById("language").appendChild(Bridge.merge(document.createElement('option'), {
                         value: System.Enum.toString(NumberSayer.Language, item),
-                        innerHTML: System.Enum.toString(NumberSayer.Language, item)
+                        innerHTML: System.String.replaceAll(System.Enum.toString(NumberSayer.Language, item), String.fromCharCode(95), String.fromCharCode(32))
                     } ));
                 }
                 document.getElementById("language").selectedIndex = 0;
@@ -50,6 +50,7 @@
             submit: function (arg) {
                 var sound = Number_Sayer_Bridge.HTML.getNumberSayer().say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
                 document.getElementById("said").innerHTML = "";
+                var bumped = 0;
                 for (var n = 0; n < sound.sound.length; n = (n + 1) | 0) {
                     var name = sound.sound[n].name;
                     switch (name) {
@@ -58,17 +59,52 @@
                         case "teen": 
                             break;
                         default: 
-                            document.getElementById("said").appendChild(Bridge.merge(document.createElement('span'), {
-                                innerHTML: " "
-                            } ));
+                            if (document.getElementById("language").selectedIndex !== NumberSayer.Language.Roman_Numerals || !System.String.startsWith(name, "d_")) {
+                                document.getElementById("said").appendChild(Bridge.merge(document.createElement('span'), {
+                                    innerHTML: " "
+                                } ));
+                            }
                             break;
                     }
-                    document.getElementById("said").appendChild(Bridge.merge(document.createElement('span'), {
-                        id: "s" + n,
-                        innerHTML: name
-                    } ));
+                    var bump = false;
+                    if (document.getElementById("language").selectedIndex === NumberSayer.Language.Roman_Numerals) {
+                        if (!(Bridge.is(sound.sound[n], Number_Sayer_Bridge.RomanNumeralsAudio))) {
+                            bump = true;
+                        }
+                        else  {
+                            name = System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(name, "d_0_0", "I"), "d_0_1", "V"), "d_1_0", "X"), "d_1_1", "L"), "d_2_0", "C"), "d_2_1", "D"), "d_3_0", "M");
+                        }
+                    }
+                    if (bump) {
+                        bumped = (bumped + 1) | 0;
+                    }
+                    else  {
+                        var span = Bridge.merge(document.createElement('span'), {
+                            innerHTML: name
+                        } );
+                        if (Bridge.is(sound.sound[n], Number_Sayer_Bridge.RomanNumeralsAudio)) {
+                            for (var idx = 0; idx < sound.sound[n].lineNumbers; idx = (idx + 1) | 0) {
+                                var oldSpan = span;
+                                span = document.createElement('span');
+                                span.style.borderTop = "1px solid black";
+                                span.style.marginTop = "1px";
+                                span.style.display = "inline-block";
+                                span.appendChild(oldSpan);
+                            }
+                        }
+                        span.id = "s" + (((n - bumped) | 0));
+                        document.getElementById("said").appendChild(span);
+                    }
                 }
-                sound.play$1($_.Number_Sayer_Bridge.HTML.f5);
+                var indexBump = 0;
+                sound.play$1(function (index) {
+                    if (Bridge.is(sound.sound[index], Number_Sayer_Bridge.RomanNumeralsAudio) || document.getElementById("language").selectedIndex !== NumberSayer.Language.Roman_Numerals) {
+                        document.getElementById("s" + (((index - indexBump) | 0))).style.color = "red";
+                    }
+                    else  {
+                        indexBump = (indexBump + 1) | 0;
+                    }
+                });
             },
             update: function () {
                 var $t;
@@ -113,9 +149,6 @@
         },
         f4: function (e) {
             Number_Sayer_Bridge.HTML.update();
-        },
-        f5: function (index) {
-            document.getElementById("s" + index).style.color = "red";
         }
     });
     

@@ -141,11 +141,12 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English,   new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
-            {Language.Spanish,   new[] {"Ana", "Sylvia"} },
-            {Language.French,    new[] {"Ben"} },
-            {Language.Esperanto, new[] {"Michael"} },
-            {Language.German,    new[] {"Ally", "Laurie"} }
+            {Language.English,        new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
+            {Language.Spanish,        new[] {"Ana", "Sylvia"} },
+            {Language.French,         new[] {"Ben"} },
+            {Language.Esperanto,      new[] {"Michael"} },
+            {Language.German,         new[] {"Ally", "Laurie"} },
+            {Language.Roman_Numerals, new[] {"Michael"} }
         };
 
         private static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
@@ -170,7 +171,8 @@ namespace Number_Sayer_Bridge
             {Language.French,  shortNumberScale },
             {Language.German, shortNumberScale },
             {Language.Spanish,  longNumberScale },
-            {Language.Esperanto, shortNumberScale }
+            {Language.Esperanto, shortNumberScale },
+            {Language.Roman_Numerals, 10 }
         };
 
         public Dictionary<string, Sound> alreadyDone = new Dictionary<string, Sound>();
@@ -252,195 +254,204 @@ namespace Number_Sayer_Bridge
 
         public Sound Say (WholeNumber value)
         {
-            if (value < 0)
-            {
-                return LoadSound("minus").Append(Say(-value));
-            }
             Sound result = new Sound();
-            if (value < 1000000)
+            if (language != Language.Roman_Numerals)
             {
-                if (value < 1000)
+                if (value < 0)
                 {
-                    if (value < 100)
+                    return LoadSound("minus").Append(Say(-value));
+                }
+                if (value < 1000000)
+                {
+                    if (value < 1000)
                     {
-                        if (value < 20)
+                        if (value < 100)
                         {
-                            if (value < irregularStarters[language])
+                            if (value < 20)
                             {
-                                result.AppendThis(smalls[(int)value]);
-                                return result;
+                                if (value < irregularStarters[language])
+                                {
+                                    result.AppendThis(smalls[(int)value]);
+                                    return result;
+                                }
+                                switch (language)
+                                {
+                                    case Language.English:
+                                    case Language.German:
+                                        {
+                                            result.AppendThis(GetThirFifSound(value % 10));
+                                            result.AppendThis(LoadSound(language == Language.German ? "10" : "teen"));
+                                            return result;
+                                        }
+                                }
                             }
+                            int dig1 = (int)(value / 10);
+                            int dig2 = (int)(value % 10);
                             switch (language)
                             {
                                 case Language.English:
                                 case Language.German:
                                     {
-                                        result.AppendThis(GetThirFifSound(value % 10));
-                                        result.AppendThis(LoadSound(language == Language.German ? "10" : "teen"));
-                                        return result;
+                                        if (language == Language.German && dig2 != 0)
+                                        {
+                                            result.AppendThis(GetEinSound(dig2));
+                                            result.AppendThis(and);
+                                        }
+                                        if (dig1 == 2)
+                                            result.AppendThis(LoadSound("20"));
+                                        else
+                                        {
+                                            result.AppendThis(GetThirFifSound(dig1));
+                                            result.AppendThis(ty);
+                                        }
+                                        if (language == Language.German)
+                                            return result;
+                                        break;
+                                    }
+                                case Language.Esperanto:
+                                    {
+                                        if (dig1 != 1)
+                                            result.AppendThis(Say(dig1));
+                                        result.AppendThis(LoadSound("10"));
+                                        break;
+                                    }
+                                case Language.Spanish:
+                                    {
+                                        result.AppendThis(LoadSound(dig1 + "0"));
+                                        if (dig2 != 0)
+                                            result.AppendThis(and);
+                                        break;
+                                    }
+                                case Language.French:
+                                    {
+                                        int dig120 = (int)value / 20;
+                                        BigInteger dig220 = value % 20;
+                                        switch (dig120)
+                                        {
+                                            case 3:
+                                            case 4:
+                                                {
+                                                    result.AppendThis(LoadSound(dig120 * 2 + "0"));
+                                                    if (dig120 == 3 && dig220 == 1)
+                                                        result.AppendThis(and);
+                                                    result.AppendThis(Say(dig220));
+                                                    return result;
+                                                }
+                                            default:
+                                                {
+                                                    result.AppendThis(LoadSound(dig1 + "0"));
+                                                    if (dig2 == 1)
+                                                        result.AppendThis(and);
+                                                    break;
+                                                }
+                                        }
+                                        break;
                                     }
                             }
+                            if (dig2 != 0)
+                                result.AppendThis(Say(dig2));
+                            return result;
                         }
-                        int dig1 = (int)(value / 10);
-                        int dig2 = (int)(value % 10);
+
+                        int hundred = (int)(value / 100);
+                        int remainder = (int)(value % 100);
                         switch (language)
                         {
                             case Language.English:
                             case Language.German:
                                 {
-                                    if (language == Language.German && dig2 != 0)
-                                    {
-                                        result.AppendThis(GetEinSound(dig2));
-                                        result.AppendThis(and);
-                                    }
-                                    if (dig1 == 2)
-                                        result.AppendThis(LoadSound("20"));
-                                    else
-                                    {
-                                        result.AppendThis(GetThirFifSound(dig1));
-                                        result.AppendThis(ty);
-                                    }
-                                    if (language == Language.German)
-                                        return result;
-                                    break;
-                                }
-                            case Language.Esperanto:
-                                {
-                                    if (dig1 != 1)
-                                        result.AppendThis(Say(dig1));
-                                    result.AppendThis(LoadSound("10"));
+                                    if (language == Language.English || hundred != 1)
+                                        result.AppendThis(Say(hundred));
+                                    result.AppendThis(LoadSound("hundred"));
                                     break;
                                 }
                             case Language.Spanish:
                                 {
-                                    result.AppendThis(LoadSound(dig1 + "0"));
-                                    if (dig2 != 0)
-                                        result.AppendThis(and);
-                                    break;
-                                }
-                            case Language.French:
-                                {
-                                    int dig120 = (int)value / 20;
-                                    BigInteger dig220 = value % 20;
-                                    switch (dig120)
+                                    switch (hundred)
                                     {
-                                        case 3:
-                                        case 4:
+                                        case 1:
                                             {
-                                                result.AppendThis(LoadSound(dig120 * 2 + "0"));
-                                                if (dig120 == 3 && dig220 == 1)
-                                                    result.AppendThis(and);
-                                                result.AppendThis(Say(dig220));
-                                                return result;
+                                                result.AppendThis(remainder == 0 ? LoadSound("100") : LoadSound("ciento"));
+                                                break;
+                                            }
+                                        case 5:
+                                            {
+                                                result.AppendThis(LoadSound("500"));
+                                                break;
+                                            }
+                                        case 7:
+                                            {
+                                                result.AppendThis(LoadSound("700"));
+                                                break;
+                                            }
+                                        case 9:
+                                            {
+                                                result.AppendThis(LoadSound("900"));
+                                                break;
                                             }
                                         default:
                                             {
-                                                result.AppendThis(LoadSound(dig1 + "0"));
-                                                if (dig2 == 1)
-                                                    result.AppendThis(and);
+                                                result.AppendThis(Say(hundred));
+                                                result.AppendThis(LoadSound("hundred"));
+                                                break;
+                                            }
+                                    }
+                                    break;
+                                }
+                            case Language.French:
+                            case Language.Esperanto:
+                                {
+                                    switch (hundred)
+                                    {
+                                        case 1:
+                                            {
+                                                result.AppendThis(LoadSound("hundred"));
+                                                if (remainder == 1 && language == Language.French)
+                                                    result.AppendThis(LoadSound("and"));
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                result.AppendThis(Say(hundred));
+                                                result.AppendThis(LoadSound("hundred"));
                                                 break;
                                             }
                                     }
                                     break;
                                 }
                         }
-                        if (dig2 != 0)
-                            result.AppendThis(Say(dig2));
+                        if (remainder != 0)
+                        {
+                            if (language == Language.English)
+                                result.AppendThis(and);
+                            result.AppendThis(Say(remainder));
+                        };
                         return result;
                     }
-
-                    int hundred = (int)(value / 100);
-                    int remainder = (int)(value % 100);
                     switch (language)
                     {
-                        case Language.English:
-                        case Language.German:
-                            {
-                                if (language == Language.English || hundred != 1)
-                                    result.AppendThis(Say(hundred));
-                                result.AppendThis(LoadSound("hundred"));
-                                break;
-                            }
                         case Language.Spanish:
-                            {
-                                switch (hundred)
-                                {
-                                    case 1:
-                                    {
-                                        result.AppendThis(remainder == 0 ? LoadSound("100") : LoadSound("ciento"));
-                                        break;
-                                    }
-                                    case 5:
-                                        {
-                                            result.AppendThis(LoadSound("500"));
-                                            break;
-                                        }
-                                    case 7:
-                                        {
-                                            result.AppendThis(LoadSound("700"));
-                                            break;
-                                        }
-                                    case 9:
-                                        {
-                                            result.AppendThis(LoadSound("900"));
-                                            break;
-                                        }
-                                    default:
-                                        {
-                                            result.AppendThis(Say(hundred));
-                                            result.AppendThis(LoadSound("hundred"));
-                                            break;
-                                        }
-                                }
-                                break;
-                            }
                         case Language.French:
                         case Language.Esperanto:
+                        case Language.German:
                             {
-                                switch (hundred)
-                                {
-                                    case 1:
-                                        {
-                                            result.AppendThis(LoadSound("hundred"));
-                                            if (remainder == 1 && language == Language.French)
-                                                result.AppendThis(LoadSound("and"));
-                                            break;
-                                        }
-                                    default:
-                                        {
-                                            result.AppendThis(Say(hundred));
-                                            result.AppendThis(LoadSound("hundred"));
-                                            break;
-                                        }
-                                }
-                                break;
+                                WholeNumber part1 = value / 1000;
+                                WholeNumber part2 = value % 1000;
+                                if (part1 != 1)
+                                    result.AppendThis(Say(part1));
+
+                                result.AppendThis(LoadSound("thousand"));
+                                if (part2 != 0)
+                                    result.AppendThis(Say(part2));
+                                return result;
                             }
                     }
-                    if (remainder != 0)
-                    {
-                        if (language == Language.English)
-                            result.AppendThis(and);
-                        result.AppendThis(Say(remainder));
-                    };
-                    return result;
                 }
-                switch (language)
-                {
-                    case Language.Spanish:
-                    case Language.French:
-                    case Language.Esperanto:
-                    case Language.German:
-                        {
-                            WholeNumber part1 = value / 1000;
-                            WholeNumber part2 = value % 1000;
-                            if (part1 != 1)
-                                result.AppendThis(Say(part1));
-                            result.AppendThis(LoadSound("thousand"));
-                            if (part2 != 0)
-                                result.AppendThis(Say(part2));
-                            return result;
-                        }
-                }
+            }
+            else if (value < 10)
+            {
+                RomanNumeralization((int)value).ForEach(v => result.AppendThis(v == 2 ? LoadSound("d_1_0") : LoadSound("d_0_" + v)));
+                return result;
             }
             WholeNumber current = 1;
             int n = 0;
@@ -458,7 +469,33 @@ namespace Number_Sayer_Bridge
                         result.AppendThis(and);
                     int spanishAPart = (int)(currentVal / 1000);
                     int spanishBPart = (int)(currentVal % 1000);
-                    result.AppendThis((spanishBPart == 1 && !condition && language == Language.Spanish) ? (spanishAPart == 0 ? new Sound() : Say(new WholeNumber(spanishAPart * 1000))).Append(LoadSound("one")): Say(currentVal));
+                    if (language == Language.Roman_Numerals)
+                    {
+                        List<int> digits = RomanNumeralization((int)currentVal);
+                        foreach (var item in digits)
+                        {
+                            int lineNumbers = (n + 1 + ((item == 2) ? 1 : 0)) / 3;
+                            Sound append;
+                            if (((n % 3) == 2 && item == 0) || (item == 2 && (n % 3) == 1))
+                            {
+                                lineNumbers--;
+                                append = LoadSound("d_3_0");
+                            }
+                            else if (item == 2)
+                                append = LoadSound("d_" + (n + 2) % 3 + "_0");
+                            else
+                                append = LoadSound("d_" + (n + 1) % 3 + "_" + item);
+                            result.AppendThis(new Sound(new RomanNumeralsAudio(append.sound[0], lineNumbers)));
+                            if (lineNumbers > 0)
+                            {
+                                result.AppendThis(LoadSound("with"));
+                                result.AppendThis(Say(lineNumbers));
+                                result.AppendThis(LoadSound(lineNumbers == 1 ? "line" : "lines"));
+                            }
+                        }
+                    }
+                    else
+                        result.AppendThis((spanishBPart == 1 && !condition && language == Language.Spanish) ? (spanishAPart == 0 ? new Sound() : Say(new WholeNumber(spanishAPart * 1000))).Append(LoadSound("one")): Say(currentVal));
                     if (!condition)
                         switch (language)
                         {
@@ -473,18 +510,44 @@ namespace Number_Sayer_Bridge
                             case Language.French:
                             case Language.Esperanto:
                             case Language.German:
-                                    result.AppendThis(LoadSound(placeValues[(n + 1) / 2]).Append(((n + 1) % 2) == 1 ? LoadSound("ard") : LoadSound("on")));
-                                    break;
+                                result.AppendThis(LoadSound(placeValues[(n + 1) / 2]).Append(((n + 1) % 2) == 1 ? LoadSound("ard") : LoadSound("on")));
+                                break;
                         }
                 }
                 current /= languageNumberScale;
                 int valMod1000000;
-                if (current == 1000 && (valMod1000000 = (int)(value % 1000000)) != 0 && language != Language.English)
+                if (current == 1000 && (valMod1000000 = (int)(value % 1000000)) != 0 && language != Language.English && language != Language.Roman_Numerals)
                     return result.Append(Say(valMod1000000));
                 n--;
                 if (current == 0)
                     return result;
             }
+        }
+        
+        /// <returns>The List: key|type, value|number of </returns>
+        static List<int> RomanNumeralization (int value)
+        {
+            var result = new List<int>(4);
+            if (value == 9)
+            {
+                value -= 9;
+                result.Add(0);
+                result.Add(2);
+            }
+            if (value >= 5)
+            {
+                value -= 5;
+                result.Add(1);
+            }
+            if (value == 4)
+            {
+                result.Add(0);
+                result.Add(1);
+            }
+            else if (value != 0)
+                for (int n = 0; n < value; n++)
+                    result.Add(0);
+            return result;
         }
 
         public Sound Say (string value)
@@ -494,6 +557,14 @@ namespace Number_Sayer_Bridge
 
         public Sound Say (Number value)
         {
+            if (language == Language.Roman_Numerals)
+            {
+                if (value.pow10Div != 0)
+                    throw new Exception("Decimals are invalid.");
+                if (value.value <= 0)
+                    throw new Exception("Negatives are invalid");
+                return Say(value.value);
+            }
             Sound s0s = new Sound();
             for (int n = 0; n < value.Decimal0sAtBeginningOfPartB; n++)
                 s0s.AppendThis(LoadSound("0"));
@@ -529,7 +600,8 @@ namespace Number_Sayer_Bridge
             Spanish,
             French,
             Esperanto,
-            German
+            German,
+            Roman_Numerals
         }
     }
 }

@@ -51,7 +51,7 @@ namespace Number_Sayer_Bridge
                 language.AppendChild(new HTMLOptionElement
                 {
                     Value = item.ToString(),
-                    InnerHTML = item.ToString()
+                    InnerHTML = item.ToString().Replace('_', ' ')
                 });
             language.SelectedIndex = 0;
 
@@ -84,6 +84,7 @@ namespace Number_Sayer_Bridge
         {
             Sound sound = NumberSayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
             said.InnerHTML = "";
+            int bumped = 0;
             for (int n = 0; n < sound.sound.Length; n++)
             {
                 var name = sound.sound[n].name;
@@ -94,12 +95,45 @@ namespace Number_Sayer_Bridge
                     case "teen":
                         break;
                     default:
-                        said.AppendChild(new HTMLSpanElement { InnerHTML = " " });
+                        if (currentLanguage != NumberSayer.Language.Roman_Numerals || !name.StartsWith("d_"))
+                            said.AppendChild(new HTMLSpanElement { InnerHTML = " " });
                         break;
                 }
-                said.AppendChild(new HTMLSpanElement { Id = "s" + n, InnerHTML = name });
+                bool bump = false;
+                if (currentLanguage == NumberSayer.Language.Roman_Numerals)
+                {
+                    if (!(sound.sound[n] is RomanNumeralsAudio))
+                        bump = true;
+                    else
+                        name = name.Replace("d_0_0", "I").Replace("d_0_1", "V").Replace("d_1_0", "X").Replace("d_1_1", "L").Replace("d_2_0", "C").Replace("d_2_1", "D").Replace("d_3_0", "M");
+                }
+                if (bump)
+                    bumped++;
+                else
+                {
+                    var span = new HTMLSpanElement { InnerHTML = name };
+                    if (sound.sound[n] is RomanNumeralsAudio)
+                        for (int idx = 0; idx < sound.sound[n].As<RomanNumeralsAudio>().lineNumbers; idx++)
+                        {
+                            var oldSpan = span;
+                            span = new HTMLSpanElement();
+                            span.Style.BorderTop = "1px solid black";
+                            span.Style.MarginTop = "1px";
+                            span.Style.Display = Display.InlineBlock;
+                            span.AppendChild(oldSpan);
+                        }
+                    span.Id = "s" + (n - bumped);
+                    said.AppendChild(span);
+                }
             }
-            sound.Play(index => Document.GetElementById("s" + index).Style.Color = HTMLColor.Red);
+            var indexBump = 0;
+            sound.Play(index => 
+            {
+                if (sound.sound[index] is RomanNumeralsAudio || currentLanguage != NumberSayer.Language.Roman_Numerals)
+                    Document.GetElementById("s" + (index - indexBump)).Style.Color = HTMLColor.Red;
+                else
+                    indexBump++;
+            });
         }
 
         private static void Update()

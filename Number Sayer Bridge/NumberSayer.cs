@@ -141,7 +141,7 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English,        new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Seamus", "Sylvia" } },
+            {Language.English,        new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia" } },
             {Language.Spanish,        new[] {"Ana", "Sylvia"} },
             {Language.French,         new[] {"Ben"} },
             {Language.Esperanto,      new[] {"Michael"} },

@@ -8,6 +8,7 @@ namespace Number_Sayer_Bridge
     public class Sound
     {
         internal Audio[] sound;
+        public event Action OnEnded;
 
         public Sound(Audio value)
         {
@@ -36,7 +37,7 @@ namespace Number_Sayer_Bridge
         
         void Play (int index, Action<int> callStart)
         {
-            callStart(index);
+            callStart(index);++++
             Audio audio = sound[index];
             HTMLAudioElement audioActual = audio.audio;
             if (sound.Length != ++index)
@@ -45,6 +46,8 @@ namespace Number_Sayer_Bridge
                     v.Target.OnEnded = v2 => { };
                     Play(index, callStart);
                 };
+            else
+                audio.OnEnded = OnEnded;
             audioActual.Play();
         }
 

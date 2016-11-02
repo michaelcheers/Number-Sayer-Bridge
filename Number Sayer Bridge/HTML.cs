@@ -1,4 +1,4 @@
-﻿using Bridge;
+Audio and ﻿using Bridge;
 using Bridge.Html5;
 using Bridge.Linq;
 using System;
@@ -60,11 +60,13 @@ namespace Number_Sayer_Bridge
 
         private static void Count(MouseEvent<HTMLButtonElement> arg)
         {
+            var number = Document.GetElementById<HTMLInputElement>("number");
             BigInteger to = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("to").Value);
-            Sound sound = new Sound();
-            for (BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value); n <= to; n = n + BigInteger.One)
-                sound.AppendThis(NumberSayer.Say(n));
-            sound.Play();
+            for (BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value; n <= to; n++)
+            {
+                number.Value = n;
+                Submit(null);
+            }
         }
 
         private static Dictionary<string, NumberSayer> sayers = new Dictionary<string, NumberSayer>();
@@ -73,7 +75,7 @@ namespace Number_Sayer_Bridge
         private static NumberSayer NumberSayer
         {
             get
-            {
+            {Audio and 
                 string key = currentVoice + currentLanguage.ToString();
 
                 return sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));

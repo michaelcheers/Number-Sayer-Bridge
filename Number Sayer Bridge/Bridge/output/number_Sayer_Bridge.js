@@ -1,4 +1,9 @@
-﻿Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
+﻿/**
+ * @version 1.0.0.0
+ * @copyright Copyright ©  2016
+ * @compiler Bridge.NET 15.3.0
+ */
+Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
     "use strict";
 
     Bridge.define("Number_Sayer_Bridge.Audio", {
@@ -16,7 +21,7 @@
         },
         getaudio: function () {
             if (this.value.length === 0) {
-                var error = System.String.concat(System.String.concat("No valid audio for ", this.name), ".");
+                var error = System.String.concat("No valid audio for ", this.name, ".");
                 Bridge.global.alert(error);
                 throw new System.Exception(error);
             }
@@ -210,7 +215,7 @@
                 return this.alreadyDone.get(value);
             }
             var mixedResult = [];
-            var format = System.String.concat(System.String.concat("Sounds/", ($t=this.language, System.Enum.toString(NumberSayer.Language, $t))), "/{0}/{1}.wav");
+            var format = System.String.concat("Sounds/", ($t=this.language, System.Enum.toString(NumberSayer.Language, $t)), "/{0}/{1}.wav");
             try {
                 switch (this.voice) {
                     case "mixed": 
@@ -276,7 +281,7 @@
                 case 9: 
                     return this.loadSound("9");
             }
-            throw new System.ArgumentException(System.String.concat(value, " should only be 1 digit."));
+            throw new System.ArgumentException(value + " should only be 1 digit.");
         },
         say$1: function (value) {
             var $t;
@@ -347,7 +352,7 @@
                                     }
                                 case NumberSayer.Language.Spanish: 
                                     {
-                                        result.appendThis(this.loadSound(System.String.concat(dig1, "0")));
+                                        result.appendThis(this.loadSound(dig1 + "0"));
                                         if (dig2 !== 0) {
                                             result.appendThis(this.getand());
                                         }
@@ -361,7 +366,7 @@
                                             case 3: 
                                             case 4: 
                                                 {
-                                                    result.appendThis(this.loadSound(System.String.concat(((dig120 * 2) | 0), "0")));
+                                                    result.appendThis(this.loadSound(((dig120 * 2) | 0) + "0"));
                                                     if (dig120 === 3 && dig220.eq(1)) {
                                                         result.appendThis(this.getand());
                                                     }
@@ -370,7 +375,7 @@
                                                 }
                                             default: 
                                                 {
-                                                    result.appendThis(this.loadSound(System.String.concat(dig1, "0")));
+                                                    result.appendThis(this.loadSound(dig1 + "0"));
                                                     if (dig2 === 1) {
                                                         result.appendThis(this.getand());
                                                     }
@@ -483,8 +488,8 @@
                 }
             } else if (value.lt(10)) {
                 Bridge.Linq.Enumerable.from(NumberSayer.romanNumeralization(value.toJSNumber())).forEach(Bridge.fn.bind(this, function (v) {
-                    result.appendThis(v === 2 ? this.loadSound("d_1_0") : this.loadSound(System.String.concat("d_0_", v)));
-                }));
+                        result.appendThis(v === 2 ? this.loadSound("d_1_0") : this.loadSound("d_0_" + v));
+                    }));
                 return result;
             }
             var current = bigInt(1);
@@ -515,9 +520,9 @@
                                 lineNumbers = (lineNumbers - 1) | 0;
                                 append = this.loadSound("d_3_0");
                             } else if (item === 2) {
-                                append = this.loadSound(System.String.concat(System.String.concat("d_", (((n + 2) | 0)) % 3), "_0"));
+                                append = this.loadSound("d_" + (((n + 2) | 0)) % 3 + "_0");
                             } else {
-                                append = this.loadSound(System.String.concat(System.String.concat(System.String.concat("d_", (((n + 1) | 0)) % 3), "_"), item));
+                                append = this.loadSound("d_" + (((n + 1) | 0)) % 3 + "_" + item);
                             }
                             result.appendThis(new Number_Sayer_Bridge.Sound.$ctor1(new Number_Sayer_Bridge.RomanNumeralsAudio(append.sound[0], lineNumbers)));
                             if (lineNumbers > 0) {
@@ -598,7 +603,7 @@
         sayBit: function (bit) {
             var div = (Bridge.Int.div(bit, 4)) | 0;
             if (div === 0) {
-                return this.loadSound(System.String.concat("bit_", bit));
+                return this.loadSound("bit_" + bit);
             } else {
                 var mod = bit % 4;
                 var sound = this.sayBit(mod);
@@ -662,6 +667,11 @@
 
     Bridge.define("Number_Sayer_Bridge.Sound", {
         sound: null,
+        config: {
+            events: {
+                OnEnded: null
+            }
+        },
         $ctor1: function (value) {
             this.$initialize();
             this.sound = [value];
@@ -691,6 +701,8 @@
                     v.target.onended = $_.Number_Sayer_Bridge.Sound.f2;
                     this.play$2(index, callStart);
                 });
+            } else {
+                audioActual.onended = Bridge.fn.bind(this, $_.Number_Sayer_Bridge.Sound.f3);
             }
             audioActual.play();
         },
@@ -712,6 +724,9 @@
         f1: function (v) {
         },
         f2: function (v2) {
+        },
+        f3: function (e) {
+            this.OnEnded();
         }
     });
 

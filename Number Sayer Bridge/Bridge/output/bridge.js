@@ -1,10 +1,10 @@
-﻿/*
- * @version   : 15.2.0 - Bridge.NET
+﻿/**
+ * @version   : 15.3.0 - Bridge.NET
  * @author    : Object.NET, Inc. http://bridge.net/
- * @date      : 2016-10-04
+ * @date      : 2016-10-17
  * @copyright : Copyright 2008-2016 Object.NET, Inc. http://object.net/
- * @license   : See license.txt and https://github.com/bridgedotnet/Bridge.NET/blob/master/LICENSE.
-*/
+ * @license   : See license.txt and https://github.com/bridgedotnet/Bridge/blob/master/LICENSE.md
+ */
 
     // @source Init.js
 
@@ -457,16 +457,37 @@
             return Bridge.Reflection.getTypeFullName(obj);
         },
 
+        hasValue: function (obj) {
+            return obj != null;
+        },
+
+        hasValue$1: function () {
+            if (arguments.length === 0) {
+                return false;
+            }
+
+            var i = 0;
+
+            for (i; i < arguments.length; i++) {
+                if (arguments[i] == null) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+
         is: function (obj, type, ignoreFn, allowNull) {
             if (type && type.prototype && type.prototype.$literal && Bridge.isPlainObject(obj)) {
                 return true;
             }
 
-            if (typeof type === "boolean") {
+            var tt = typeof type;
+            if (tt === "boolean") {
                 return type;
             }
 
-            if (typeof type === "string") {
+            if (tt === "string") {
                 type = Bridge.unroll(type);
             }
 
@@ -474,51 +495,45 @@
                 return !!allowNull;
             }
 
+            if (tt === "function" && ((obj.constructor === type) || (Bridge.getType(obj).prototype instanceof type))) {
+                return true;
+            }
+            else if (type.$kind === "interface" && System.Array.contains(Bridge.Reflection.getInterfaces(Bridge.getType(obj)), type)) {
+                return true;
+            }
+
             if (ignoreFn !== true) {
-                if (Bridge.isFunction(type.$is)) {
+                if (typeof (type.$is) === "function") {
                     return type.$is(obj);
                 }
 
-                if (Bridge.isFunction(type.instanceOf)) {
+                if (typeof (type.instanceOf) === "function") {
                     return type.instanceOf(obj);
                 }
 
-                if (Bridge.isFunction(type.isAssignableFrom)) {
+                if (typeof (type.isAssignableFrom) === "function") {
                     return type.isAssignableFrom(Bridge.getType(obj));
                 }
             }
 
-            if ((obj.constructor === type) || (obj instanceof type)) {
-                return true;
-            }
-
-            if (Bridge.isArray(obj) || obj instanceof Bridge.ArrayEnumerator) {
-                return System.Array.is(obj, type);
-            }
-
-            if (Bridge.isString(obj)) {
-                return System.String.is(obj, type);
-            }
-
-            if (Bridge.isBoolean(obj)) {
-                return System.Boolean.is(obj, type);
-            }
-
-            if (Bridge.Reflection.isInterface(type) && System.Array.contains(Bridge.Reflection.getInterfaces(Bridge.getType(obj)), type)) {
-                return true;
-            }
-
-            if (!type.$$inheritors) {
-                return false;
-            }
-
-            var inheritors = type.$$inheritors,
-                i;
-
-            for (i = 0; i < inheritors.length; i++) {
-                if (Bridge.is(obj, inheritors[i])) {
-                    return true;
+            if (!(obj && obj.$kind && obj.$$name)) {
+                if (Bridge.isArray(obj)) {
+                    return System.Array.is(obj, type);
                 }
+
+                var to = typeof (obj);
+                if (to === "string") {
+                    return System.String.is(obj, type);
+                }
+
+                if (to === "boolean") {
+                    return System.Boolean.is(obj, type);
+                }
+
+                return tt === "object" && ((obj.constructor === type) || (obj instanceof type));
+            }
+            else if (obj.$isArrayEnumerator) {
+                return System.Array.is(obj, type);
             }
 
             return false;
@@ -529,11 +544,11 @@
         },
 
         cast: function (obj, type, allowNull) {
-            if (obj === null || typeof (obj) === "undefined") {
+            if (obj == null) {
                 return obj;
             }
 
-            var result = Bridge.as(obj, type, allowNull);
+            var result = Bridge.is(obj, type, false, allowNull) ? obj : null;
 
             if (result === null) {
                 throw new System.InvalidCastException("Unable to cast type " + (obj ? Bridge.getTypeName(obj) : "'null'") + " to type " + Bridge.getTypeName(type));
@@ -647,16 +662,16 @@
             return to;
         },
 
-        getEnumerator: function (obj, suffix, T) {
+        getEnumerator: function (obj, fnName, T) {
             if (typeof obj === "string") {
                 obj = System.String.toCharArray(obj);
             }
 
-            if (suffix && obj && obj["getEnumerator" + suffix]) {
-                return obj["getEnumerator" + suffix].call(obj);
+            if (fnName && obj && obj[fnName]) {
+                return obj[fnName].call(obj);
             }
 
-            if (obj && obj.getEnumerator) {
+            if (!T && obj && obj.getEnumerator) {
                 return obj.getEnumerator();
             }
 
@@ -668,6 +683,10 @@
 
             if (Bridge.isFunction(obj[name = "System$Collections$IEnumerable$getEnumerator"])) {
                 return obj[name]();
+            }
+
+            if (T && obj && obj.getEnumerator) {
+                return obj.getEnumerator();
             }
 
             if ((Object.prototype.toString.call(obj) === "[object Array]") ||
@@ -981,7 +1000,7 @@
         },
 
         getType: function (instance) {
-            if (!Bridge.isDefined(instance, true)) {
+            if (instance == null) {
                 throw new System.NullReferenceException("instance is null");
             }
 
@@ -1131,10 +1150,10 @@
                     return method;
                 }
 
-                if (method.$$bind) {
-                    for (var i = 0; i < method.$$bind.length; i++) {
-                        if (method.$$bind[i].$scope === obj) {
-                            return method.$$bind[i];
+                if (obj && obj.$$bind) {
+                    for (var i = 0; i < obj.$$bind.length; i++) {
+                        if (obj.$$bind[i].$method === method) {
+                            return obj.$$bind[i];
                         }
                     }
                 }
@@ -1179,8 +1198,10 @@
                     }, method.length);
                 }
 
-                method.$$bind = method.$$bind || [];
-                method.$$bind.push(fn);
+                if (obj) {
+                    obj.$$bind = obj.$$bind || [];
+                    obj.$$bind.push(fn);
+                }
 
                 fn.$method = method;
                 fn.$scope = obj;
@@ -1323,12 +1344,10 @@
     // @source Nullable.js
 
     var nullable = {
-        hasValue: function (obj) {
-            return (obj !== null) && (obj !== undefined);
-        },
+        hasValue: Bridge.hasValue,
 
         getValue: function (obj) {
-            if (!System.Nullable.hasValue(obj)) {
+            if (!Bridge.hasValue(obj)) {
                 throw new System.InvalidOperationException("Nullable instance doesn't have a value.");
             }
 
@@ -1336,19 +1355,19 @@
         },
 
         getValueOrDefault: function (obj, defValue) {
-            return System.Nullable.hasValue(obj) ? obj : defValue;
+            return Bridge.hasValue(obj) ? obj : defValue;
         },
 
         add: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a + b : null;
+            return Bridge.hasValue$1(a, b) ? a + b : null;
         },
 
         band: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a & b : null;
+            return Bridge.hasValue$1(a, b) ? a & b : null;
         },
 
         bor: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a | b : null;
+            return Bridge.hasValue$1(a, b) ? a | b : null;
         },
 
         and: function (a, b) {
@@ -1372,7 +1391,7 @@
         },
 
         div: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a / b : null;
+            return Bridge.hasValue$1(a, b) ? a / b : null;
         },
 
         eq: function (a, b) {
@@ -1392,15 +1411,15 @@
         },
 
         xor: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a ^ b : null;
+            return Bridge.hasValue$1(a, b) ? a ^ b : null;
         },
 
         gt: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) && a > b;
+            return Bridge.hasValue$1(a, b) && a > b;
         },
 
         gte: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) && a >= b;
+            return Bridge.hasValue$1(a, b) && a >= b;
         },
 
         neq: function (a, b) {
@@ -1408,35 +1427,35 @@
         },
 
         lt: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) && a < b;
+            return Bridge.hasValue$1(a, b) && a < b;
         },
 
         lte: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) && a <= b;
+            return Bridge.hasValue$1(a, b) && a <= b;
         },
 
         mod: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a % b : null;
+            return Bridge.hasValue$1(a, b) ? a % b : null;
         },
 
         mul: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a * b : null;
+            return Bridge.hasValue$1(a, b) ? a * b : null;
         },
 
         sl: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a << b : null;
+            return Bridge.hasValue$1(a, b) ? a << b : null;
         },
 
         sr: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a >> b : null;
+            return Bridge.hasValue$1(a, b) ? a >> b : null;
         },
 
         srr: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a >>> b : null;
+            return Bridge.hasValue$1(a, b) ? a >>> b : null;
         },
 
         sub: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? a - b : null;
+            return Bridge.hasValue$1(a, b) ? a - b : null;
         },
 
         bnot: function (a) {
@@ -1478,11 +1497,11 @@
         },
 
         lift2: function (f, a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (typeof f === "function" ? f.apply(null, Array.prototype.slice.call(arguments, 1)) : a[f].apply(a, Array.prototype.slice.call(arguments, 2))) : null;
+            return Bridge.hasValue$1(a, b) ? (typeof f === "function" ? f.apply(null, Array.prototype.slice.call(arguments, 1)) : a[f].apply(a, Array.prototype.slice.call(arguments, 2))) : null;
         },
 
         liftcmp: function (f, a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (typeof f === "function" ? f.apply(null, Array.prototype.slice.call(arguments, 1)) : a[f].apply(a, Array.prototype.slice.call(arguments, 2))) : false;
+            return Bridge.hasValue$1(a, b) ? (typeof f === "function" ? f.apply(null, Array.prototype.slice.call(arguments, 1)) : a[f].apply(a, Array.prototype.slice.call(arguments, 2))) : false;
         },
 
         lifteq: function (f, a, b) {
@@ -1501,8 +1520,6 @@
     };
 
     System.Nullable = nullable;
-    Bridge.hasValue = System.Nullable.hasValue;
-
     // @source String.js
 
     var string = {
@@ -1969,8 +1986,14 @@
             return System.String.trimStart(System.String.trimEnd(s, chars), chars);
         },
 
-        concat: function(s1, s2) {
-            return (s1 == null ? "" : s1) + (s2 == null ? "" : s2);
+        concat: function () {
+            var s = "";
+            for (var i = 0; i < arguments.length; i++) {
+                var tmp = arguments[i];
+                s += tmp == null ? "" : tmp;
+            }
+
+            return s;
         }
     };
 
@@ -2496,7 +2519,7 @@
 
             if (!cls) {
                 if (prop.$literal) {
-                    Class = function() {
+                    Class = function () {
                         return {};
                     };
                 } else {
@@ -2507,7 +2530,7 @@
                         }
                     };
                 }
-                
+
                 prop.ctor = Class;
             } else {
                 Class = cls;
@@ -2562,8 +2585,8 @@
                         }
                     }
 
-                    if (extend[j].$kind === "interface") {
-                        interfaces.push(extend[j]);
+                    if (baseType.$kind === "interface") {
+                        interfaces.push(baseType);
                     }
                 }
             }
@@ -2715,6 +2738,16 @@
 
                     return typeof (instance) == "number";
                 };
+
+                Class.getDefaultValue = function () {
+                    var utype = Class.prototype.$utype;
+
+                    if (utype === System.String) {
+                        return null;
+                    }
+
+                    return 0;
+                };
             }
 
             if (Class.$kind === "interface" && Class.prototype.$variance) {
@@ -2774,6 +2807,8 @@
                 scope;
 
             Array.prototype.push.apply(cls.$$inherits, extend);
+            cls.$interfaces = cls.$interfaces || [];
+            cls.$baseInterfaces = cls.$baseInterfaces || [];
 
             for (i = 0; i < extend.length; i++) {
                 scope = extend[i];
@@ -2783,6 +2818,20 @@
                 }
 
                 scope.$$inheritors.push(cls);
+
+                var baseI = (scope.$interfaces || []).concat(scope.$baseInterfaces || []);
+
+                if (baseI.length > 0) {
+                    for (var k = 0; k < baseI.length; k++) {
+                        if (cls.$baseInterfaces.indexOf(baseI[k]) < 0) {
+                            cls.$baseInterfaces.push(baseI[k]);
+                        }
+                    }
+                }
+
+                if (scope.$kind === "interface") {
+                    cls.$interfaces.push(scope);
+                }
             }
         },
 
@@ -2793,7 +2842,7 @@
                 exists,
                 i;
 
-            for (i = 0; i < (nameParts.length - 1); i++) {
+            for (i = 0; i < (nameParts.length - 1) ; i++) {
                 if (typeof scope[nameParts[i]] == "undefined") {
                     scope[nameParts[i]] = {};
                 }
@@ -2968,7 +3017,7 @@
     Bridge.definei = Bridge.Class.definei;
     Bridge.init = Bridge.Class.init;
 
-    // @source Reflection.js
+    // @source ReflectionAssembly.js
 
     Bridge.assembly = function (assemblyName, res, callback) {
         if (!callback) {
@@ -3060,6 +3109,17 @@
     Bridge.SystemAssembly = Bridge.$currentAssembly;
     Bridge.SystemAssembly.$types["System.Reflection.Assembly"] = System.Reflection.Assembly;
     System.Reflection.Assembly.$assembly = Bridge.SystemAssembly;
+
+    // @source systemAssemblyVersion.js
+
+    (function(){
+        Bridge.SystemAssembly.version = "15.3.0";
+        Bridge.SystemAssembly.compiler = "15.3.0";
+    })();
+
+    Bridge.define("Bridge.Utils.SystemAssemblyVersion");
+
+    // @source Reflection.js
 
     Bridge.Reflection = {
         setMetadata: function (type, metadata) {
@@ -3332,10 +3392,6 @@
         isInstanceOfType: function (instance, type) {
             return Bridge.is(instance, type);
         },
-
-        /*isAssignableFrom: function(target, type) {
-            return target === type || (typeof(target.isAssignableFrom) === 'function' && target.isAssignableFrom(type)) || type.prototype instanceof target;
-        },*/
 
         isAssignableFrom: function (baseType, type) {
             if (baseType == null) {
@@ -5324,7 +5380,7 @@
                 var nf = (provider || System.Globalization.CultureInfo.getCurrentCulture()).getFormat(System.Globalization.NumberFormatInfo),
                     str,
                     decimalIndex,
-                    negPattern,
+                    pattern,
                     roundingFactor,
                     groupIndex,
                     groupSize,
@@ -5339,7 +5395,8 @@
                     buffer = "",
                     isDecimal = number instanceof System.Decimal,
                     isLong = number instanceof System.Int64 || number instanceof System.UInt64,
-                    isNeg = isDecimal || isLong ? (number.isZero() ? false : number.isNegative()) : number < 0;
+                    isNeg = isDecimal || isLong ? (number.isZero() ? false : number.isNegative()) : number < 0,
+                    isZero = false;
 
                 roundingFactor = Math.pow(10, maxDecLen);
 
@@ -5350,6 +5407,8 @@
                 } else {
                     str = "" + (+Math.abs(number).toFixed(maxDecLen));
                 }
+
+                isZero = str.split('').every(function (s) { return s === '0' || s === '.'; });
 
                 decimalIndex = str.indexOf(".");
 
@@ -5426,14 +5485,14 @@
                     }
                 }
 
-                if (isNeg) {
-                    negPattern = System.Globalization.NumberFormatInfo[name + "NegativePatterns"][nf[name + "NegativePattern"]];
+                if (isNeg && !isZero) {
+                    pattern = System.Globalization.NumberFormatInfo[name + "NegativePatterns"][nf[name + "NegativePattern"]];
 
-                    return negPattern.replace("-", nf.negativeSign).replace("%", nf.percentSymbol).replace("$", nf.currencySymbol).replace("n", buffer);
+                    return pattern.replace("-", nf.negativeSign).replace("%", nf.percentSymbol).replace("$", nf.currencySymbol).replace("n", buffer);
                 } else if (System.Globalization.NumberFormatInfo[name + "PositivePatterns"]) {
-                    negPattern = System.Globalization.NumberFormatInfo[name + "PositivePatterns"][nf[name + "PositivePattern"]];
+                    pattern = System.Globalization.NumberFormatInfo[name + "PositivePatterns"][nf[name + "PositivePattern"]];
 
-                    return negPattern.replace("%", nf.percentSymbol).replace("$", nf.currencySymbol).replace("n", buffer);
+                    return pattern.replace("%", nf.percentSymbol).replace("$", nf.currencySymbol).replace("n", buffer);
                 }
 
                 return buffer;
@@ -5452,6 +5511,7 @@
                     roundingFactor,
                     decimalIndex,
                     isNegative = false,
+                    isZero = false,
                     name,
                     groupCfg,
                     buffer = "",
@@ -5508,13 +5568,14 @@
                 roundingFactor = Math.pow(10, decimals);
 
                 if (isDecimal) {
-                    number = number.abs().mul(roundingFactor).round().div(roundingFactor).toString();
-                }
-                if (isLong) {
+                    number = System.Decimal.round(number.abs().mul(roundingFactor), 4).div(roundingFactor).toString();
+                } else if (isLong) {
                     number = (number.eq(System.Int64.MinValue) ? System.Int64(number.value.toUnsigned()) : number.abs()).mul(roundingFactor).div(roundingFactor).toString();
                 } else {
                     number = "" + (Math.round(Math.abs(number) * roundingFactor) / roundingFactor);
                 }
+
+                isZero = number.split('').every(function (s) { return s === '0' || s === '.'; });
 
                 decimalIndex = number.indexOf(".");
                 integralDigits = decimalIndex < 0 ? number.length : decimalIndex;
@@ -5588,7 +5649,7 @@
                     }
                 }
 
-                if (isNegative) {
+                if (isNegative && !isZero) {
                     buffer = "-" + buffer;
                 }
 
@@ -7914,31 +7975,31 @@
         },
 
         subdt: function (d, t) {
-            return Bridge.hasValue(d) && Bridge.hasValue(t) ? this.dateAddSubTimespan(d, t, -1) : null;
+            return Bridge.hasValue$1(d, t) ? this.dateAddSubTimespan(d, t, -1) : null;
         },
 
         adddt: function (d, t) {
-            return Bridge.hasValue(d) && Bridge.hasValue(t) ? this.dateAddSubTimespan(d, t, 1) : null;
+            return Bridge.hasValue$1(d, t) ? this.dateAddSubTimespan(d, t, 1) : null;
         },
 
         subdd: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (new System.TimeSpan((a - b) * 10000)) : null;
+            return Bridge.hasValue$1(a, b) ? (new System.TimeSpan((a - b) * 10000)) : null;
         },
 
         gt: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a > b) : false;
+            return Bridge.hasValue$1(a, b) ? (a > b) : false;
         },
 
         gte: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a >= b) : false;
+            return Bridge.hasValue$1(a, b) ? (a >= b) : false;
         },
 
         lt: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a < b) : false;
+            return Bridge.hasValue$1(a, b) ? (a < b) : false;
         },
 
         lte: function (a, b) {
-            return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a <= b) : false;
+            return Bridge.hasValue$1(a, b) ? (a <= b) : false;
         }
     };
 
@@ -7996,15 +8057,15 @@
             },
 
             sub: function (t1, t2) {
-                return Bridge.hasValue(t1) && Bridge.hasValue(t2) ? (new System.TimeSpan(t1.ticks.sub(t2.ticks))) : null;
+                return Bridge.hasValue$1(t1, t2) ? (new System.TimeSpan(t1.ticks.sub(t2.ticks))) : null;
             },
 
             eq: function (t1, t2) {
-                return Bridge.hasValue(t1) && Bridge.hasValue(t2) ? (t1.ticks.eq(t2.ticks)) : null;
+                return Bridge.hasValue$1(t1, t2) ? (t1.ticks.eq(t2.ticks)) : null;
             },
 
             neq: function (t1, t2) {
-                return Bridge.hasValue(t1) && Bridge.hasValue(t2) ? (t1.ticks.ne(t2.ticks)) : null;
+                return Bridge.hasValue$1(t1, t2) ? (t1.ticks.ne(t2.ticks)) : null;
             },
 
             plus: function (t) {
@@ -8012,23 +8073,23 @@
             },
 
             add: function (t1, t2) {
-                return Bridge.hasValue(t1) && Bridge.hasValue(t2) ? (new System.TimeSpan(t1.ticks.add(t2.ticks))) : null;
+                return Bridge.hasValue$1(t1, t2) ? (new System.TimeSpan(t1.ticks.add(t2.ticks))) : null;
             },
 
             gt: function (a, b) {
-                return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a.ticks.gt(b.ticks)) : false;
+                return Bridge.hasValue$1(a, b) ? (a.ticks.gt(b.ticks)) : false;
             },
 
             gte: function (a, b) {
-                return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a.ticks.gte(b.ticks)) : false;
+                return Bridge.hasValue$1(a, b) ? (a.ticks.gte(b.ticks)) : false;
             },
 
             lt: function (a, b) {
-                return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a.ticks.lt(b.ticks)) : false;
+                return Bridge.hasValue$1(a, b) ? (a.ticks.lt(b.ticks)) : false;
             },
 
             lte: function (a, b) {
-                return Bridge.hasValue(a) && Bridge.hasValue(b) ? (a.ticks.lte(b.ticks)) : false;
+                return Bridge.hasValue$1(a, b) ? (a.ticks.lte(b.ticks)) : false;
             }
         },
 
@@ -9638,6 +9699,20 @@
         };
     });
 
+    Bridge.define('System.Collections.Generic.IReadOnlyCollection$1', function (T) {
+        return {
+            inherits: [System.Collections.Generic.IEnumerable$1(T)],
+            $kind: "interface"
+        };
+    });
+
+    Bridge.define('System.Collections.Generic.IReadOnlyList$1', function (T) {
+        return {
+            inherits: [System.Collections.Generic.IReadOnlyCollection$1(T)],
+            $kind: "interface"
+        };
+    });
+
     // @source CustomEnumerator.js
 
     Bridge.define('Bridge.CustomEnumerator', {
@@ -9696,6 +9771,8 @@
 
     Bridge.define('Bridge.ArrayEnumerator', {
         inherits: [System.Collections.IEnumerator, System.IDisposable],
+
+        $isArrayEnumerator: true,
 
         config: {
             alias: [
@@ -10185,6 +10262,8 @@
                 } else {
                     this.items = [];
                 }
+
+                this.clear.$clearCallbacks = [];
             },
 
             checkIndex: function (index) {
@@ -10241,6 +10320,14 @@
             clear: function () {
                 this.checkReadOnly();
                 this.items = [];
+
+                for (var i = 0; i < this.clear.$clearCallbacks.length; i++) {
+                    this.clear.$clearCallbacks[i](this);
+                }
+            },
+
+            onClear: function(callback) {
+                this.clear.$clearCallbacks.push(callback);
             },
 
             indexOf: function (item, startIndex) {
@@ -10464,15 +10551,27 @@
 
     Bridge.define('System.Collections.ObjectModel.ReadOnlyCollection$1', function (T) {
         return {
-            inherits: [System.Collections.Generic.List$1(T)],
+            inherits: [System.Collections.Generic.List$1(T), System.Collections.Generic.IReadOnlyList$1(T)],
             ctor: function (list) {
                 this.$initialize();
                 if (list == null) {
                     throw new System.ArgumentNullException("list");
                 }
 
-                System.Collections.Generic.List$1(T).ctor.call(this, list);
+                System.Collections.Generic.List$1(T).ctor.call(this, []);
                 this.readOnly = true;
+
+                if (Object.prototype.toString.call(list) === '[object Array]') {
+                    this.items = list;
+                } else if (Bridge.is(list, System.Collections.Generic.List$1(T))) {
+                    var me = this;
+                    this.items = list.items;
+                    list.onClear(function(l) {
+                        me.items = l.items;
+                    });
+                } else if (Bridge.is(list, System.Collections.IEnumerable)) {
+                    this.items = Bridge.toArray(list);
+                }
             }
         };
     });
@@ -13768,11 +13867,8 @@
         this.System$Collections$IEnumerator$reset = this.reset;
     };
 
-    System.IDisposable.$$inheritors = System.IDisposable.$$inheritors || [];
-    System.IDisposable.$$inheritors.push(IEnumerator);
-
-    System.Collections.IEnumerator.$$inheritors = System.Collections.IEnumerator.$$inheritors || [];
-    System.Collections.IEnumerator.$$inheritors.push(IEnumerator);
+    IEnumerator.$$inherits = [];
+    Bridge.Class.addExtend(IEnumerator, [System.IDisposable, System.Collections.IEnumerator]);
 
     // for tryGetNext
     var Yielder = function () {
@@ -13791,8 +13887,9 @@
     var Enumerable = function (getEnumerator) {
         this.getEnumerator = getEnumerator;
     };
-    System.Collections.IEnumerable.$$inheritors = System.Collections.IEnumerable.$$inheritors || [];
-    System.Collections.IEnumerable.$$inheritors.push(Enumerable);
+
+    Enumerable.$$inherits = [];
+    Bridge.Class.addExtend(Enumerable, [System.Collections.IEnumerable]);
 
     // Utility
 
@@ -16521,8 +16618,8 @@
         };
     };
 
-    System.Collections.IEnumerable.$$inheritors = System.Collections.IEnumerable.$$inheritors || [];
-    System.Collections.IEnumerable.$$inheritors.push(Lookup);
+    Lookup.$$inherits = [];
+    Bridge.Class.addExtend(Lookup, [System.Collections.IEnumerable]);
 
     var Grouping = function (groupKey, elements) {
         this.key = function () {
@@ -16803,7 +16900,7 @@
             return false;
         },
         format$1: function (format) {
-            var s = System.String.concat(System.String.concat(System.UInt32.format((this._a >>> 0), "x8"), System.UInt16.format((this._b & 65535), "x4")), System.UInt16.format((this._c & 65535), "x4"));
+            var s = System.String.concat(System.UInt32.format((this._a >>> 0), "x8"), System.UInt16.format((this._b & 65535), "x4"), System.UInt16.format((this._c & 65535), "x4"));
             s = System.String.concat(s, ([this._d, this._e, this._f, this._g, this._h, this._i, this._j, this._k]).map(System.Guid.makeBinary).join(""));
 
             s = System.Guid.split.exec(s).slice(1).join("-");
@@ -16814,10 +16911,10 @@
                     return s.replace(System.Guid.replace, "");
                 case "b": 
                 case "B": 
-                    return System.String.concat(System.String.concat(String.fromCharCode(123), s), String.fromCharCode(125));
+                    return System.String.concat(String.fromCharCode(123), s, String.fromCharCode(125));
                 case "p": 
                 case "P": 
-                    return System.String.concat(System.String.concat(String.fromCharCode(40), s), String.fromCharCode(41));
+                    return System.String.concat(String.fromCharCode(40), s, String.fromCharCode(41));
                 default: 
                     return s;
             }
@@ -18718,7 +18815,7 @@ Bridge.define("System.Text.RegularExpressions.RegexParser", {
         // is simply to truncate the high bits.
         i &= 0xFF;
 
-        return i;
+        return String.fromCharCode(i);
     },
 
     _scanHex: function (c) {
@@ -18830,8 +18927,9 @@ Bridge.define("System.Text.RegularExpressions.RegexParser", {
             case "c":
                 return this._scanControl();
             default:
-                if (!this._useOptionE() && this._isWordChar(ch)) {
-                    throw this._makeException("Unrecognized escape sequence.");
+                var isInvalidBasicLatin = ch === '8' || ch === '9' || ch === '_';
+                if (isInvalidBasicLatin || (!this._useOptionE() && this._isWordChar(ch))) {
+                    throw this._makeException("Unrecognized escape sequence \\" + ch + ".");
                 }
                 return ch;
         }
@@ -18860,7 +18958,7 @@ Bridge.define("System.Text.RegularExpressions.RegexParser", {
     _isWordChar: function (ch) {
         // Partial implementation,
         // see the link for more details (http://referencesource.microsoft.com/#System/regex/system/text/regularexpressions/RegexParser.cs,1156)
-        return System.Char.isLetter(ch);
+        return System.Char.isLetter(ch.charCodeAt(0));
     },
 
     _charsRight: function () {
@@ -21721,6 +21819,20 @@ Bridge.define("System.Text.RegularExpressions.RegexParser", {
                     throw new System.ArgumentException("Malformed \\k<...> named back reference.");
                 }
 
+                // Temp fix (until IsWordChar is not supported):
+                // See more: https://referencesource.microsoft.com/#System/regex/system/text/regularexpressions/RegexParser.cs,1414
+                // Unescaping of any of the following ASCII characters results in the character itself
+                var code = ch.charCodeAt(0);
+                if ((code >= 0 && code < 48) ||
+                    (code > 57 && code < 65) ||
+                    (code > 90 && code < 95) ||
+                    (code === 96) ||
+                    (code > 122 && code < 128)) {
+                    var token = scope._createPatternToken(pattern, tokenTypes.escChar, i, 2);
+                    token.data = { n: code, ch: ch };
+                    return token;
+                }
+
                 // Unrecognized escape sequence:
                 throw new System.ArgumentException("Unrecognized escape sequence \\" + ch + ".");
             },
@@ -23219,7 +23331,7 @@ Bridge.define("System.Text.RegularExpressions.RegexParser", {
 
             var div = document.createElement("div");
             div.id = Bridge.Console.BODY_WRAPPER_ID;
-            div.setAttribute("style", System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat(System.String.concat("height: calc(100vh - ", this.consoleHeight), " - "), this.consoleHeaderHeight), ");"), "margin-top: calc(-1 * "), "("), (System.String.concat(System.String.concat(bodyMarginTop, " + "), bodyPaddingTop))), "));"), "margin-right: calc(-1 * "), "("), (System.String.concat(System.String.concat(bodyMarginRight, " + "), bodyPaddingRight))), "));"), "margin-left: calc(-1 * "), "("), (System.String.concat(System.String.concat(bodyMarginLeft, " + "), bodyPaddingLeft))), "));"), "padding-top: calc("), (System.String.concat(System.String.concat(bodyMarginTop, " + "), bodyPaddingTop))), ");"), "padding-right: calc("), (System.String.concat(System.String.concat(bodyMarginRight, " + "), bodyPaddingRight))), ");"), "padding-bottom: calc("), (System.String.concat(System.String.concat(bodyMarginBottom, " + "), bodyPaddingBottom))), ");"), "padding-left: calc("), (System.String.concat(System.String.concat(bodyMarginLeft, " + "), bodyPaddingLeft))), ");"), "overflow-x: auto;"), "box-sizing: border-box !important;"));
+            div.setAttribute("style", System.String.concat("height: calc(100vh - ", this.consoleHeight, " - ", this.consoleHeaderHeight, ");", "margin-top: calc(-1 * ", "(", (System.String.concat(bodyMarginTop, " + ", bodyPaddingTop)), "));", "margin-right: calc(-1 * ", "(", (System.String.concat(bodyMarginRight, " + ", bodyPaddingRight)), "));", "margin-left: calc(-1 * ", "(", (System.String.concat(bodyMarginLeft, " + ", bodyPaddingLeft)), "));", "padding-top: calc(", (System.String.concat(bodyMarginTop, " + ", bodyPaddingTop)), ");", "padding-right: calc(", (System.String.concat(bodyMarginRight, " + ", bodyPaddingRight)), ");", "padding-bottom: calc(", (System.String.concat(bodyMarginBottom, " + ", bodyPaddingBottom)), ");", "padding-left: calc(", (System.String.concat(bodyMarginLeft, " + ", bodyPaddingLeft)), ");", "overflow-x: auto;", "box-sizing: border-box !important;"));
 
             while (document.body.firstChild != null) {
                 div.appendChild(document.body.firstChild);
@@ -23293,7 +23405,7 @@ Bridge.define("System.Text.RegularExpressions.RegexParser", {
             $t = Bridge.getEnumerator(obj);
             while ($t.moveNext()) {
                 var item = $t.getCurrent();
-                str = System.String.concat(str, (System.String.concat(System.String.concat(System.String.concat(item.key.toLowerCase(), ":"), item.value), ";")));
+                str = System.String.concat(str, (System.String.concat(item.key.toLowerCase(), ":", item.value, ";")));
             }
 
             return str;

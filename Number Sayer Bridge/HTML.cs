@@ -1,5 +1,5 @@
-Audio and ﻿using Bridge;
 using Bridge.Html5;
+﻿using Bridge;
 using Bridge.Linq;
 using System;
 using System.Collections.Generic;
@@ -62,9 +62,9 @@ namespace Number_Sayer_Bridge
         {
             var number = Document.GetElementById<HTMLInputElement>("number");
             BigInteger to = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("to").Value);
-            for (BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value; n <= to; n++)
+            for (BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value); n <= to; n++)
             {
-                number.Value = n;
+                number.Value = n.ToString();
                 Submit(null);
             }
         }
@@ -75,7 +75,7 @@ namespace Number_Sayer_Bridge
         private static NumberSayer NumberSayer
         {
             get
-            {Audio and 
+            { 
                 string key = currentVoice + currentLanguage.ToString();
 
                 return sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));

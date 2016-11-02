@@ -40,12 +40,12 @@
                 Number_Sayer_Bridge.HTML.update();
             },
             count: function (arg) {
+                var number = document.getElementById("number");
                 var to = bigInt(document.getElementById("to").value, 10);
-                var sound = new Number_Sayer_Bridge.Sound.ctor();
-                for (var n = bigInt(document.getElementById("from").value, 10); n.leq(to); n = n.add(bigInt(1))) {
-                    sound.appendThis(Number_Sayer_Bridge.HTML.NumberSayer().say$1(n));
+                for (var n = bigInt(document.getElementById("from").value, 10); n.leq(to); n = n.add(1)) {
+                    number.value = n.toString();
+                    Number_Sayer_Bridge.HTML.submit(null);
                 }
-                sound.play();
             },
             submit: function (arg) {
                 var sound = Number_Sayer_Bridge.HTML.NumberSayer().say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
@@ -90,14 +90,14 @@
                                 span.appendChild(oldSpan);
                             }
                         }
-                        span.id = System.String.concat("s", (((n - bumped) | 0)));
+                        span.id = "s" + (((n - bumped) | 0));
                         document.getElementById("said").appendChild(span);
                     }
                 }
                 var indexBump = 0;
                 sound.play$1(function (index) {
                     if (Bridge.is(sound.sound[index], Number_Sayer_Bridge.RomanNumeralsAudio) || document.getElementById("language").selectedIndex !== NumberSayer.Language.Roman_Numerals) {
-                        document.getElementById(System.String.concat("s", (((index - indexBump) | 0)))).style.color = "red";
+                        document.getElementById("s" + (((index - indexBump) | 0))).style.color = "red";
                     } else {
                         indexBump = (indexBump + 1) | 0;
                     }

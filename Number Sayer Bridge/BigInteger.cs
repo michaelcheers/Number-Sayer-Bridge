@@ -111,5 +111,8 @@ namespace System.Numerics
 
         [Template("{0}.mod({1})")]
         public static extern BigInteger operator %(BigInteger a, GenNum b);
+
+        [Template("{0}.add(1)")]
+        public static extern BigInteger operator ++ (BigInteger value);
     }
 }

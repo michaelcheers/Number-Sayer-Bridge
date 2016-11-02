@@ -146,7 +146,8 @@ namespace Number_Sayer_Bridge
             {Language.French,         new[] {"Ben"} },
             {Language.Esperanto,      new[] {"Michael"} },
             {Language.German,         new[] {"Ally", "Laurie"} },
-            {Language.Roman_Numerals, new[] {"Michael"} }
+            {Language.Roman_Numerals, new[] {"Michael"} },
+            {Language.Binary_Short,   new[] {"Michael"} }
         };
 
         private static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
@@ -255,6 +256,16 @@ namespace Number_Sayer_Bridge
         public Sound Say (WholeNumber value)
         {
             Sound result = new Sound();
+            if (language == Language.Binary_Short)
+            {
+                WholeNumber num = 1;
+                int bit = 0;
+                for (; num < value; num<<=1, bit++) ;
+                for (WholeNumber currentNum = num; currentNum != 0; currentNum >>= 1, bit--)
+                    if ((value & currentNum) == currentNum)
+                        result.AppendThis(SayBit(bit));
+                return result;
+            }
             if (language != Language.Roman_Numerals)
             {
                 if (value < 0)
@@ -523,7 +534,20 @@ namespace Number_Sayer_Bridge
                     return result;
             }
         }
-        
+
+        private Sound SayBit(int bit)
+        {
+            var div = bit / 4;
+            if (div == 0)
+                return LoadSound("bit_" + bit);
+            else
+            {
+                var mod = bit % 4;
+                Sound sound = SayBit(mod);
+                return SayBit(mod).Append(LoadSound("_start")).Append(Say(div).Append(LoadSound("_end")));
+            }
+        }
+
         /// <returns>The List: key|type, value|number of </returns>
         static List<int> RomanNumeralization (int value)
         {
@@ -557,7 +581,7 @@ namespace Number_Sayer_Bridge
 
         public Sound Say (Number value)
         {
-            if (language == Language.Roman_Numerals)
+            if (language == Language.Roman_Numerals || language == Language.Binary_Short)
             {
                 if (value.pow10Div != 0)
                     throw new Exception("Decimals are invalid.");
@@ -601,7 +625,8 @@ namespace Number_Sayer_Bridge
             French,
             Esperanto,
             German,
-            Roman_Numerals
+            Roman_Numerals,
+            Binary_Short
         }
     }
 }

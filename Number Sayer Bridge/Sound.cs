@@ -43,7 +43,7 @@ namespace Number_Sayer_Bridge
             if (sound.Length != ++index)
                 audioActual.OnEnded = v => 
                 {
-                    v.Target.OnEnded = v2 => { };
+                    v.Target.As<HTMLAudioElement>().OnEnded = v2 => { };
                     Play(index, callStart);
                 };
             else

@@ -47,6 +47,7 @@
     <Compile Include="Sound.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Bridge\bridge.json" />
     <None Include="Bridge\www\Sounds\English\Michael\0.wav" />
     <None Include="Bridge\www\Sounds\English\Michael\1.wav" />
     <None Include="Bridge\www\Sounds\English\Michael\10.wav" />
@@ -118,6 +119,7 @@
     <Content Include="Bridge\output\html.min.js" />
     <Content Include="Bridge\output\number_Sayer_Bridge.js" />
     <Content Include="Bridge\output\number_Sayer_Bridge.min.js" />
+    <Content Include="Bridge\output\readme.txt" />
     <Content Include="Bridge\www\BigInteger.min.js" />
     <Content Include="Bridge\www\demo.html" />
     <Content Include="Bridge\www\demo.min.html" />

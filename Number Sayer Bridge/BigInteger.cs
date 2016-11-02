@@ -79,10 +79,10 @@ namespace System.Numerics
         [Template("bigInt.gcd({0}, {1})")]
         public static extern BigInteger GreatestCommonDivisor(BigInteger numerator, BigInteger denominator);
 
-        [Template("{0}.greaterOrEquals({1})")]
+        [Template("{0}.geq({1})")]
         public static extern bool operator >=(BigInteger a, GenNum b);
 
-        [Template("{0}.lesserOrEquals({1})")]
+        [Template("{0}.leq({1})")]
         public static extern bool operator <=(BigInteger a, GenNum b);
 
         [Template("{0}.lt({1})")]

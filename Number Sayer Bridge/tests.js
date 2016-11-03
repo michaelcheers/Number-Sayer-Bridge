@@ -1,4 +1,5 @@
-/// <reference path="Bridge/output/number_Sayer_Bridge.js" />
+﻿/// <reference path="Bridge/output/number_Sayer_Bridge.js" />
+/// <reference path="Bridge/output/bridge.js" />
 
 test("Say 1000000", function ()
 {

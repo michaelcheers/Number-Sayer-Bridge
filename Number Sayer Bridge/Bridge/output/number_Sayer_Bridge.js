@@ -726,7 +726,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
         f2: function (v2) {
         },
         f3: function (e) {
-            this.OnEnded();
+            !Bridge.staticEquals(this.OnEnded, null) ? this.OnEnded() : null;
         }
     });
 

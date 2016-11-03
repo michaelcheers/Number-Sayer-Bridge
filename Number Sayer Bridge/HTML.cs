@@ -32,7 +32,7 @@ namespace Number_Sayer_Bridge
             {
                 if (ev.IsKeyboardEvent() && ev.As<KeyboardEvent>().KeyCode == 13)
                 {
-                    Submit(null);
+                    Submit(null, () => { });
                 }
             };
             new[] { Document.GetElementById("from"), Document.GetElementById("to") }.ForEach(item => item.OnKeyDown = ev =>
@@ -43,7 +43,7 @@ namespace Number_Sayer_Bridge
 
             language.OnChange = e => Update();
 
-            Document.GetElementById<HTMLButtonElement>("submit").OnClick = Submit;
+            Document.GetElementById<HTMLButtonElement>("submit").OnClick = (e) => Submit(e, () => { });
             Document.GetElementById<HTMLButtonElement>("count") .OnClick = Count;
 
             language.InnerHTML = "";
@@ -62,11 +62,15 @@ namespace Number_Sayer_Bridge
         {
             var number = Document.GetElementById<HTMLInputElement>("number");
             BigInteger to = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("to").Value);
-            for (BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value); n <= to; n++)
-            {
+            BigInteger n = BigInteger.Parse(Document.GetElementById<HTMLInputElement>("from").Value);
                 number.Value = n.ToString();
-                Submit(null);
-            }
+                Submit(null, () =>
+                {
+                    if (BigInteger.Parse(number.Value) == to)
+                        return;
+                    Document.GetElementById<HTMLInputElement>("from").Value = (BigInteger.Parse(number.Value) + 1).ToString();
+                    Count(null);
+                });
         }
 
         private static Dictionary<string, NumberSayer> sayers = new Dictionary<string, NumberSayer>();
@@ -82,7 +86,7 @@ namespace Number_Sayer_Bridge
             }
         }
 
-        private static void Submit(MouseEvent<HTMLButtonElement> arg)
+        private static void Submit(MouseEvent<HTMLButtonElement> arg, Action Callback)
         {
             Sound sound = NumberSayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
             said.InnerHTML = "";
@@ -129,6 +133,7 @@ namespace Number_Sayer_Bridge
                 }
             }
             var indexBump = 0;
+            sound.OnEnded += Callback;
             sound.Play(index => 
             {
                 if (sound.sound[index] is RomanNumeralsAudio || currentLanguage != NumberSayer.Language.Roman_Numerals)

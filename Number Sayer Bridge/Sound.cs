@@ -41,13 +41,13 @@ namespace Number_Sayer_Bridge
             Audio audio = sound[index];
             HTMLAudioElement audioActual = audio.audio;
             if (sound.Length != ++index)
-                audioActual.OnEnded = v => 
+                audioActual.OnEnded = v =>
                 {
                     v.Target.As<HTMLAudioElement>().OnEnded = v2 => { };
                     Play(index, callStart);
                 };
             else
-                audioActual.OnEnded = e => OnEnded();
+                audioActual.OnEnded = e => OnEnded?.Invoke();
             audioActual.Play();
         }
 

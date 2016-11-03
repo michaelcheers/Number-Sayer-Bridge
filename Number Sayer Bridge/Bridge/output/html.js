@@ -18,12 +18,12 @@
             },
             start: function () {
                 var $t;
-                document.getElementById("number").onkeydown = $_.Number_Sayer_Bridge.HTML.f1;
-                [document.getElementById("from"), document.getElementById("to")].forEach($_.Number_Sayer_Bridge.HTML.f3);
+                document.getElementById("number").onkeydown = $_.Number_Sayer_Bridge.HTML.f2;
+                [document.getElementById("from"), document.getElementById("to")].forEach($_.Number_Sayer_Bridge.HTML.f4);
 
-                document.getElementById("language").onchange = $_.Number_Sayer_Bridge.HTML.f4;
+                document.getElementById("language").onchange = $_.Number_Sayer_Bridge.HTML.f5;
 
-                document.getElementById("submit").onclick = Number_Sayer_Bridge.HTML.submit;
+                document.getElementById("submit").onclick = $_.Number_Sayer_Bridge.HTML.f6;
                 document.getElementById("count").onclick = Number_Sayer_Bridge.HTML.count;
 
                 document.getElementById("language").innerHTML = "";
@@ -42,12 +42,17 @@
             count: function (arg) {
                 var number = document.getElementById("number");
                 var to = bigInt(document.getElementById("to").value, 10);
-                for (var n = bigInt(document.getElementById("from").value, 10); n.leq(to); n = n.add(1)) {
-                    number.value = n.toString();
-                    Number_Sayer_Bridge.HTML.submit(null);
-                }
+                var n = bigInt(document.getElementById("from").value, 10);
+                number.value = n.toString();
+                Number_Sayer_Bridge.HTML.submit(null, function () {
+                    if (bigInt(number.value, 10).eq(to)) {
+                        return;
+                    }
+                    document.getElementById("from").value = (bigInt(number.value, 10).add(1)).toString();
+                    Number_Sayer_Bridge.HTML.count(null);
+                });
             },
-            submit: function (arg) {
+            submit: function (arg, Callback) {
                 var sound = Number_Sayer_Bridge.HTML.NumberSayer().say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
                 document.getElementById("said").innerHTML = "";
                 var bumped = 0;
@@ -95,6 +100,7 @@
                     }
                 }
                 var indexBump = 0;
+                sound.addOnEnded(Callback);
                 sound.play$1(function (index) {
                     if (Bridge.is(sound.sound[index], Number_Sayer_Bridge.RomanNumeralsAudio) || document.getElementById("language").selectedIndex !== NumberSayer.Language.Roman_Numerals) {
                         document.getElementById("s" + (((index - indexBump) | 0))).style.color = "red";
@@ -131,21 +137,26 @@
     Bridge.ns("Number_Sayer_Bridge.HTML", $_);
 
     Bridge.apply($_.Number_Sayer_Bridge.HTML, {
-        f1: function (ev) {
-            if (Bridge.is(ev, KeyboardEvent) && ev.keyCode === 13) {
-                Number_Sayer_Bridge.HTML.submit(null);
-            }
+        f1: function () {
         },
         f2: function (ev) {
+            if (Bridge.is(ev, KeyboardEvent) && ev.keyCode === 13) {
+                Number_Sayer_Bridge.HTML.submit(null, $_.Number_Sayer_Bridge.HTML.f1);
+            }
+        },
+        f3: function (ev) {
             if (Bridge.is(ev, KeyboardEvent) && ev.keyCode === 13) {
                 Number_Sayer_Bridge.HTML.count(null);
             }
         },
-        f3: function (item) {
-            item.onkeydown = $_.Number_Sayer_Bridge.HTML.f2;
+        f4: function (item) {
+            item.onkeydown = $_.Number_Sayer_Bridge.HTML.f3;
         },
-        f4: function (e) {
+        f5: function (e) {
             Number_Sayer_Bridge.HTML.update();
+        },
+        f6: function (e) {
+            Number_Sayer_Bridge.HTML.submit(e, $_.Number_Sayer_Bridge.HTML.f1);
         }
     });
 });

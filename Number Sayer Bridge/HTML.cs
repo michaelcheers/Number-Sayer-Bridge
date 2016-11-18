@@ -91,6 +91,7 @@ namespace Number_Sayer_Bridge
             Sound sound = NumberSayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
             said.InnerHTML = "";
             int bumped = 0;
+            bool with = false;
             for (int n = 0; n < sound.sound.Length; n++)
             {
                 var name = sound.sound[n].name;
@@ -100,6 +101,13 @@ namespace Number_Sayer_Bridge
                     case "ty":
                     case "teen":
                         break;
+                    case "with":
+                        with = true;
+                        break;
+                    case "line":
+                    case "lines":
+                        with = false;
+                        break;
                     default:
                         if (currentLanguage != NumberSayer.Language.Roman_Numerals || !name.StartsWith("d_"))
                             said.AppendChild(new HTMLSpanElement { InnerHTML = " " });
@@ -108,7 +116,7 @@ namespace Number_Sayer_Bridge
                 bool bump = false;
                 if (currentLanguage == NumberSayer.Language.Roman_Numerals)
                 {
-                    if (!(sound.sound[n] is RomanNumeralsAudio))
+                    if (with || name.StartsWith("line"))
                         bump = true;
                     else
                         name = name.Replace("d_0_0", "I").Replace("d_0_1", "V").Replace("d_1_0", "X").Replace("d_1_1", "L").Replace("d_2_0", "C").Replace("d_2_1", "D").Replace("d_3_0", "M");
@@ -136,12 +144,24 @@ namespace Number_Sayer_Bridge
             sound.OnEnded += Callback;
             sound.Play(index => 
             {
-                if (sound.sound[index] is RomanNumeralsAudio || currentLanguage != NumberSayer.Language.Roman_Numerals)
-                    Document.GetElementById("s" + (index - indexBump)).Style.Color = HTMLColor.Red;
-                else
+                switch (sound.sound[index].name)
+                {
+                    case "with":
+                        currentSayingWith = true;
+                        break;
+                    case "line":
+                    case "lines":
+                        currentSayingWith = false;
+                        break;
+                }
+                if (currentSayingWith || sound.sound[index].name.StartsWith("line"))
                     indexBump++;
+                else
+                    Document.GetElementById("s" + (index - indexBump)).Style.Color = HTMLColor.Red;
             });
         }
+
+        static bool currentSayingWith = false;
 
         private static void Update()
         {

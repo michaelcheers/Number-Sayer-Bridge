@@ -4,6 +4,7 @@
     Bridge.define("Number_Sayer_Bridge.HTML", {
         statics: {
             sayers: null,
+            currentSayingWith: false,
             config: {
                 init: function () {
                     this.sayers = new (System.Collections.Generic.Dictionary$2(String,NumberSayer))();
@@ -56,12 +57,20 @@
                 var sound = Number_Sayer_Bridge.HTML.NumberSayer().say(Number_Sayer_Bridge.BigDecimal.parse(document.getElementById("number").value));
                 document.getElementById("said").innerHTML = "";
                 var bumped = 0;
+                var $with = false;
                 for (var n = 0; n < sound.sound.length; n = (n + 1) | 0) {
                     var name = sound.sound[n].name;
                     switch (name) {
                         case "es": 
                         case "ty": 
                         case "teen": 
+                            break;
+                        case "with": 
+                            $with = true;
+                            break;
+                        case "line": 
+                        case "lines": 
+                            $with = false;
                             break;
                         default: 
                             if (document.getElementById("language").selectedIndex !== NumberSayer.Language.Roman_Numerals || !System.String.startsWith(name, "d_")) {
@@ -73,7 +82,7 @@
                     }
                     var bump = false;
                     if (document.getElementById("language").selectedIndex === NumberSayer.Language.Roman_Numerals) {
-                        if (!(Bridge.is(sound.sound[n], Number_Sayer_Bridge.RomanNumeralsAudio))) {
+                        if ($with || System.String.startsWith(name, "line")) {
                             bump = true;
                         } else {
                             name = System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(System.String.replaceAll(name, "d_0_0", "I"), "d_0_1", "V"), "d_1_0", "X"), "d_1_1", "L"), "d_2_0", "C"), "d_2_1", "D"), "d_3_0", "M");
@@ -102,10 +111,19 @@
                 var indexBump = 0;
                 sound.addOnEnded(Callback);
                 sound.play$1(function (index) {
-                    if (Bridge.is(sound.sound[index], Number_Sayer_Bridge.RomanNumeralsAudio) || document.getElementById("language").selectedIndex !== NumberSayer.Language.Roman_Numerals) {
-                        document.getElementById("s" + (((index - indexBump) | 0))).style.color = "red";
-                    } else {
+                    switch (sound.sound[index].name) {
+                        case "with": 
+                            Number_Sayer_Bridge.HTML.currentSayingWith = true;
+                            break;
+                        case "line": 
+                        case "lines": 
+                            Number_Sayer_Bridge.HTML.currentSayingWith = false;
+                            break;
+                    }
+                    if (Number_Sayer_Bridge.HTML.currentSayingWith || System.String.startsWith(sound.sound[index].name, "line")) {
                         indexBump = (indexBump + 1) | 0;
+                    } else {
+                        document.getElementById("s" + (((index - indexBump) | 0))).style.color = "red";
                     }
                 });
             },

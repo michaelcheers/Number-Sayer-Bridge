@@ -13,22 +13,22 @@ namespace Number_Sayer_Bridge
     [FileName("html.js")]
     internal static class HTML
     {
-        private static extern HTMLInputElement number { [Template("document.getElementById(\"number\")")] get; }
+        private static extern HTMLInputElement Number { [Template("document.getElementById(\"number\")")] get; }
 
-        private static extern HTMLSelectElement voice { [Template("document.getElementById(\"voice\")")] get; }
+        private static extern HTMLSelectElement Voice { [Template("document.getElementById(\"voice\")")] get; }
 
-        private static extern HTMLSelectElement language { [Template("document.getElementById(\"language\")")] get; }
+        private static extern HTMLSelectElement Language { [Template("document.getElementById(\"language\")")] get; }
 
-        private static extern NumberSayer.Language currentLanguage { [Template("document.getElementById(\"language\").selectedIndex")] get; }
+        private static extern NumberSayer.Language CurrentLanguage { [Template("document.getElementById(\"language\").selectedIndex")] get; }
 
-        private static extern string currentVoice { [Template("document.getElementById(\"voice\").value")] get; }
+        private static extern string CurrentVoice { [Template("document.getElementById(\"voice\").value")] get; }
 
-        private static extern HTMLParagraphElement said { [Template("document.getElementById(\"said\")")] get; }
+        private static extern HTMLParagraphElement Said { [Template("document.getElementById(\"said\")")] get; }
 
         [Ready]
         private static void Start()
         {
-            number.OnKeyDown = (ev) =>
+            Number.OnKeyDown = (ev) =>
             {
                 if (ev.IsKeyboardEvent() && ev.As<KeyboardEvent>().KeyCode == 13)
                 {
@@ -41,19 +41,19 @@ namespace Number_Sayer_Bridge
                     Count(null);
             });
 
-            language.OnChange = e => Update();
+            Language.OnChange = e => Update();
 
             Document.GetElementById<HTMLButtonElement>("submit").OnClick = (e) => Submit(e, () => { });
             Document.GetElementById<HTMLButtonElement>("count") .OnClick = Count;
 
-            language.InnerHTML = "";
+            Language.InnerHTML = "";
             foreach (NumberSayer.Language item in Enum.GetValues(typeof(NumberSayer.Language)))
-                language.AppendChild(new HTMLOptionElement
+                Language.AppendChild(new HTMLOptionElement
                 {
                     Value = item.ToString(),
                     InnerHTML = item.ToString().Replace('_', ' ')
                 });
-            language.SelectedIndex = 0;
+            Language.SelectedIndex = 0;
 
             Update();
         }
@@ -80,16 +80,16 @@ namespace Number_Sayer_Bridge
         {
             get
             { 
-                string key = currentVoice + currentLanguage.ToString();
+                string key = CurrentVoice + CurrentLanguage.ToString();
 
-                return sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(currentLanguage, currentVoice));
+                return sayers.ContainsKey(key) ? sayers[key] : (sayers[key] = new NumberSayer(CurrentLanguage, CurrentVoice));
             }
         }
 
         private static void Submit(MouseEvent<HTMLButtonElement> arg, Action Callback)
         {
             Sound sound = NumberSayer.Say(BigDecimal.Parse(Document.GetElementById<HTMLInputElement>("number").Value));
-            said.InnerHTML = "";
+            Said.InnerHTML = "";
             int bumped = 0;
             bool with = false;
             for (int n = 0; n < sound.sound.Length; n++)
@@ -109,12 +109,12 @@ namespace Number_Sayer_Bridge
                         with = false;
                         break;
                     default:
-                        if (currentLanguage != NumberSayer.Language.Roman_Numerals || !name.StartsWith("d_"))
-                            said.AppendChild(new HTMLSpanElement { InnerHTML = " " });
+                        if (CurrentLanguage != NumberSayer.Language.Roman_Numerals || !name.StartsWith("d_"))
+                            Said.AppendChild(new HTMLSpanElement { InnerHTML = " " });
                         break;
                 }
                 bool bump = false;
-                if (currentLanguage == NumberSayer.Language.Roman_Numerals)
+                if (CurrentLanguage == NumberSayer.Language.Roman_Numerals)
                 {
                     if (with || name.StartsWith("line"))
                         bump = true;
@@ -137,7 +137,7 @@ namespace Number_Sayer_Bridge
                             span.AppendChild(oldSpan);
                         }
                     span.Id = "s" + (n - bumped);
-                    said.AppendChild(span);
+                    Said.AppendChild(span);
                 }
             }
             var indexBump = 0;
@@ -165,17 +165,17 @@ namespace Number_Sayer_Bridge
 
         private static void Update()
         {
-            voice.InnerHTML = "";
-            string[] currentKnownVoices = NumberSayer.knownVoices[currentLanguage];
+            Voice.InnerHTML = "";
+            string[] currentKnownVoices = NumberSayer.knownVoices[CurrentLanguage];
 
             foreach (string item in currentKnownVoices)
-                voice.AppendChild(new HTMLOptionElement
+                Voice.AppendChild(new HTMLOptionElement
                 {
                     Value = item.ToString(),
                     InnerHTML = item.ToString()
                 });
 
-            voice.AppendChild(new HTMLOptionElement
+            Voice.AppendChild(new HTMLOptionElement
             {
                 Value = "mixed",
                 InnerHTML = "Mixed"

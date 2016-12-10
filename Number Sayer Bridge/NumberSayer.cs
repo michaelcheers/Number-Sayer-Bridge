@@ -143,7 +143,7 @@ namespace Number_Sayer_Bridge
         {
             {Language.English,        new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia" } },
             {Language.Spanish,        new[] {"Ana", "Sylvia"} },
-            {Language.French,         new[] {"Ben"} },
+            {Language.French,         new[] {"Ben", "Melissa"} },
             {Language.Esperanto,      new[] {"Michael"} },
             {Language.German,         new[] {"Ally", "Laurie"} },
             {Language.Roman_Numerals, new[] {"Michael"} },
@@ -345,7 +345,8 @@ namespace Number_Sayer_Bridge
                                                     result.AppendThis(LoadSound(dig120 * 2 + "0"));
                                                     if (dig120 == 3 && dig220 == 1)
                                                         result.AppendThis(and);
-                                                    result.AppendThis(Say(dig220));
+                                                    if (dig220 != 0)
+                                                        result.AppendThis(Say(dig220));
                                                     return result;
                                                 }
                                             default:

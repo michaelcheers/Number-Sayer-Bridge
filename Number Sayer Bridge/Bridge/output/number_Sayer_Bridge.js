@@ -370,7 +370,9 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                                     if (dig120 === 3 && dig220.eq(1)) {
                                                         result.appendThis(this.getand());
                                                     }
-                                                    result.appendThis(this.say$1(dig220));
+                                                    if (dig220.neq(0)) {
+                                                        result.appendThis(this.say$1(dig220));
+                                                    }
                                                     return result;
                                                 }
                                             default: 
@@ -623,7 +625,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
         f1: function (_o1) {
             _o1.add(NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia"]);
             _o1.add(NumberSayer.Language.Spanish, ["Ana", "Sylvia"]);
-            _o1.add(NumberSayer.Language.French, ["Ben"]);
+            _o1.add(NumberSayer.Language.French, ["Ben", "Melissa"]);
             _o1.add(NumberSayer.Language.Esperanto, ["Michael"]);
             _o1.add(NumberSayer.Language.German, ["Ally", "Laurie"]);
             _o1.add(NumberSayer.Language.Roman_Numerals, ["Michael"]);

@@ -141,11 +141,11 @@ namespace Number_Sayer_Bridge
 
         public static readonly Dictionary<Language, string[]> knownVoices = new Dictionary<Language, string[]>
         {
-            {Language.English,        new[] {"Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia" } },
+            {Language.English,        new[] {"Ally", "Ally (New)", "Ben (Silly)", "Erlantz", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia" } },
             {Language.Spanish,        new[] {"Ana", "Sylvia"} },
             {Language.French,         new[] {"Ben", "Melissa"} },
             {Language.Esperanto,      new[] {"Michael"} },
-            {Language.German,         new[] {"Ally", "Laurie"} },
+            {Language.German,         new[] {"Ally", "Laurie", "Leire"} },
             {Language.Roman_Numerals, new[] {"Michael"} },
             {Language.Binary_Short,   new[] {"Michael"} }
         };

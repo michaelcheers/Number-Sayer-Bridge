@@ -623,11 +623,11 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
 
     Bridge.apply($_.NumberSayer, {
         f1: function (_o1) {
-            _o1.add(NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia"]);
+            _o1.add(NumberSayer.Language.English, ["Ally", "Ally (New)", "Ben (Silly)", "Erlantz", "Jeff", "Laurie", "Melissa", "Michael", "Pedro", "Seamus", "Sylvia"]);
             _o1.add(NumberSayer.Language.Spanish, ["Ana", "Sylvia"]);
             _o1.add(NumberSayer.Language.French, ["Ben", "Melissa"]);
             _o1.add(NumberSayer.Language.Esperanto, ["Michael"]);
-            _o1.add(NumberSayer.Language.German, ["Ally", "Laurie"]);
+            _o1.add(NumberSayer.Language.German, ["Ally", "Laurie", "Leire"]);
             _o1.add(NumberSayer.Language.Roman_Numerals, ["Michael"]);
             _o1.add(NumberSayer.Language.Binary_Short, ["Michael"]);
             return _o1;

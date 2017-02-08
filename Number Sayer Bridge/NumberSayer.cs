@@ -212,11 +212,7 @@ namespace Number_Sayer_Bridge
                 var index = mixedResult.IndexOf(result);
                 if (index > -1)
                     mixedResult.Splice(index, 1);
-                Script.Write("/*");
-                return false;
-#pragma warning disable CS0162 // Unreachable code detected
-                Script.Write("*/");
-#pragma warning restore CS0162 // Unreachable code detected
+                return Global.Undefined.As<bool>();
             };
             HTMLSourceElement source = new HTMLSourceElement
             {

@@ -16,6 +16,10 @@ namespace System.Numerics
 #pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 #pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
     {
+        [Name("randBetween")]
+#pragma warning disable CS0626 // Method, operator, or accessor is marked external and has no attributes on it
+        public static extern BigInteger RandomNumberBetween (GenNum min, GenNum max);
+#pragma warning restore CS0626 // Method, operator, or accessor is marked external and has no attributes on it
         public static extern BigInteger One
         {
             [Template("bigInt(1)")]
@@ -39,7 +43,7 @@ namespace System.Numerics
 
         [Template("bigInt({value}, {radix})")]
         public static extern BigInteger Parse(string value, int radix = 10);
-
+        
         public extern BigInteger(int value = 0);
 
         public static extern BigInteger Zero

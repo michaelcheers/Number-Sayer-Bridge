@@ -195,6 +195,11 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                         this.smalls = [this.loadSound("0"), this.loadSound("eins"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12")];
                         break;
                     }
+                case NumberSayer.Language.Dutch: 
+                    {
+                        this.smalls = [this.loadSound("0"), this.loadSound("eins"), this.loadSound("2"), this.loadSound("3"), this.loadSound("4"), this.loadSound("5"), this.loadSound("6"), this.loadSound("7"), this.loadSound("8"), this.loadSound("9"), this.loadSound("10"), this.loadSound("11"), this.loadSound("12"), this.loadSound("13")];
+                        break;
+                    }
             }
         },
         getthir: function () {
@@ -247,11 +252,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 if (index > -1) {
                     mixedResult.splice(index, 1);
                 }
-                /*;
-                return false; /// Unreachable code detected
-
-
-                */
+                return undefined;
             };
             var source = Bridge.merge(document.createElement('source'), {
                 src: value,
@@ -275,15 +276,15 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 case 6: 
                     return this.loadSound("6");
                 case 7: 
-                    return this.loadSound(this.language === NumberSayer.Language.English ? "7" : "sieb");
+                    return this.loadSound(this.language !== NumberSayer.Language.German ? "7" : "sieb");
                 case 8: 
-                    return this.loadSound(this.language === NumberSayer.Language.English ? "eigh" : "8");
+                    return this.loadSound(this.language !== NumberSayer.Language.German ? "eigh" : "8");
                 case 9: 
                     return this.loadSound("9");
             }
             throw new System.ArgumentException(value + " should only be 1 digit.");
         },
-        say$2: function (value) {
+        say$1: function (value) {
             var $t;
             var result = new Number_Sayer_Bridge.Sound.ctor();
             if (this.language === NumberSayer.Language.Binary_Short) {
@@ -301,7 +302,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
             }
             if (this.language !== NumberSayer.Language.Roman_Numerals) {
                 if (value.lt(0)) {
-                    return this.loadSound("minus").append(this.say$2(value.negate()));
+                    return this.loadSound("minus").append(this.say$1(value.negate()));
                 }
                 if (value.lt(1000000)) {
                     if (value.lt(1000)) {
@@ -314,9 +315,10 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                 switch (this.language) {
                                     case NumberSayer.Language.English: 
                                     case NumberSayer.Language.German: 
+                                    case NumberSayer.Language.Dutch: 
                                         {
                                             result.appendThis(this.getThirFifSound(value.mod(10)));
-                                            result.appendThis(this.loadSound(this.language === NumberSayer.Language.German ? "10" : "teen"));
+                                            result.appendThis(this.loadSound(this.language !== NumberSayer.Language.English ? "10" : "teen"));
                                             return result;
                                         }
                                 }
@@ -326,8 +328,9 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                             switch (this.language) {
                                 case NumberSayer.Language.English: 
                                 case NumberSayer.Language.German: 
+                                case NumberSayer.Language.Dutch: 
                                     {
-                                        if (this.language === NumberSayer.Language.German && dig2 !== 0) {
+                                        if (this.language !== NumberSayer.Language.English && dig2 !== 0) {
                                             result.appendThis(this.getEinSound(dig2));
                                             result.appendThis(this.getand());
                                         }
@@ -337,7 +340,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                             result.appendThis(this.getThirFifSound(bigInt(dig1)));
                                             result.appendThis(this.getty());
                                         }
-                                        if (this.language === NumberSayer.Language.German) {
+                                        if (this.language !== NumberSayer.Language.English) {
                                             return result;
                                         }
                                         break;
@@ -345,7 +348,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                 case NumberSayer.Language.Esperanto: 
                                     {
                                         if (dig1 !== 1) {
-                                            result.appendThis(this.say$2(bigInt(dig1)));
+                                            result.appendThis(this.say$1(bigInt(dig1)));
                                         }
                                         result.appendThis(this.loadSound("10"));
                                         break;
@@ -371,7 +374,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                                         result.appendThis(this.getand());
                                                     }
                                                     if (dig220.neq(0)) {
-                                                        result.appendThis(this.say$2(dig220));
+                                                        result.appendThis(this.say$1(dig220));
                                                     }
                                                     return result;
                                                 }
@@ -388,7 +391,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                     }
                             }
                             if (dig2 !== 0) {
-                                result.appendThis(this.say$2(bigInt(dig2)));
+                                result.appendThis(this.say$1(bigInt(dig2)));
                             }
                             return result;
                         }
@@ -398,9 +401,10 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                         switch (this.language) {
                             case NumberSayer.Language.English: 
                             case NumberSayer.Language.German: 
+                            case NumberSayer.Language.Dutch: 
                                 {
                                     if (this.language === NumberSayer.Language.English || hundred !== 1) {
-                                        result.appendThis(this.say$2(bigInt(hundred)));
+                                        result.appendThis(this.say$1(bigInt(hundred)));
                                     }
                                     result.appendThis(this.loadSound("hundred"));
                                     break;
@@ -430,7 +434,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                             }
                                         default: 
                                             {
-                                                result.appendThis(this.say$2(bigInt(hundred)));
+                                                result.appendThis(this.say$1(bigInt(hundred)));
                                                 result.appendThis(this.loadSound("hundred"));
                                                 break;
                                             }
@@ -451,7 +455,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                             }
                                         default: 
                                             {
-                                                result.appendThis(this.say$2(bigInt(hundred)));
+                                                result.appendThis(this.say$1(bigInt(hundred)));
                                                 result.appendThis(this.loadSound("hundred"));
                                                 break;
                                             }
@@ -460,10 +464,10 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                                 }
                         }
                         if (remainder !== 0) {
-                            if (this.language === NumberSayer.Language.English) {
+                            if (this.language === NumberSayer.Language.English || this.language === NumberSayer.Language.German || this.language === NumberSayer.Language.Dutch) {
                                 result.appendThis(this.getand());
                             }
-                            result.appendThis(this.say$2(bigInt(remainder)));
+                            result.appendThis(this.say$1(bigInt(remainder)));
                         }
                         ;
                         return result;
@@ -473,16 +477,17 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                         case NumberSayer.Language.French: 
                         case NumberSayer.Language.Esperanto: 
                         case NumberSayer.Language.German: 
+                        case NumberSayer.Language.Dutch: 
                             {
                                 var part1 = value.over(1000);
                                 var part2 = value.mod(1000);
                                 if (part1.neq(1)) {
-                                    result.appendThis(this.say$2(part1));
+                                    result.appendThis(this.say$1(part1));
                                 }
 
                                 result.appendThis(this.loadSound("thousand"));
                                 if (part2.neq(0)) {
-                                    result.appendThis(this.say$2(part2));
+                                    result.appendThis(this.say$1(part2));
                                 }
                                 return result;
                             }
@@ -506,7 +511,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 var condition = n === -1;
                 var currentVal = (value.over(current)).mod(languageNumberScale);
                 if (currentVal.neq(0)) {
-                    if (currentVal.lt(100) && condition && this.language === NumberSayer.Language.English) {
+                    if (currentVal.lt(100) && condition && (this.language === NumberSayer.Language.English || this.language === NumberSayer.Language.Dutch || this.language === NumberSayer.Language.German)) {
                         result.appendThis(this.getand());
                     }
                     var spanishAPart = (currentVal.over(1000)).toJSNumber();
@@ -529,12 +534,12 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                             result.appendThis(new Number_Sayer_Bridge.Sound.$ctor1(new Number_Sayer_Bridge.RomanNumeralsAudio(append.sound[0], lineNumbers)));
                             if (lineNumbers > 0) {
                                 result.appendThis(this.loadSound("with"));
-                                result.appendThis(this.say$2(bigInt(lineNumbers)));
+                                result.appendThis(this.say$1(bigInt(lineNumbers)));
                                 result.appendThis(this.loadSound(lineNumbers === 1 ? "line" : "lines"));
                             }
                         }
                     } else {
-                        result.appendThis((spanishBPart === 1 && !condition && this.language === NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound.ctor() : this.say$2(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say$2(currentVal));
+                        result.appendThis((spanishBPart === 1 && !condition && this.language === NumberSayer.Language.Spanish) ? (spanishAPart === 0 ? new Number_Sayer_Bridge.Sound.ctor() : this.say$1(bigInt(((spanishAPart * 1000) | 0)))).append(this.loadSound("one")) : this.say$1(currentVal));
                     }
                     if (!condition) {
                         switch (this.language) {
@@ -550,6 +555,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                             case NumberSayer.Language.French: 
                             case NumberSayer.Language.Esperanto: 
                             case NumberSayer.Language.German: 
+                            case NumberSayer.Language.Dutch: 
                                 result.appendThis(this.loadSound(NumberSayer.placeValues[((Bridge.Int.div((((n + 1) | 0)), 2)) | 0)]).append(((((n + 1) | 0)) % 2) === 1 ? this.loadSound("ard") : this.loadSound("on")));
                                 break;
                         }
@@ -558,7 +564,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 current = current.over(languageNumberScale);
                 var valMod1000000;
                 if (current.eq(1000) && ((valMod1000000 = (value.mod(1000000)).toJSNumber())) !== 0 && this.language !== NumberSayer.Language.English && this.language !== NumberSayer.Language.Roman_Numerals) {
-                    return result.append(this.say$2(bigInt(valMod1000000)));
+                    return result.append(this.say$1(bigInt(valMod1000000)));
                 }
                 n = (n - 1) | 0;
                 if (current.eq(0)) {
@@ -566,13 +572,8 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 }
             }
         },
-        say$3: function (value) {
-            var dateTime = { };
-            if (Bridge.Date.tryParse(value, null, dateTime)) {
-                return this.say$1(dateTime.v);
-            } else {
-                return this.say(Number_Sayer_Bridge.BigDecimal.parse(value));
-            }
+        say$2: function (value) {
+            return this.say(Number_Sayer_Bridge.BigDecimal.parse(value));
         },
         say: function (value) {
             var $t, $t1;
@@ -583,7 +584,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 if (value.value.leq(0)) {
                     throw new System.Exception("Negatives are invalid");
                 }
-                return this.say$2(value.value);
+                return this.say$1(value.value);
             }
             var s0s = new Number_Sayer_Bridge.Sound.ctor();
             for (var n = 0; bigInt(n).lt(value.N0s()); n = (n + 1) | 0) {
@@ -594,21 +595,19 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
                 case NumberSayer.Language.English: 
                     {
                         var partB = value.getPartB();
-                        return (negative ? this.loadSound("minus") : new Number_Sayer_Bridge.Sound.ctor()).append(this.say$2(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound.ctor() : this.loadSound("point").append(s0s).append(new Number_Sayer_Bridge.Sound.$ctor2(System.Array.convertAll(($t=partB.toString(), System.String.toCharArray($t, 0, $t.length)), Bridge.fn.bind(this, $_.NumberSayer.f4))))));
+                        return (negative ? this.loadSound("minus") : new Number_Sayer_Bridge.Sound.ctor()).append(this.say$1(value.getPartA()).append(partB.eq(0) ? new Number_Sayer_Bridge.Sound.ctor() : this.loadSound("point").append(s0s).append(new Number_Sayer_Bridge.Sound.$ctor2(System.Array.convertAll(($t=partB.toString(), System.String.toCharArray($t, 0, $t.length)), Bridge.fn.bind(this, $_.NumberSayer.f4))))));
                     }
                 case NumberSayer.Language.Spanish: 
                 case NumberSayer.Language.French: 
                 case NumberSayer.Language.German: 
                 case NumberSayer.Language.Esperanto: 
+                case NumberSayer.Language.Dutch: 
                     {
                         var partB1 = value.getPartB();
-                        return (negative ? this.loadSound("minus") : new Number_Sayer_Bridge.Sound.ctor()).append(this.say$2(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound.ctor() : this.loadSound("point").append(s0s).append(this.say$2(partB1))));
+                        return (negative ? this.loadSound("minus") : new Number_Sayer_Bridge.Sound.ctor()).append(this.say$1(value.getPartA()).append(partB1.eq(0) ? new Number_Sayer_Bridge.Sound.ctor() : this.loadSound("point").append(s0s).append(this.say$1(partB1))));
                     }
             }
             throw new System.NotImplementedException(System.String.concat("Unhandled language: ", ($t1=this.language, System.Enum.toString(NumberSayer.Language, $t1))));
-        },
-        say$1: function (dateTime) {
-            throw new System.NotImplementedException();
         },
         sayBit: function (bit) {
             var div = (Bridge.Int.div(bit, 4)) | 0;
@@ -617,11 +616,11 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
             } else {
                 var mod = bit % 4;
                 var sound = this.sayBit(mod);
-                return this.sayBit(mod).append(this.loadSound("_start")).append(this.say$2(bigInt(div)).append(this.loadSound("_end")));
+                return this.sayBit(mod).append(this.loadSound("_start")).append(this.say$1(bigInt(div)).append(this.loadSound("_end")));
             }
         },
         getEinSound: function (dig2) {
-            return dig2 === 1 ? this.loadSound("1") : this.say$2(bigInt(dig2));
+            return dig2 === 1 ? this.loadSound("1") : this.say$1(bigInt(dig2));
         }
     });
 
@@ -638,10 +637,12 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
             _o1.add(NumberSayer.Language.German, ["Ally", "Laurie", "Leire"]);
             _o1.add(NumberSayer.Language.Roman_Numerals, ["Michael"]);
             _o1.add(NumberSayer.Language.Binary_Short, ["Michael"]);
+            _o1.add(NumberSayer.Language.Dutch, []);
             return _o1;
         },
         f2: function (_o2) {
             _o2.add(NumberSayer.Language.English, 13);
+            _o2.add(NumberSayer.Language.Dutch, 14);
             _o2.add(NumberSayer.Language.German, 13);
             _o2.add(NumberSayer.Language.Spanish, 16);
             _o2.add(NumberSayer.Language.French, 17);
@@ -652,6 +653,7 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
             _o3.add(NumberSayer.Language.English, 1000);
             _o3.add(NumberSayer.Language.French, 1000);
             _o3.add(NumberSayer.Language.German, 1000);
+            _o3.add(NumberSayer.Language.Dutch, 1000);
             _o3.add(NumberSayer.Language.Spanish, 1000000);
             _o3.add(NumberSayer.Language.Esperanto, 1000);
             _o3.add(NumberSayer.Language.Roman_Numerals, 10);
@@ -671,7 +673,8 @@ Bridge.assembly("Number Sayer Bridge", function ($asm, globals) {
             Esperanto: 3,
             German: 4,
             Roman_Numerals: 5,
-            Binary_Short: 6
+            Binary_Short: 6,
+            Dutch: 7
         }
     });
 

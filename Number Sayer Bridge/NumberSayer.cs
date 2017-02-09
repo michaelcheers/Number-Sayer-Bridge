@@ -130,6 +130,27 @@ namespace Number_Sayer_Bridge
                         };
                         break;
                     }
+                case Language.Dutch:
+                    {
+                        smalls = new[]
+                        {
+                            LoadSound("0"),
+                            LoadSound("eins"),
+                            LoadSound("2"),
+                            LoadSound("3"),
+                            LoadSound("4"),
+                            LoadSound("5"),
+                            LoadSound("6"),
+                            LoadSound("7"),
+                            LoadSound("8"),
+                            LoadSound("9"),
+                            LoadSound("10"),
+                            LoadSound("11"),
+                            LoadSound("12"),
+                            LoadSound("13")
+                        };
+                        break;
+                    }
             }
         }
 
@@ -147,12 +168,14 @@ namespace Number_Sayer_Bridge
             {Language.Esperanto,      new[] {"Michael"} },
             {Language.German,         new[] {"Ally", "Laurie", "Leire"} },
             {Language.Roman_Numerals, new[] {"Michael"} },
-            {Language.Binary_Short,   new[] {"Michael"} }
+            {Language.Binary_Short,   new[] {"Michael"} },
+            {Language.Dutch,    new string[]{ } }
         };
 
         private static readonly Dictionary<Language, int> irregularStarters = new Dictionary<Language, int>
         {
             {Language.English, 13 },
+            {Language.Dutch, 14 },
             {Language.German, 13 },
             {Language.Spanish, 16 },
             {Language.French, 17 },
@@ -171,6 +194,7 @@ namespace Number_Sayer_Bridge
             {Language.English, shortNumberScale },
             {Language.French,  shortNumberScale },
             {Language.German, shortNumberScale },
+            {Language.Dutch, shortNumberScale },
             {Language.Spanish,  longNumberScale },
             {Language.Esperanto, shortNumberScale },
             {Language.Roman_Numerals, 10 }
@@ -240,9 +264,9 @@ namespace Number_Sayer_Bridge
                 case 6:
                     return LoadSound("6");
                 case 7:
-                    return LoadSound(language == Language.English ? "7" : "sieb");
+                    return LoadSound(language != Language.German ? "7" : "sieb");
                 case 8:
-                    return LoadSound(language == Language.English ? "eigh" : "8");
+                    return LoadSound(language != Language.German ? "eigh" : "8");
                 case 9:
                     return LoadSound("9");
             }
@@ -285,9 +309,10 @@ namespace Number_Sayer_Bridge
                                 {
                                     case Language.English:
                                     case Language.German:
+                                    case Language.Dutch:
                                         {
                                             result.AppendThis(GetThirFifSound(value % 10));
-                                            result.AppendThis(LoadSound(language == Language.German ? "10" : "teen"));
+                                            result.AppendThis(LoadSound(language != Language.English ? "10" : "teen"));
                                             return result;
                                         }
                                 }
@@ -298,8 +323,9 @@ namespace Number_Sayer_Bridge
                             {
                                 case Language.English:
                                 case Language.German:
+                                case Language.Dutch:
                                     {
-                                        if (language == Language.German && dig2 != 0)
+                                        if (language != Language.English && dig2 != 0)
                                         {
                                             result.AppendThis(GetEinSound(dig2));
                                             result.AppendThis(and);
@@ -311,7 +337,7 @@ namespace Number_Sayer_Bridge
                                             result.AppendThis(GetThirFifSound(dig1));
                                             result.AppendThis(ty);
                                         }
-                                        if (language == Language.German)
+                                        if (language != Language.English)
                                             return result;
                                         break;
                                     }
@@ -367,6 +393,7 @@ namespace Number_Sayer_Bridge
                         {
                             case Language.English:
                             case Language.German:
+                            case Language.Dutch:
                                 {
                                     if (language == Language.English || hundred != 1)
                                         result.AppendThis(Say(hundred));
@@ -430,7 +457,7 @@ namespace Number_Sayer_Bridge
                         }
                         if (remainder != 0)
                         {
-                            if (language == Language.English)
+                            if (language == Language.English || language == Language.German || language == Language.Dutch)
                                 result.AppendThis(and);
                             result.AppendThis(Say(remainder));
                         };
@@ -442,6 +469,7 @@ namespace Number_Sayer_Bridge
                         case Language.French:
                         case Language.Esperanto:
                         case Language.German:
+                        case Language.Dutch:
                             {
                                 WholeNumber part1 = value / 1000;
                                 WholeNumber part2 = value % 1000;
@@ -473,7 +501,7 @@ namespace Number_Sayer_Bridge
                 WholeNumber currentVal = (value / current) % languageNumberScale;
                 if (currentVal != 0)
                 {
-                    if (currentVal < 100 && condition && language == Language.English)
+                    if (currentVal < 100 && condition && (language == Language.English || language == Language.Dutch || language == Language.German))
                         result.AppendThis(and);
                     int spanishAPart = (int)(currentVal / 1000);
                     int spanishBPart = (int)(currentVal % 1000);
@@ -518,6 +546,7 @@ namespace Number_Sayer_Bridge
                             case Language.French:
                             case Language.Esperanto:
                             case Language.German:
+                            case Language.Dutch:
                                 result.AppendThis(LoadSound(placeValues[(n + 1) / 2]).Append(((n + 1) % 2) == 1 ? LoadSound("ard") : LoadSound("on")));
                                 break;
                         }
@@ -601,6 +630,7 @@ namespace Number_Sayer_Bridge
                 case Language.French:
                 case Language.German:
                 case Language.Esperanto:
+                case Language.Dutch:
                     {
                         WholeNumber partB = value.PartB;
                         return (negative ? LoadSound("minus") : new Sound()).Append(Say(value.PartA).Append(partB == 0 ? new Sound() : LoadSound("point").Append(s0s).Append(Say(partB))));
@@ -623,7 +653,8 @@ namespace Number_Sayer_Bridge
             Esperanto,
             German,
             Roman_Numerals,
-            Binary_Short
+            Binary_Short,
+            Dutch
         }
     }
 }
